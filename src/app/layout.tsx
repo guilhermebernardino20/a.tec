@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { Prompt, Roboto_Mono } from "next/font/google";
+import { Geist_Mono, Prompt } from "next/font/google";
 import SmoothScroll from "@/components/SmoothScroll";
+import Grain from "@/components/ui/Grain";
+import AmbientCursorGrid from "@/components/AmbientCursorGrid";
 import "./globals.css";
 
 const prompt = Prompt({
@@ -10,10 +12,10 @@ const prompt = Prompt({
   display: "swap",
 });
 
-const mono = Roboto_Mono({
-  variable: "--font-roboto-mono",
+// variável: cobre todos os pesos, do 200 dos números grandes ao 500 dos rótulos
+const mono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
-  weight: ["400"],
   display: "swap",
 });
 
@@ -55,6 +57,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col bg-paper text-ink">
         <SmoothScroll>{children}</SmoothScroll>
+        <AmbientCursorGrid />
+        <Grain />
       </body>
     </html>
   );

@@ -3,6 +3,7 @@ import Container from "@/components/ui/Container";
 import Mono from "@/components/ui/Mono";
 import Pill from "@/components/ui/Pill";
 import { InViewGroup, InViewItem } from "@/components/ui/InView";
+import Parallax from "@/components/ui/Parallax";
 
 const [featured, ...rest] = JUDICIARY_DATA;
 
@@ -23,13 +24,14 @@ export default function Judiciary() {
 
           <InViewGroup className="mt-14 grid grid-cols-1 gap-x-5 gap-y-12 lg:grid-cols-12">
             <InViewItem className="lg:col-span-5">
+              <Parallax distance={-46} className="lg:h-full">
               <div className="flex flex-col justify-between gap-10 rounded-[24px] bg-ink p-8 text-paper md:p-10 lg:h-full">
                 <div className="flex flex-col gap-2">
                   <Mono className="text-paper/60">Judiciário brasileiro</Mono>
                   <Mono className="text-paper/40">{featured.source}</Mono>
                 </div>
                 <div>
-                  <p className="text-[clamp(3rem,6vw,5rem)] font-extralight leading-none tracking-[-0.03em]">
+                  <p className="font-mono text-[clamp(2.5rem,5vw,4.25rem)] font-light leading-none tracking-[-0.04em]">
                     {featured.figure}
                   </p>
                   <p className="mt-4 text-lead font-light text-paper/85">
@@ -40,6 +42,7 @@ export default function Judiciary() {
                   </p>
                 </div>
               </div>
+              </Parallax>
             </InViewItem>
 
             <ul className="lg:col-span-7">
@@ -52,7 +55,7 @@ export default function Judiciary() {
                   <div className="grid grid-cols-1 gap-4 py-8 md:grid-cols-12 md:items-baseline md:gap-5 md:py-10">
                     <div className="flex items-baseline gap-4 md:col-span-4">
                       <Mono className="text-ink-mute">{d.source}</Mono>
-                      <span className="text-[clamp(1.75rem,3vw,2.5rem)] font-extralight leading-none tracking-[-0.03em] text-ink">
+                      <span className="font-mono text-[clamp(1.5rem,2.6vw,2.1rem)] font-light leading-none tracking-[-0.04em] text-ink">
                         {d.figure}
                       </span>
                     </div>

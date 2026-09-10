@@ -4,6 +4,9 @@ import { useEffect, useRef, type ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { PRACTICES } from "@/lib/content";
+import TiltCard from "@/components/ui/TiltCard";
+import ScanEdge from "@/components/ui/ScanEdge";
+import Parallax from "@/components/ui/Parallax";
 
 const TONES: Record<string, string> = {
   mint: "bg-mint text-olive-deep",
@@ -80,12 +83,18 @@ export default function AreaCards() {
   return (
     <section ref={root} className="bg-paper">
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-        {PRACTICES.map((p) => (
-          <li
-            key={p.id}
-            className={`area-card flex min-h-[340px] flex-col md:min-h-[420px] justify-between gap-10 p-8 md:p-10 ${TONES[p.tone]}`}
-          >
-            <div className="area-card-content flex h-full flex-col justify-between gap-10">
+        {PRACTICES.map((p, i) => (
+          <li key={p.id} className="[perspective:1200px]">
+            <Parallax distance={i % 2 === 0 ? -34 : -62}>
+            <TiltCard
+              intensity={5}
+              glare={p.tone === "ink"}
+              className={`area-card flex min-h-[340px] flex-col justify-between gap-10 p-8 md:min-h-[420px] md:p-10 ${TONES[p.tone]}`}
+            >
+              <ScanEdge orientation="x" duration={6.5} delay={i * 1.2} />
+              <ScanEdge orientation="y" duration={8} delay={i * 1.2 + 0.6} />
+
+              <div className="area-card-content flex h-full flex-col justify-between gap-10">
               <div className="flex items-start justify-between">
                 <span className="font-mono text-mono uppercase opacity-70">
                   {p.index}.
@@ -103,11 +112,13 @@ export default function AreaCards() {
                 </svg>
               </div>
 
-              <div>
-                <h3 className="text-heading font-light">{p.name}</h3>
-                <p className="mt-4 max-w-[34ch] text-body opacity-80">{p.cardBody}</p>
+                <div>
+                  <h3 className="text-heading font-light">{p.name}</h3>
+                  <p className="mt-4 max-w-[34ch] text-body opacity-80">{p.cardBody}</p>
+                </div>
               </div>
-            </div>
+            </TiltCard>
+            </Parallax>
           </li>
         ))}
       </ul>

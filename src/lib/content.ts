@@ -212,8 +212,13 @@ export const PRACTICES: Practice[] = [
 export const CONTACT = {
   address: "Av. João Gualberto, 1342, Sala 1912 — Alto da Glória, Curitiba, Paraná",
   email: "contato@chomabettegaadvocacia.com.br",
+  /** e-mail já com assunto, para a mensagem chegar triada */
+  emailHref:
+    "mailto:contato@chomabettegaadvocacia.com.br?subject=Solicita%C3%A7%C3%A3o%20de%20An%C3%A1lise%20T%C3%A9cnica%20-%20A.TEC",
   phone: "(41) 9830-5580",
   phoneHref: "+554198305580",
+  mapsHref:
+    "https://www.google.com/maps/search/?api=1&query=Av.+Jo%C3%A3o+Gualberto,+1342,+Curitiba+-+PR",
 } as const;
 
 export const MARQUEE_TEXT = "Transformamos técnica em estratégia";

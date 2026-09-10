@@ -4,6 +4,7 @@ import Container from "@/components/ui/Container";
 import OrganicCanvas from "@/components/OrganicCanvas";
 import Mono from "@/components/ui/Mono";
 import Pill from "@/components/ui/Pill";
+import { getGeneralWhatsAppUrl } from "@/utils/whatsapp";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -48,7 +49,8 @@ export default function Footer() {
               <ul className="mt-6 space-y-3">
                 <li>
                   <a
-                    href={`mailto:${CONTACT.email}`}
+                    href={CONTACT.emailHref}
+                    aria-label={`Enviar e-mail para ${CONTACT.email} com o assunto Solicitação de Análise Técnica`}
                     className="text-body break-words text-paper/85 underline-offset-4 transition-colors hover:text-paper hover:underline"
                   >
                     {CONTACT.email}
@@ -57,9 +59,21 @@ export default function Footer() {
                 <li>
                   <a
                     href={`tel:${CONTACT.phoneHref}`}
+                    aria-label={`Ligar para ${CONTACT.phone}`}
                     className="text-body text-paper/85 underline-offset-4 transition-colors hover:text-paper hover:underline"
                   >
                     {CONTACT.phone}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={getGeneralWhatsAppUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Abrir conversa no WhatsApp com a a.tec"
+                    className="text-body text-paper/85 underline-offset-4 transition-colors hover:text-paper hover:underline"
+                  >
+                    WhatsApp
                   </a>
                 </li>
               </ul>
@@ -68,7 +82,15 @@ export default function Footer() {
             <div className="col-span-2 sm:col-span-1">
               <Mono className="text-paper/45">Localização</Mono>
               <address className="mt-6 max-w-[26ch] text-body not-italic text-paper/85">
-                {CONTACT.address}
+                <a
+                  href={CONTACT.mapsHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Abrir o endereço da a.tec no Google Maps"
+                  className="underline-offset-4 transition-colors hover:text-paper hover:underline"
+                >
+                  {CONTACT.address}
+                </a>
               </address>
             </div>
           </div>

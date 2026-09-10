@@ -3,6 +3,7 @@ import Container from "@/components/ui/Container";
 import Mono from "@/components/ui/Mono";
 import Pill from "@/components/ui/Pill";
 import { InViewGroup, InViewItem } from "@/components/ui/InView";
+import TextReveal from "@/components/ui/TextReveal";
 
 export default function Platform() {
   return (
@@ -14,12 +15,14 @@ export default function Platform() {
           </InViewItem>
 
           <div className="lg:col-span-9">
-            <h2
-              data-text-reveal
+            <TextReveal
+              as="h2"
+              text={PLATFORM.headline}
+              split="words"
+              stagger={0.035}
+              duration={0.95}
               className="text-title max-w-[18ch] font-light text-ink"
-            >
-              {PLATFORM.headline}
-            </h2>
+            />
 
             <InViewItem className="mt-10 max-w-[62ch] md:mt-12">
               <p className="text-body text-ink-soft md:text-lg md:leading-[1.45]">

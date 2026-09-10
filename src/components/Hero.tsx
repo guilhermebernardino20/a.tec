@@ -4,8 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import HeroBackdrop from "@/components/HeroBackdrop";
+import HeroCanvas from "@/components/HeroCanvas";
+import TextReveal from "@/components/ui/TextReveal";
 import Container from "@/components/ui/Container";
 import Mono from "@/components/ui/Mono";
+import StatusLed from "@/components/ui/StatusLed";
+import GlowRule from "@/components/ui/GlowRule";
+import SpotlightCard from "@/components/ui/SpotlightCard";
 import Pill from "@/components/ui/Pill";
 import { STEPS } from "@/lib/content";
 import { cn } from "@/lib/utils";
@@ -37,12 +42,6 @@ export default function Hero() {
           ".hero-bg-clip",
           { clipPath: "inset(18% 0% 18% 0%)" },
           { clipPath: "inset(0% 0% 0% 0%)", duration: 2, delay: 0.3, ease: "expo.inOut" },
-        );
-
-        gsap.fromTo(
-          ".hero-line",
-          { yPercent: 115 },
-          { yPercent: 0, duration: 1.15, delay: 0.55, stagger: 0.075, ease: "expo.out" },
         );
 
         gsap.fromTo(
@@ -100,19 +99,23 @@ export default function Hero() {
       <div className="pointer-events-none sticky top-0 h-[100svh] w-full overflow-hidden">
         <div ref={bg} className="hero-bg-clip h-full w-full will-change-transform">
           <HeroBackdrop className="h-full w-full" />
+          <HeroCanvas className="absolute inset-0 h-full w-full" />
         </div>
       </div>
 
       {/* painel de abertura */}
       <div className="relative -mt-[100svh] flex h-[100svh] min-h-[620px] flex-col justify-end">
         <Container className="pb-12 md:pb-16">
-          <h1 className="text-display max-w-[15ch] font-light text-paper">
-            {TITLE_LINES.map((line) => (
-              <span key={line} className="block overflow-hidden pb-[0.04em]">
-                <span className="hero-line block">{line}</span>
-              </span>
-            ))}
-          </h1>
+          <StatusLed className="hero-fade mb-8 md:mb-10" />
+
+          <TextReveal
+            as="h1"
+            lines={TITLE_LINES}
+            trigger="mount"
+            delay={0.55}
+            stagger={0.075}
+            className="text-display max-w-[15ch] font-light text-paper"
+          />
 
           <div className="mt-10 flex flex-col gap-8 md:mt-14 md:flex-row md:items-end md:justify-between">
             <p className="hero-fade text-lead max-w-[42ch] font-light text-paper/90">
@@ -155,7 +158,7 @@ export default function Hero() {
           </Container>
 
           <Container className="relative">
-            <div className="relative">
+            <SpotlightCard tone="dark" size={520} className="relative rounded-sm py-6">
               {STEPS.map((s, i) => (
                 <div
                   key={s.index}
@@ -186,11 +189,12 @@ export default function Hero() {
                   </p>
                 </div>
               ))}
-            </div>
+            </SpotlightCard>
           </Container>
 
           <Container className="relative">
-            <ol className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-paper/20 pt-6">
+            <GlowRule tone="dark" />
+            <ol className="flex flex-wrap items-center gap-x-6 gap-y-3 pt-6">
               {STEPS.map((s, i) => (
                 <li
                   key={s.index}

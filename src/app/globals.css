@@ -26,7 +26,7 @@
   --color-lime: #b7d492;
 
   --font-sans: var(--font-prompt), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-roboto-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* escala tipográfica fluida */
   --text-display: clamp(3.1rem, 7.9vw, 6.5rem);
@@ -73,6 +73,20 @@ body {
   overflow-x: hidden;
 }
 
+/*
+ * Foco de teclado visível em todo controle — regra global em vez de
+ * classe por componente, para que nada fique de fora ao crescer o site.
+ */
+:focus-visible {
+  outline: 2px solid #7f9970;
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
 ::selection {
   background: var(--color-mint);
   color: var(--color-olive-deep);
@@ -88,6 +102,69 @@ html.lenis body {
 }
 .lenis.lenis-stopped {
   overflow: hidden;
+}
+
+/* Filete com brilho que percorre a linha */
+@keyframes rule-sweep {
+  0% {
+    background-position: -35% 0;
+  }
+  100% {
+    background-position: 135% 0;
+  }
+}
+
+/* Feixe que percorre as bordas do grid — circuito vivo */
+@keyframes scan-x {
+  0% {
+    transform: translateX(-110%);
+  }
+  55%,
+  100% {
+    transform: translateX(240%);
+  }
+}
+
+@keyframes scan-y {
+  0% {
+    transform: translateY(-110%);
+  }
+  55%,
+  100% {
+    transform: translateY(240%);
+  }
+}
+
+/* Varredura do radar da a.tec Matrix */
+@keyframes radar-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* LED de status */
+@keyframes led-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+@keyframes led-halo {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.9);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(2.4);
+  }
 }
 
 /* Marquee contínuo */

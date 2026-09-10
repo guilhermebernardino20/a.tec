@@ -5,6 +5,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { PRACTICES } from "@/lib/content";
 import Container from "@/components/ui/Container";
 import Mono from "@/components/ui/Mono";
+import GlowRule from "@/components/ui/GlowRule";
+import SpotlightCard from "@/components/ui/SpotlightCard";
+import SpecialtyDrawer, { type DrawerSpecialty } from "@/components/SpecialtyDrawer";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -40,6 +43,7 @@ function closestEdge(e: React.MouseEvent, el: HTMLElement): Edge {
  */
 export default function Specialties() {
   const [open, setOpen] = useState<string | null>(PRACTICES[0].id);
+  const [detail, setDetail] = useState<DrawerSpecialty | null>(null);
   const panels = useRef<Record<string, HTMLSpanElement | null>>({});
 
   const onEnter = (id: string) => (e: React.MouseEvent<HTMLElement>) => {
@@ -62,7 +66,8 @@ export default function Specialties() {
   return (
     <section className="bg-paper">
       <Container>
-        <div className="grid grid-cols-1 gap-x-5 gap-y-10 border-t border-ink/10 pt-14 lg:grid-cols-12">
+        <GlowRule />
+        <div className="grid grid-cols-1 gap-x-5 gap-y-10 pt-14 lg:grid-cols-12">
           <div className="lg:col-span-3">
             <Mono className="text-ink-mute">Especialidades</Mono>
           </div>
@@ -78,6 +83,7 @@ export default function Specialties() {
                     onMouseEnter={onEnter(p.id)}
                     onMouseLeave={onLeave(p.id)}
                     aria-expanded={isOpen}
+                    aria-label={`${isOpen ? "Recolher" : "Expandir"} as especialidades de ${p.name}`}
                     className="group relative flex w-full items-center justify-between gap-6 overflow-hidden px-4 py-7 text-left md:py-9"
                   >
                     <span
@@ -128,16 +134,37 @@ export default function Specialties() {
                           </p>
                           <ul className="mt-10 grid grid-cols-1 gap-x-10 gap-y-8 md:grid-cols-2">
                             {p.specialties.map((s, i) => (
-                              <li key={s.title} className="border-t border-ink/10 pt-5">
-                                <Mono className="text-ink-mute">
-                                  {String(i + 1).padStart(2, "0")}.
-                                </Mono>
-                                <h4 className="mt-3 text-lg font-light text-ink">
-                                  {s.title}
-                                </h4>
-                                <p className="mt-2 max-w-[46ch] text-body text-ink-soft">
-                                  {s.body}
-                                </p>
+                              <li key={s.title} className="border-t border-ink/10">
+                                <SpotlightCard
+                                  as="button"
+                                  type="button"
+                                  onClick={() =>
+                                    setDetail({
+                                      practice: p.name,
+                                      index: String(i + 1).padStart(2, "0"),
+                                      title: s.title,
+                                      body: s.body,
+                                    })
+                                  }
+                                  aria-haspopup="dialog"
+                                  aria-label={`Abrir o método de trabalho da a.tec em ${s.title}`}
+                                  className="group/card w-full rounded-sm px-3 pb-6 pt-5 text-left"
+                                >
+                                  <div className="flex items-center justify-between gap-4">
+                                    <Mono className="text-ink-mute">
+                                      {String(i + 1).padStart(2, "0")}.
+                                    </Mono>
+                                    <Mono className="text-ink-mute/0 transition-colors duration-500 group-hover/card:text-ink-mute">
+                                      Ver método →
+                                    </Mono>
+                                  </div>
+                                  <h4 className="mt-3 text-lg font-light text-ink">
+                                    {s.title}
+                                  </h4>
+                                  <p className="mt-2 max-w-[46ch] text-body text-ink-soft">
+                                    {s.body}
+                                  </p>
+                                </SpotlightCard>
                               </li>
                             ))}
                           </ul>
@@ -151,6 +178,8 @@ export default function Specialties() {
           </ul>
         </div>
       </Container>
+
+      <SpecialtyDrawer specialty={detail} onClose={() => setDetail(null)} />
     </section>
   );
 }

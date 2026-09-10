@@ -8,15 +8,29 @@ import Container from "@/components/ui/Container";
 import Pill from "@/components/ui/Pill";
 import { cn } from "@/lib/utils";
 
+/** Etapas do percurso, na ordem em que aparecem na página. */
+const STAGES = [
+  { id: "topo", label: "Visão geral" },
+  { id: "matrix", label: "Matriz pericial" },
+  { id: "servicos", label: "Áreas" },
+  { id: "sobre", label: "Atuação" },
+  { id: "contato", label: "Contato" },
+] as const;
+
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [onDark, setOnDark] = useState(true);
+  const [stage, setStage] = useState(0);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    // o cabeçalho só troca de registro quando deixa uma superfície escura
-    const onScroll = () => {
+    let frame = 0;
+
+    const measure = () => {
+      frame = 0;
       setScrolled(window.scrollY > 40);
+
+      // o cabeçalho só troca de registro quando deixa uma superfície escura
       const bar = 88;
       const dark = Array.from(
         document.querySelectorAll<HTMLElement>("[data-surface='dark']"),
@@ -25,11 +39,27 @@ export default function Header() {
         return r.top <= bar && r.bottom >= bar;
       });
       setOnDark(dark);
+
+      // etapa ativa: a última cujo topo já passou pelo terço superior da tela
+      const line = window.innerHeight * 0.35;
+      let active = 0;
+      STAGES.forEach((s, i) => {
+        const el = document.getElementById(s.id);
+        if (el && el.getBoundingClientRect().top <= line) active = i;
+      });
+      setStage(active);
     };
-    onScroll();
+
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(measure);
+    };
+
+    measure();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     return () => {
+      cancelAnimationFrame(frame);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
@@ -68,13 +98,43 @@ export default function Header() {
             />
             <span
               className={cn(
-                "hidden font-mono text-[10px] uppercase leading-none transition-colors duration-500 sm:block",
+                "hidden font-mono text-[10px] uppercase leading-none transition-colors duration-500 sm:block md:hidden",
                 light ? "text-paper/70" : "text-ink/50",
               )}
             >
               Assistência Técnica Judicial
             </span>
           </a>
+
+          {/* indicador técnico da etapa em que a leitura está */}
+          <div
+            aria-hidden
+            className={cn(
+              "hidden items-center gap-1 font-mono text-[10px] uppercase leading-none transition-colors duration-500 md:flex",
+              light ? "text-paper/60" : "text-ink/45",
+            )}
+          >
+            <span>[</span>
+            <span className={light ? "text-paper/85" : "text-ink/70"}>
+              {String(stage + 1).padStart(2, "0")}/{String(STAGES.length).padStart(2, "0")}
+            </span>
+            <span className="px-1">•</span>
+            <span className="relative block h-3 overflow-hidden">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={STAGES[stage].id}
+                  initial={{ y: 12, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -12, opacity: 0 }}
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  className={cn("block whitespace-nowrap", light ? "text-paper" : "text-ink")}
+                >
+                  {STAGES[stage].label}
+                </motion.span>
+              </AnimatePresence>
+            </span>
+            <span>]</span>
+          </div>
 
           <div className="flex items-center gap-1">
             <nav className="hidden items-center lg:flex">
@@ -97,6 +157,7 @@ export default function Header() {
             <Pill
               href="#contato"
               variant={light ? "light" : "dark"}
+              aria-label="Ir para o formulário e agendar uma análise técnica"
               className="hidden md:inline-flex"
             >
               Agendar análise
