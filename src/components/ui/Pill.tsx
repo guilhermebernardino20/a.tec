@@ -30,7 +30,7 @@ export default function Pill({
     <Link
       href={href}
       className={cn(
-        "group/pill relative inline-flex items-center justify-center overflow-hidden rounded-lg px-[17px] py-[11px] font-mono text-mono uppercase transition-colors duration-500",
+        "group/pill relative inline-flex min-h-11 items-center justify-center overflow-hidden rounded-lg px-[17px] py-[11px] font-mono text-mono uppercase transition-colors duration-500",
         VARIANTS[variant],
         className,
       )}

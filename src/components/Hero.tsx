@@ -1,18 +1,19 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
+import { motion, type Variants } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import HeroTopographyCanvas from "@/components/HeroTopographyCanvas";
-import TextReveal from "@/components/ui/TextReveal";
 import Container from "@/components/ui/Container";
-import StatusLed from "@/components/ui/StatusLed";
-import Pill from "@/components/ui/Pill";
-import { cn } from "@/lib/utils";
+import { useMediaQuery } from "@/lib/use-media-query";
+
+/** curva de entrada do site de referência */
+const EASE_INTEGRATED = [0.16, 1, 0.3, 1] as const;
 
 const TITLE_LINES = ["Quando", "o processo", "vai além", "do direito."];
 
-/** ruído estático: textura de papel, sem custo de runtime */
+/** granulação de papel: tira o aspecto liso do gradiente */
 const NOISE = `data:image/svg+xml,${encodeURIComponent(
   `<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220">
      <filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/>
@@ -21,63 +22,99 @@ const NOISE = `data:image/svg+xml,${encodeURIComponent(
    </svg>`,
 )}`;
 
-const TELEMETRY = [
-  { id: "sys", text: "[ sys_status: operational ]", className: "left-6 top-24 md:left-12" },
-  {
-    id: "org",
-    text: "[ a.tec // judicial technical assistance ]",
-    className: "right-6 top-24 hidden text-right sm:block md:right-12",
+// ---------------------------------------------------------------------
+// Orquestração da abertura
+// ---------------------------------------------------------------------
+
+/**
+ * Moldura que se expande: o herói começa como um cartão recuado e
+ * desfocado e abre até ocupar a tela inteira.
+ */
+const FRAME_OPEN = {
+  clipPath: "inset(0% 0% 0% 0% round 0px)",
+  scale: 1,
+  opacity: 1,
+  filter: "blur(0px)",
+} as const;
+
+const FRAME_CLOSED_DESKTOP = {
+  clipPath: "inset(6% 5% 6% 5% round 28px)",
+  scale: 0.92,
+  opacity: 0.6,
+  filter: "blur(10px)",
+} as const;
+
+/** no celular o recuo é menor: comprimir o texto não ajuda ninguém */
+const FRAME_CLOSED_MOBILE = {
+  ...FRAME_CLOSED_DESKTOP,
+  clipPath: "inset(3% 2% 3% 2% round 16px)",
+} as const;
+
+/** contra-escala: a câmera recua enquanto a janela abre */
+const backdrop: Variants = {
+  hidden: { scale: 1.18 },
+  show: { scale: 1, transition: { duration: 2.4, ease: EASE_INTEGRATED } },
+};
+
+const eyebrow: Variants = {
+  hidden: { opacity: 0, y: 12 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1, delay: 0.6, ease: EASE_INTEGRATED },
   },
-  {
-    id: "geo",
-    text: "[ curitiba / pr • brazil ]",
-    className: "bottom-6 left-6 md:left-12",
+};
+
+/** título: entra quando a expansão já passou de ~40% do percurso */
+const title: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1.2, delay: 0.7, ease: EASE_INTEGRATED },
   },
-  {
-    id: "scan",
-    text: "[ hover to scan matrix ]",
-    className: "bottom-6 right-6 hidden text-right md:right-12 lg:block",
+};
+
+const lead: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1.1, delay: 0.9, ease: EASE_INTEGRATED },
   },
-] as const;
+};
+
+const tail: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1, delay: 1.05, ease: EASE_INTEGRATED },
+  },
+};
 
 /**
  * Abertura do site.
  *
- * O fundo orgânico fica preso na viewport enquanto o título entra; ao
- * longo da saída do herói ele escurece (opacidade 0.9 → 0.6) e avança
- * (escala 1 → 1.2).
+ * Nada de HUD: um fundo silencioso, uma linha de identificação, o título
+ * e dois caminhos de ação. A entrada é a moldura que se expande; o GSAP
+ * fica só com o afastamento do fundo na saída do herói.
  */
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
   const bg = useRef<HTMLDivElement>(null);
+  const compact = useMediaQuery("(max-width: 767px)");
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const ctx = gsap.context(() => {
-      // abertura: o fundo abre em clip-path e o conteúdo entra em cascata
-      if (!reduced) {
-        gsap.fromTo(
-          ".hero-bg-clip",
-          { clipPath: "inset(18% 0% 18% 0%)" },
-          { clipPath: "inset(0% 0% 0% 0%)", duration: 2, delay: 0.3, ease: "expo.inOut" },
-        );
-
-        gsap.fromTo(
-          ".hero-fade",
-          { opacity: 0, y: 22 },
-          { opacity: 1, y: 0, duration: 0.8, delay: 1.5, stagger: 0.05, ease: "expo.out" },
-        );
-      }
-
-      // fundo: escurece e avança conforme a esteira é percorrida
       gsap.fromTo(
         bg.current,
-        { opacity: 0.9, scale: 1 },
+        { opacity: 1, scale: 1 },
         {
-          opacity: 0.6,
-          scale: 1.2,
+          opacity: 0.65,
+          scale: 1.12,
           ease: "none",
           scrollTrigger: {
             trigger: root.current,
@@ -87,101 +124,89 @@ export default function Hero() {
           },
         },
       );
-
     }, root);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section
-      id="topo"
-      ref={root}
-      data-surface="dark"
-      className="relative bg-olive-deep"
+    <motion.div
+      initial={compact ? FRAME_CLOSED_MOBILE : FRAME_CLOSED_DESKTOP}
+      animate={FRAME_OPEN}
+      transition={{ duration: 2.2, ease: EASE_INTEGRATED }}
+      className="relative will-change-transform"
     >
-      {/* fundo preso à viewport durante todo o percurso */}
-      <div className="pointer-events-none sticky top-0 h-[100svh] w-full overflow-hidden">
-        <div ref={bg} className="hero-bg-clip relative h-full w-full will-change-transform">
-          {/* luz volumétrica, no alto do quadro */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#7F9970]/15 via-[#080B09]/80 to-[#080B09]" />
+      <motion.section
+        id="topo"
+        ref={root}
+        data-surface="dark"
+        initial="hidden"
+        animate="show"
+        className="relative flex min-h-screen w-full flex-col justify-between overflow-hidden bg-[#070807] pb-14 pt-24 supports-[height:100svh]:min-h-[100svh] md:pb-16 md:pt-28"
+      >
+        {/* fundo: camada externa é do scrub (GSAP), interna é da entrada */}
+        <div
+          aria-hidden
+          ref={bg}
+          className="pointer-events-none absolute inset-0 z-0 overflow-hidden will-change-transform"
+        >
+          <motion.div variants={backdrop} className="relative h-full w-full will-change-transform">
+            {/* única fonte de luz: difusa, no centro-topo */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(127,153,112,0.12),rgba(255,255,255,0))]" />
 
-          {/* malha topográfica reativa ao cursor */}
-          <HeroTopographyCanvas className="absolute inset-0 h-full w-full" />
-
-          {/* granulação editorial */}
-          <div
-            className="absolute inset-0 opacity-[0.03] [mix-blend-mode:overlay]"
-            style={{ backgroundImage: `url("${NOISE}")`, backgroundSize: "220px 220px" }}
-          />
-
-          {/* assentamento do texto no rodapé do quadro */}
-          <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#080B09] via-[#080B09]/70 to-transparent" />
+            {/* granulação de papel */}
+            <div
+              className="absolute inset-0 opacity-[0.02]"
+              style={{ backgroundImage: `url("${NOISE}")`, backgroundSize: "220px 220px" }}
+            />
+          </motion.div>
         </div>
-      </div>
 
-      {/* painel de abertura */}
-      <div className="relative -mt-[100svh] flex h-[100svh] min-h-[620px] flex-col justify-end">
-        {/* telemetria nos cantos */}
-        {TELEMETRY.map((item) => (
-          <span
-            key={item.id}
-            aria-hidden
-            className={cn(
-              "hero-fade pointer-events-none absolute font-mono text-[9px] uppercase tracking-[0.2em] text-[#7F9970]/60",
-              item.className,
-            )}
-          >
-            {item.text}
-          </span>
-        ))}
+        <div className="relative z-10 my-auto md:mb-0 md:mt-auto">
+          <Container>
+            <motion.p
+              variants={eyebrow}
+              className="text-xs font-medium uppercase tracking-[0.25em] text-[#7F9970]"
+            >
+              Assistência Técnica Judicial • Prova Pericial Blindada
+            </motion.p>
 
-        <Container className="pb-20 md:pb-24">
-          <StatusLed className="hero-fade mb-8 md:mb-10" />
+            <motion.h1
+              variants={title}
+              className="mt-8 max-w-[15ch] font-sans text-3xl font-bold leading-[1.08] tracking-tight text-[#F3F4F3] will-change-transform sm:text-5xl md:text-7xl"
+            >
+              {TITLE_LINES.map((line) => (
+                <span key={line} className="-my-2 block px-1 pb-2 pt-2">
+                  {line}
+                </span>
+              ))}
+            </motion.h1>
 
-          <TextReveal
-            as="h1"
-            lines={TITLE_LINES}
-            trigger="mount"
-            delay={0.55}
-            stagger={0.075}
-            className="text-display max-w-[15ch] font-light text-paper"
-            pieceClassName="title-sheen [--sheen-base:#f7f7f5] [--sheen-light:#ffffff]"
-          />
-
-          <div className="mt-10 flex flex-col gap-8 md:mt-14 md:flex-row md:items-end md:justify-between">
-            <p className="hero-fade text-lead max-w-[42ch] font-light text-paper/90">
+            <motion.p
+              variants={lead}
+              className="mt-8 max-w-2xl text-base leading-relaxed text-neutral-300 md:text-xl"
+            >
               Assistência técnica e perícias em Medicina, Psicologia, Engenharias
               e Avaliações Imobiliárias. Transformamos técnica em estratégia.
-            </p>
+            </motion.p>
 
-            <div className="hero-fade flex flex-wrap items-center gap-2">
-              <Pill href="#servicos" variant="light">
+            <motion.div variants={tail} className="mt-10 flex flex-wrap items-center gap-4">
+              <Link
+                href="#servicos"
+                className="rounded-full bg-[#7F9970] px-8 py-4 font-semibold text-[#070807] shadow-lg transition-all duration-300 hover:bg-[#8EA87E]"
+              >
                 Nossas frentes de atuação
-              </Pill>
-              <Pill href="#sobre" variant="ghost" className="text-paper hover:bg-paper/15">
-                Sobre a a.tec
-              </Pill>
-            </div>
-          </div>
-        </Container>
-
-        {/* indicador de rolagem */}
-        <span
-          aria-hidden
-          className="hero-fade pointer-events-none absolute inset-x-0 bottom-6 hidden flex-col items-center gap-3 md:flex"
-        >
-          <span className="relative block h-8 w-px overflow-hidden bg-paper/15">
-            <span
-              className="absolute inset-x-0 top-0 h-3 bg-gradient-to-b from-transparent via-lime to-transparent"
-              style={{ animation: "scan-y 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite" }}
-            />
-          </span>
-          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-paper/45">
-            Deslize para explorar
-          </span>
-        </span>
-      </div>
-    </section>
+              </Link>
+              <Link
+                href="#contato"
+                className="rounded-full border border-white/15 px-8 py-4 text-neutral-200 transition-all duration-300 hover:bg-white/5"
+              >
+                Agendar análise técnica
+              </Link>
+            </motion.div>
+          </Container>
+        </div>
+      </motion.section>
+    </motion.div>
   );
 }

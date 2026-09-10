@@ -18,7 +18,7 @@ export default function Home() {
     <>
       <Header />
       <TextRevealRoot />
-      <main className="flex-1">
+      <main className="w-full max-w-full flex-1 overflow-x-clip">
         {/* 01 · visão geral */}
         <Hero />
         {/* 02 · métricas e o peso da prova */}

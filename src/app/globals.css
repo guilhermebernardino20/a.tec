@@ -32,7 +32,7 @@
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* escala tipográfica fluida */
-  --text-display: clamp(3.1rem, 7.9vw, 6.5rem);
+  --text-display: clamp(3.1rem, 7.6vw, 6.25rem);
   --text-display--line-height: 1;
   --text-display--letter-spacing: -0.03em;
 
@@ -68,13 +68,24 @@ html {
   background-color: var(--color-ink);
 }
 
+html,
+body {
+  max-width: 100%;
+  /*
+   * `clip` e não `hidden`: `overflow-x: hidden` faz o elemento virar
+   * contêiner de rolagem (o eixo Y passa a `auto`) e isso anula o
+   * `position: sticky` de qualquer descendente — foi o que soltou o
+   * painel fixado das cinco etapas. `clip` corta sem criar scrollport.
+   */
+  overflow-x: clip;
+}
+
 body {
   background-color: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-body);
   font-weight: 400;
   font-size: var(--text-body);
-  overflow-x: hidden;
 }
 
 /*

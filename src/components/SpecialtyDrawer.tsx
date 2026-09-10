@@ -7,9 +7,12 @@ import { prefillContact } from "@/lib/prefill";
 import { setScrollLock } from "@/lib/scroll-lock";
 import { getSpecialtyWhatsAppUrl } from "@/utils/whatsapp";
 import Mono from "@/components/ui/Mono";
+import { useMediaQuery } from "@/lib/use-media-query";
+import { cn } from "@/lib/utils";
 import StatusLed from "@/components/ui/StatusLed";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
+const BOTTOM_SHEET = "(max-width: 767px)";
 
 export type DrawerSpecialty = {
   practice: string;
@@ -31,6 +34,8 @@ export default function SpecialtyDrawer({
 }) {
   const closeRef = useRef<HTMLButtonElement>(null);
   const open = Boolean(specialty);
+  // em telas estreitas a gaveta vira bottom sheet
+  const sheet = useMediaQuery(BOTTOM_SHEET);
 
   useEffect(() => {
     if (!open) return;
@@ -80,13 +85,25 @@ export default function SpecialtyDrawer({
             role="dialog"
             aria-modal="true"
             aria-labelledby="drawer-title"
-            variants={{
-              hidden: { x: "100%" },
-              visible: { x: 0 },
-            }}
+            variants={
+              sheet
+                ? { hidden: { y: "100%" }, visible: { y: 0 } }
+                : { hidden: { x: "100%" }, visible: { x: 0 } }
+            }
             transition={{ duration: 0.6, ease: EASE }}
-            className="absolute inset-y-0 right-0 flex w-full max-w-[560px] flex-col border-l border-paper/15 bg-olive-deep/92 text-paper backdrop-blur-2xl"
+            className={cn(
+              "absolute flex flex-col bg-olive-deep/92 text-paper backdrop-blur-2xl",
+              sheet
+                ? "inset-x-0 bottom-0 max-h-[88vh] rounded-t-[28px] border-t border-white/15 shadow-2xl"
+                : "inset-y-0 right-0 w-full max-w-[560px] border-l border-paper/15",
+            )}
           >
+            {sheet ? (
+              <span
+                aria-hidden
+                className="mx-auto mt-3 h-1 w-12 shrink-0 rounded-full bg-white/20"
+              />
+            ) : null}
             <header className="flex items-start justify-between gap-6 border-b border-paper/12 px-6 py-6 md:px-10">
               <div>
                 <Mono className="text-paper/50">
@@ -104,7 +121,7 @@ export default function SpecialtyDrawer({
                 type="button"
                 onClick={onClose}
                 aria-label="Fechar painel"
-                className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-paper/20 transition-colors duration-300 hover:border-paper/60 hover:bg-paper/10"
+                className="grid h-11 w-11 shrink-0 place-items-center rounded-lg border border-paper/20 transition-colors duration-300 hover:border-paper/60 hover:bg-paper/10"
               >
                 <span aria-hidden className="relative block h-3.5 w-3.5">
                   <span className="absolute left-0 top-1/2 h-px w-full rotate-45 bg-paper" />
@@ -172,7 +189,7 @@ export default function SpecialtyDrawer({
                     onClose();
                   }}
                   aria-label={`Solicitar análise sobre ${specialty.title} pelo formulário de contato`}
-                  className="flex-1 rounded-lg bg-paper px-[17px] py-[13px] text-center font-mono text-mono uppercase text-ink transition-colors duration-300 hover:bg-mint"
+                  className="flex min-h-11 flex-1 items-center justify-center rounded-lg bg-paper px-[17px] py-[13px] text-center font-mono text-mono uppercase text-ink transition-colors duration-300 hover:bg-mint"
                 >
                   Solicitar análise
                 </a>
@@ -181,7 +198,7 @@ export default function SpecialtyDrawer({
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`Falar no WhatsApp sobre ${specialty.title}`}
-                  className="flex-1 rounded-lg border border-paper/25 px-[17px] py-[13px] text-center font-mono text-mono uppercase text-paper transition-colors duration-300 hover:border-paper/70 hover:bg-paper/10"
+                  className="flex min-h-11 flex-1 items-center justify-center rounded-lg border border-paper/25 px-[17px] py-[13px] text-center font-mono text-mono uppercase text-paper transition-colors duration-300 hover:border-paper/70 hover:bg-paper/10"
                 >
                   Falar no WhatsApp
                 </a>

@@ -82,7 +82,11 @@ export default function Header() {
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
       <Container className="pointer-events-auto">
-        <div
+        <motion.div
+          // entra depois que a moldura do herói termina de abrir
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 1, ease: [0.16, 1, 0.3, 1] }}
           className={cn(
             "mt-3 flex items-center justify-between rounded-2xl px-4 py-3 transition-colors duration-500 md:mt-4 md:px-5",
             !scrolled
@@ -92,7 +96,7 @@ export default function Header() {
                 : "bg-paper/80 backdrop-blur-xl",
           )}
         >
-          <a href="#topo" aria-label="a.tec — início" className="flex items-center gap-3">
+          <a href="#topo" aria-label="a.tec — início" className="flex min-h-11 items-center gap-3">
             <Image
               src={light ? "/brand/atec-offwhite.png" : "/brand/atec-olive.png"}
               alt="a.tec"
@@ -148,7 +152,7 @@ export default function Header() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "rounded-lg px-[17px] py-[11px] font-mono text-mono uppercase leading-none transition-colors duration-500",
+                    "inline-flex min-h-11 items-center rounded-lg px-[17px] py-[11px] font-mono text-mono uppercase leading-none transition-colors duration-500",
                     light
                       ? "text-paper/85 hover:bg-paper/15 hover:text-paper"
                       : "text-ink/75 hover:bg-ink/[0.06] hover:text-ink",
@@ -174,14 +178,14 @@ export default function Header() {
               aria-label={open ? "Fechar menu" : "Abrir menu"}
               aria-expanded={open}
               className={cn(
-                "rounded-lg px-[17px] py-[11px] font-mono text-mono uppercase leading-none transition-colors duration-500 lg:hidden",
+                "inline-flex min-h-11 items-center rounded-lg px-[17px] py-[11px] font-mono text-mono uppercase leading-none transition-colors duration-500 lg:hidden",
                 light ? "bg-paper/15 text-paper" : "bg-ink text-paper",
               )}
             >
               {open ? "Fechar" : "Menu"}
             </button>
           </div>
-        </div>
+        </motion.div>
       </Container>
 
       <AnimatePresence>

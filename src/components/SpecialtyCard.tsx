@@ -77,12 +77,13 @@ export default function SpecialtyCard({
       type="button"
       onClick={onOpen}
       onPointerEnter={start}
+      onPointerDown={start}
       onPointerLeave={reset}
       onFocus={start}
       onBlur={reset}
       aria-haspopup="dialog"
       aria-label={`Abrir o método de trabalho da a.tec em ${title}`}
-      className="group/card relative w-full overflow-hidden rounded-sm px-4 pb-12 pt-6 text-left"
+      className="group/card relative min-h-11 w-full overflow-hidden rounded-sm px-4 pb-12 pt-6 text-left transition-colors duration-200 active:bg-olive/[0.06]"
     >
       {/* malha de captura */}
       <motion.span

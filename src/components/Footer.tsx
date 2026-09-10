@@ -30,12 +30,12 @@ export default function Footer() {
           <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 lg:col-span-6 lg:col-start-7 lg:gap-10">
             <div>
               <Mono className="text-paper/45">Navegar</Mono>
-              <ul className="mt-6 space-y-3">
+              <ul className="mt-4 flex flex-col">
                 {NAV.map((item) => (
                   <li key={item.href}>
                     <a
                       href={item.href}
-                      className="text-body text-paper/85 underline-offset-4 transition-colors hover:text-paper hover:underline"
+                      className="inline-flex min-h-11 items-center text-body text-paper/85 underline-offset-4 transition-colors hover:text-paper hover:underline"
                     >
                       {item.label}
                     </a>
@@ -46,12 +46,12 @@ export default function Footer() {
 
             <div>
               <Mono className="text-paper/45">Contato</Mono>
-              <ul className="mt-6 space-y-3">
+              <ul className="mt-4 flex flex-col">
                 <li>
                   <a
                     href={CONTACT.emailHref}
                     aria-label={`Enviar e-mail para ${CONTACT.email} com o assunto Solicitação de Análise Técnica`}
-                    className="text-body break-words text-paper/85 underline-offset-4 transition-colors hover:text-paper hover:underline"
+                    className="inline-flex min-h-11 items-center text-body break-words text-paper/85 underline-offset-4 transition-colors hover:text-paper hover:underline"
                   >
                     {CONTACT.email}
                   </a>
@@ -60,7 +60,7 @@ export default function Footer() {
                   <a
                     href={`tel:${CONTACT.phoneHref}`}
                     aria-label={`Ligar para ${CONTACT.phone}`}
-                    className="text-body text-paper/85 underline-offset-4 transition-colors hover:text-paper hover:underline"
+                    className="inline-flex min-h-11 items-center text-body text-paper/85 underline-offset-4 transition-colors hover:text-paper hover:underline"
                   >
                     {CONTACT.phone}
                   </a>
@@ -71,7 +71,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Abrir conversa no WhatsApp com a a.tec"
-                    className="text-body text-paper/85 underline-offset-4 transition-colors hover:text-paper hover:underline"
+                    className="inline-flex min-h-11 items-center text-body text-paper/85 underline-offset-4 transition-colors hover:text-paper hover:underline"
                   >
                     WhatsApp
                   </a>
@@ -102,7 +102,7 @@ export default function Footer() {
             alt="a.tec"
             width={2070}
             height={622}
-            className="w-full max-w-[1100px] opacity-90"
+            className="w-full max-w-[1100px] opacity-90" 
           />
         </div>
 

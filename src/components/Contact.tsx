@@ -85,7 +85,7 @@ function SubmitButton({ pending }: { pending: boolean }) {
       disabled={pending}
       aria-label="Enviar solicitação de análise técnica"
       aria-busy={pending}
-      className="group inline-flex items-center gap-3 rounded-lg bg-ink px-[17px] py-[13px] font-mono text-mono uppercase text-paper transition-colors duration-500 hover:bg-olive disabled:cursor-wait disabled:opacity-70"
+      className="group inline-flex min-h-11 items-center gap-3 rounded-lg bg-ink px-[17px] py-[13px] font-mono text-mono uppercase text-paper transition-colors duration-500 hover:bg-olive disabled:cursor-wait disabled:opacity-70"
     >
       {pending ? "Enviando…" : "Enviar"}
       {pending ? (
@@ -150,7 +150,7 @@ function SuccessToast({
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Acelerar atendimento pelo WhatsApp"
-        className="mt-4 flex items-center justify-between gap-3 rounded-lg bg-paper px-4 py-3 font-mono text-mono uppercase text-ink transition-colors duration-300 hover:bg-mint"
+        className="mt-4 flex min-h-11 items-center justify-between gap-3 rounded-lg bg-paper px-4 py-3 font-mono text-mono uppercase text-ink transition-colors duration-300 hover:bg-mint"
       >
         Acelerar atendimento via WhatsApp
         <span aria-hidden>↗</span>
@@ -279,18 +279,18 @@ export default function Contact() {
                 <dt>
                   <Mono className="text-ink-mute">Contato</Mono>
                 </dt>
-                <dd className="mt-3 space-y-1 text-body text-ink">
+                <dd className="mt-1 flex flex-col text-body text-ink">
                   <a
                     href={CONTACT.emailHref}
                     aria-label={`Enviar e-mail para ${CONTACT.email} com o assunto Solicitação de Análise Técnica`}
-                    className="block break-all underline-offset-4 hover:underline"
+                    className="inline-flex min-h-11 items-center break-all underline-offset-4 hover:underline"
                   >
                     {CONTACT.email}
                   </a>
                   <a
                     href={`tel:${CONTACT.phoneHref}`}
                     aria-label={`Ligar para ${CONTACT.phone}`}
-                    className="block underline-offset-4 hover:underline"
+                    className="inline-flex min-h-11 items-center underline-offset-4 hover:underline"
                   >
                     {CONTACT.phone}
                   </a>
@@ -299,7 +299,7 @@ export default function Contact() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Abrir conversa no WhatsApp com a a.tec"
-                    className="block underline-offset-4 hover:underline"
+                    className="inline-flex min-h-11 items-center underline-offset-4 hover:underline"
                   >
                     WhatsApp — atendimento direto
                   </a>
@@ -367,7 +367,7 @@ export default function Contact() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Acelerar atendimento pelo WhatsApp"
-                    className="inline-flex w-fit items-center gap-3 rounded-lg border border-ink/20 px-[17px] py-[13px] font-mono text-mono uppercase text-ink transition-colors duration-300 hover:border-olive hover:bg-olive/10"
+                    className="inline-flex min-h-11 w-fit items-center gap-3 rounded-lg border border-ink/20 px-[17px] py-[13px] font-mono text-mono uppercase text-ink transition-colors duration-300 hover:border-olive hover:bg-olive/10"
                   >
                     Acelerar atendimento via WhatsApp
                     <span aria-hidden>↗</span>
