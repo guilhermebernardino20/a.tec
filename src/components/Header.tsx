@@ -6,14 +6,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import { NAV } from "@/lib/content";
 import Container from "@/components/ui/Container";
 import Pill from "@/components/ui/Pill";
+import { setScrollLock } from "@/lib/scroll-lock";
 import { cn } from "@/lib/utils";
 
 /** Etapas do percurso, na ordem em que aparecem na página. */
 const STAGES = [
   { id: "topo", label: "Visão geral" },
+  { id: "dados", label: "Peso da prova" },
+  { id: "processo", label: "Metodologia" },
   { id: "matrix", label: "Matriz pericial" },
   { id: "servicos", label: "Áreas" },
-  { id: "sobre", label: "Atuação" },
   { id: "contato", label: "Contato" },
 ] as const;
 
@@ -66,9 +68,12 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    document.documentElement.style.overflow = open ? "hidden" : "";
+    if (!open) return;
+    document.documentElement.style.overflow = "hidden";
+    setScrollLock(true);
     return () => {
       document.documentElement.style.overflow = "";
+      setScrollLock(false);
     };
   }, [open]);
 

@@ -1,7 +1,9 @@
-import { JUDICIARY_DATA } from "@/lib/content";
+import { JUDICIARY_DATA, METRICS } from "@/lib/content";
 import Container from "@/components/ui/Container";
 import Mono from "@/components/ui/Mono";
 import Pill from "@/components/ui/Pill";
+import AnimatedNumber from "@/components/ui/AnimatedNumber";
+import SpotlightCard from "@/components/ui/SpotlightCard";
 import { InViewGroup, InViewItem } from "@/components/ui/InView";
 import Parallax from "@/components/ui/Parallax";
 
@@ -13,6 +15,21 @@ export default function Judiciary() {
     <section id="dados" className="bg-paper">
       <div className="overflow-clip rounded-[40px] bg-mist">
         <Container className="py-20 md:py-28">
+          {/* números da própria a.tec, antes do retrato do Judiciário */}
+          <InViewGroup as="ul" className="grid grid-cols-2 pb-14 lg:grid-cols-4">
+            {METRICS.map((m) => (
+              <InViewItem as="li" key={m.label}>
+                <SpotlightCard className="h-full rounded-sm px-4 py-8 md:px-6 md:py-10">
+                  <div className="text-[clamp(2.5rem,4.6vw,4rem)] font-extralight leading-none tracking-[-0.03em] text-ink">
+                    <AnimatedNumber value={m.value} prefix={m.prefix} />
+                  </div>
+                  <p className="mt-4 max-w-[20ch] text-body text-ink">{m.label}</p>
+                  <p className="mt-2 text-[13px] text-ink-mute">{m.note}</p>
+                </SpotlightCard>
+              </InViewItem>
+            ))}
+          </InViewGroup>
+
           <div className="flex flex-wrap items-end justify-between gap-6">
             <h2 data-text-reveal className="text-title font-light text-ink">
               O peso da prova
@@ -67,9 +84,9 @@ export default function Judiciary() {
                 </InViewItem>
               ))}
               <InViewItem as="li" className="pt-8">
-                <Mono className="text-ink-mute">
+                <p className="text-[11px] leading-normal text-ink-mute">
                   Fontes: CNJ · INSS · Justiça Federal
-                </Mono>
+                </p>
               </InViewItem>
             </ul>
           </InViewGroup>

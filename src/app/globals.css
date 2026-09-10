@@ -25,7 +25,10 @@
   --color-mint: #cfe3b4;
   --color-lime: #b7d492;
 
+  /* títulos e chamadas */
   --font-sans: var(--font-prompt), ui-sans-serif, system-ui, sans-serif;
+  /* corpo, descrições e notas */
+  --font-body: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* escala tipográfica fluida */
@@ -42,12 +45,13 @@
   --text-heading--letter-spacing: -0.02em;
 
   --text-lead: clamp(1.125rem, 1.5vw, 1.46rem);
-  --text-lead--line-height: 1.2;
-  --text-lead--letter-spacing: -0.02em;
+  --text-lead--line-height: 1.32;
+  --text-lead--letter-spacing: -0.01em;
 
   --text-body: 1.0625rem;
-  --text-body--line-height: 1.5;
-  --text-body--letter-spacing: -0.01em;
+  /* a Jakarta tem altura-x maior que a Prompt: pede entrelinha mais folgada */
+  --text-body--line-height: 1.6;
+  --text-body--letter-spacing: 0;
 
   --text-mono: 0.855rem;
   --text-mono--line-height: 1;
@@ -67,8 +71,8 @@ html {
 body {
   background-color: var(--color-paper);
   color: var(--color-ink);
-  font-family: var(--font-sans);
-  font-weight: 300;
+  font-family: var(--font-body);
+  font-weight: 400;
   font-size: var(--text-body);
   overflow-x: hidden;
 }
@@ -85,6 +89,14 @@ body {
 
 :focus:not(:focus-visible) {
   outline: none;
+}
+
+/* a Prompt fica com os títulos; o corpo é da Jakarta */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-sans);
 }
 
 ::selection {
@@ -135,6 +147,45 @@ html.lenis body {
   }
 }
 
+/* Reflexo que atravessa os grandes títulos */
+@keyframes title-sheen {
+  0%,
+  62% {
+    background-position: 180% 0;
+  }
+  100% {
+    background-position: -80% 0;
+  }
+}
+
+/* Feixe do scanner nos cartões de especialidade */
+@keyframes card-scan {
+  0% {
+    transform: translateY(-8%);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(1000%);
+    opacity: 0;
+  }
+}
+
+/* Fluxo de dados entre os filtros e os cartões de resultado */
+@keyframes data-stream {
+  from {
+    stroke-dashoffset: 44;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 /* Varredura do radar da a.tec Matrix */
 @keyframes radar-spin {
   to {
@@ -175,6 +226,31 @@ html.lenis body {
   to {
     transform: translate3d(-50%, 0, 0);
   }
+}
+
+/*
+ * Reflexo dos títulos: o texto é pintado por um gradiente que carrega a
+ * própria cor base mais uma faixa clara, e essa faixa atravessa a linha a
+ * cada 6s. Sem `color: transparent` fora do gradiente — se a animação for
+ * desligada, a cor base continua ali.
+ */
+@utility title-sheen {
+  background-image: linear-gradient(
+    100deg,
+    var(--sheen-base) 0 42%,
+    var(--sheen-light) 50%,
+    var(--sheen-base) 58% 100%
+  );
+  background-size: 260% 100%;
+  background-position: 180% 0;
+  /* precisa ladrilhar: com `no-repeat`, os extremos do percurso deixam a
+     caixa sem pintura nenhuma e o texto some */
+  background-repeat: repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: title-sheen 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {

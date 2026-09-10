@@ -6,8 +6,9 @@ import { PRACTICES } from "@/lib/content";
 import Container from "@/components/ui/Container";
 import Mono from "@/components/ui/Mono";
 import GlowRule from "@/components/ui/GlowRule";
-import SpotlightCard from "@/components/ui/SpotlightCard";
 import SpecialtyDrawer, { type DrawerSpecialty } from "@/components/SpecialtyDrawer";
+import SpecialtyCard from "@/components/SpecialtyCard";
+import { SPECIALTY_DETAILS } from "@/lib/specialties";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -135,10 +136,14 @@ export default function Specialties() {
                           <ul className="mt-10 grid grid-cols-1 gap-x-10 gap-y-8 md:grid-cols-2">
                             {p.specialties.map((s, i) => (
                               <li key={s.title} className="border-t border-ink/10">
-                                <SpotlightCard
-                                  as="button"
-                                  type="button"
-                                  onClick={() =>
+                                <SpecialtyCard
+                                  index={String(i + 1).padStart(2, "0")}
+                                  title={s.title}
+                                  body={s.body}
+                                  documents={
+                                    SPECIALTY_DETAILS[s.title]?.documents.length ?? 0
+                                  }
+                                  onOpen={() =>
                                     setDetail({
                                       practice: p.name,
                                       index: String(i + 1).padStart(2, "0"),
@@ -146,25 +151,7 @@ export default function Specialties() {
                                       body: s.body,
                                     })
                                   }
-                                  aria-haspopup="dialog"
-                                  aria-label={`Abrir o método de trabalho da a.tec em ${s.title}`}
-                                  className="group/card w-full rounded-sm px-3 pb-6 pt-5 text-left"
-                                >
-                                  <div className="flex items-center justify-between gap-4">
-                                    <Mono className="text-ink-mute">
-                                      {String(i + 1).padStart(2, "0")}.
-                                    </Mono>
-                                    <Mono className="text-ink-mute/0 transition-colors duration-500 group-hover/card:text-ink-mute">
-                                      Ver método →
-                                    </Mono>
-                                  </div>
-                                  <h4 className="mt-3 text-lg font-light text-ink">
-                                    {s.title}
-                                  </h4>
-                                  <p className="mt-2 max-w-[46ch] text-body text-ink-soft">
-                                    {s.body}
-                                  </p>
-                                </SpotlightCard>
+                                />
                               </li>
                             ))}
                           </ul>

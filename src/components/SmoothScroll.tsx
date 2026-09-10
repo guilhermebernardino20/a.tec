@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 import { ReactLenis, type LenisRef } from "lenis/react";
+import { SCROLL_LOCK_EVENT } from "@/lib/scroll-lock";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -70,13 +71,28 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
       }
     };
 
+    // camadas sobrepostas pedem a pausa do scroll virtual; o contador
+    // segura o caso de duas se abrirem uma sobre a outra
+    let locks = 0;
+    const onLock = (event: Event) => {
+      const locked = (event as CustomEvent<{ locked: boolean }>).detail?.locked;
+      locks = Math.max(0, locks + (locked ? 1 : -1));
+      const lenis = getLenis();
+      if (!lenis) return;
+      if (locks > 0) lenis.stop();
+      else lenis.start();
+    };
+
     document.addEventListener("click", onClick);
+    window.addEventListener(SCROLL_LOCK_EVENT, onLock);
 
     return () => {
       cancelAnimationFrame(subscribeFrame);
       gsap.ticker.remove(update);
       subscribed?.off("scroll", ScrollTrigger.update);
       document.removeEventListener("click", onClick);
+      window.removeEventListener(SCROLL_LOCK_EVENT, onLock);
+      getLenis()?.start();
     };
   }, []);
 

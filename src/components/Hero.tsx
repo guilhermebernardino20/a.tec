@@ -1,35 +1,55 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import HeroBackdrop from "@/components/HeroBackdrop";
-import HeroCanvas from "@/components/HeroCanvas";
+import HeroTopographyCanvas from "@/components/HeroTopographyCanvas";
 import TextReveal from "@/components/ui/TextReveal";
 import Container from "@/components/ui/Container";
-import Mono from "@/components/ui/Mono";
 import StatusLed from "@/components/ui/StatusLed";
-import GlowRule from "@/components/ui/GlowRule";
-import SpotlightCard from "@/components/ui/SpotlightCard";
 import Pill from "@/components/ui/Pill";
-import { STEPS } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 const TITLE_LINES = ["Quando", "o processo", "vai além", "do direito."];
-const STEP_SCROLL = 900; // px de rolagem por etapa, como na referência
+
+/** ruído estático: textura de papel, sem custo de runtime */
+const NOISE = `data:image/svg+xml,${encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220">
+     <filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/>
+     <feColorMatrix type="saturate" values="0"/></filter>
+     <rect width="220" height="220" filter="url(#n)"/>
+   </svg>`,
+)}`;
+
+const TELEMETRY = [
+  { id: "sys", text: "[ sys_status: operational ]", className: "left-6 top-24 md:left-12" },
+  {
+    id: "org",
+    text: "[ a.tec // judicial technical assistance ]",
+    className: "right-6 top-24 hidden text-right sm:block md:right-12",
+  },
+  {
+    id: "geo",
+    text: "[ curitiba / pr • brazil ]",
+    className: "bottom-6 left-6 md:left-12",
+  },
+  {
+    id: "scan",
+    text: "[ hover to scan matrix ]",
+    className: "bottom-6 right-6 hidden text-right md:right-12 lg:block",
+  },
+] as const;
 
 /**
- * Hero + esteira fixada.
+ * Abertura do site.
  *
- * O fundo orgânico fica preso na viewport enquanto o título sai e as
- * cinco etapas passam por cima dele; ao longo do trajeto o fundo escurece
- * (opacidade 0.875 → 0.6) e avança (escala 1 → 1.2).
+ * O fundo orgânico fica preso na viewport enquanto o título entra; ao
+ * longo da saída do herói ele escurece (opacidade 0.9 → 0.6) e avança
+ * (escala 1 → 1.2).
  */
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
   const bg = useRef<HTMLDivElement>(null);
-  const scroller = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -62,31 +82,16 @@ export default function Hero() {
           scrollTrigger: {
             trigger: root.current,
             start: "top top",
-            end: "bottom bottom",
+            end: "bottom top",
             scrub: 1,
           },
         },
       );
 
-      // etapa ativa da esteira
-      ScrollTrigger.create({
-        trigger: scroller.current,
-        start: "top top",
-        end: "bottom bottom",
-        onUpdate: (self) => {
-          const i = Math.min(
-            STEPS.length - 1,
-            Math.max(0, Math.floor(self.progress * STEPS.length)),
-          );
-          setActive(i);
-        },
-      });
     }, root);
 
     return () => ctx.revert();
   }, []);
-
-  const step = STEPS[active];
 
   return (
     <section
@@ -97,15 +102,41 @@ export default function Hero() {
     >
       {/* fundo preso à viewport durante todo o percurso */}
       <div className="pointer-events-none sticky top-0 h-[100svh] w-full overflow-hidden">
-        <div ref={bg} className="hero-bg-clip h-full w-full will-change-transform">
-          <HeroBackdrop className="h-full w-full" />
-          <HeroCanvas className="absolute inset-0 h-full w-full" />
+        <div ref={bg} className="hero-bg-clip relative h-full w-full will-change-transform">
+          {/* luz volumétrica, no alto do quadro */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#7F9970]/15 via-[#080B09]/80 to-[#080B09]" />
+
+          {/* malha topográfica reativa ao cursor */}
+          <HeroTopographyCanvas className="absolute inset-0 h-full w-full" />
+
+          {/* granulação editorial */}
+          <div
+            className="absolute inset-0 opacity-[0.03] [mix-blend-mode:overlay]"
+            style={{ backgroundImage: `url("${NOISE}")`, backgroundSize: "220px 220px" }}
+          />
+
+          {/* assentamento do texto no rodapé do quadro */}
+          <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#080B09] via-[#080B09]/70 to-transparent" />
         </div>
       </div>
 
       {/* painel de abertura */}
       <div className="relative -mt-[100svh] flex h-[100svh] min-h-[620px] flex-col justify-end">
-        <Container className="pb-12 md:pb-16">
+        {/* telemetria nos cantos */}
+        {TELEMETRY.map((item) => (
+          <span
+            key={item.id}
+            aria-hidden
+            className={cn(
+              "hero-fade pointer-events-none absolute font-mono text-[9px] uppercase tracking-[0.2em] text-[#7F9970]/60",
+              item.className,
+            )}
+          >
+            {item.text}
+          </span>
+        ))}
+
+        <Container className="pb-20 md:pb-24">
           <StatusLed className="hero-fade mb-8 md:mb-10" />
 
           <TextReveal
@@ -115,6 +146,7 @@ export default function Hero() {
             delay={0.55}
             stagger={0.075}
             className="text-display max-w-[15ch] font-light text-paper"
+            pieceClassName="title-sheen [--sheen-base:#f7f7f5] [--sheen-light:#ffffff]"
           />
 
           <div className="mt-10 flex flex-col gap-8 md:mt-14 md:flex-row md:items-end md:justify-between">
@@ -133,82 +165,22 @@ export default function Hero() {
             </div>
           </div>
         </Container>
-      </div>
 
-      {/* esteira fixada sobre o mesmo fundo */}
-      <div
-        id="processo"
-        ref={scroller}
-        className="relative"
-        style={{ height: `${STEPS.length * STEP_SCROLL}px` }}
-      >
-        <div className="sticky top-0 flex h-[100svh] flex-col justify-between py-24 text-paper md:py-28">
-          {/* véu discreto: mantém o texto legível sobre as áreas claras do fundo */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-olive-deep/75 via-olive-deep/45 to-olive-deep/65"
-          />
-          <Container className="relative flex items-start justify-between">
-            <Mono className="text-paper/55">Como a a.tec ajuda</Mono>
-            <div className="flex items-baseline gap-1 font-mono text-mono uppercase text-paper/55">
-              <span className="text-paper">{step.index}</span>
-              <span>/</span>
-              <span>{String(STEPS.length).padStart(2, "0")}</span>
-            </div>
-          </Container>
-
-          <Container className="relative">
-            <SpotlightCard tone="dark" size={520} className="relative rounded-sm py-6">
-              {STEPS.map((s, i) => (
-                <div
-                  key={s.index}
-                  aria-hidden={i !== active}
-                  className={cn(
-                    "grid grid-cols-1 gap-8 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] lg:grid-cols-12 lg:gap-5",
-                    i === active
-                      ? "relative opacity-100 blur-0"
-                      : "pointer-events-none absolute inset-0 opacity-0 blur-[2px]",
-                  )}
-                >
-                  <h2 className="text-title max-w-[16ch] font-light lg:col-span-7">
-                    {s.title.split(" ").map((w, wi) => (
-                      <span
-                        key={`${w}-${wi}`}
-                        className="inline-block transition-opacity duration-500"
-                        style={{
-                          opacity: i === active ? 1 : 0.4,
-                          transitionDelay: `${wi * 0.05}s`,
-                        }}
-                      >
-                        {w}&nbsp;
-                      </span>
-                    ))}
-                  </h2>
-                  <p className="text-lead max-w-[46ch] font-light text-paper/75 lg:col-span-5 lg:pt-3">
-                    {s.body}
-                  </p>
-                </div>
-              ))}
-            </SpotlightCard>
-          </Container>
-
-          <Container className="relative">
-            <GlowRule tone="dark" />
-            <ol className="flex flex-wrap items-center gap-x-6 gap-y-3 pt-6">
-              {STEPS.map((s, i) => (
-                <li
-                  key={s.index}
-                  className={cn(
-                    "font-mono text-mono uppercase transition-colors duration-500",
-                    i === active ? "text-paper" : "text-paper/35",
-                  )}
-                >
-                  {s.index} {s.short}
-                </li>
-              ))}
-            </ol>
-          </Container>
-        </div>
+        {/* indicador de rolagem */}
+        <span
+          aria-hidden
+          className="hero-fade pointer-events-none absolute inset-x-0 bottom-6 hidden flex-col items-center gap-3 md:flex"
+        >
+          <span className="relative block h-8 w-px overflow-hidden bg-paper/15">
+            <span
+              className="absolute inset-x-0 top-0 h-3 bg-gradient-to-b from-transparent via-lime to-transparent"
+              style={{ animation: "scan-y 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite" }}
+            />
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-paper/45">
+            Deslize para explorar
+          </span>
+        </span>
       </div>
     </section>
   );

@@ -107,10 +107,12 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <Mono className="text-paper/40">
+          <p className="text-[11px] leading-normal text-paper/45">
             © {year} a.tec — Assistência Técnica Judicial
-          </Mono>
-          <Mono className="text-paper/40">Todos os direitos reservados</Mono>
+          </p>
+          <p className="text-[11px] leading-normal text-paper/45">
+            Todos os direitos reservados
+          </p>
         </div>
       </Container>
     </footer>

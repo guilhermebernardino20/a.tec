@@ -1,14 +1,22 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Prompt } from "next/font/google";
+import { Geist_Mono, Plus_Jakarta_Sans, Prompt } from "next/font/google";
 import SmoothScroll from "@/components/SmoothScroll";
 import Grain from "@/components/ui/Grain";
-import AmbientCursorGrid from "@/components/AmbientCursorGrid";
+import AmbientGlow from "@/components/AmbientGlow";
 import "./globals.css";
 
 const prompt = Prompt({
   variable: "--font-prompt",
   subsets: ["latin"],
   weight: ["200", "300", "400", "500"],
+  display: "swap",
+});
+
+// corpo de texto: humanista, com contraforma aberta — segura parágrafo
+// longo sem o ar de interface genérica
+const body = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
+  subsets: ["latin"],
   display: "swap",
 });
 
@@ -53,11 +61,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="pt-BR"
-      className={`${prompt.variable} ${mono.variable} h-full antialiased`}
+      className={`${prompt.variable} ${body.variable} ${mono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-paper text-ink">
         <SmoothScroll>{children}</SmoothScroll>
-        <AmbientCursorGrid />
+        <AmbientGlow />
         <Grain />
       </body>
     </html>

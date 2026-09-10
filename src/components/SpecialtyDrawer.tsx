@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { SPECIALTY_DETAILS } from "@/lib/specialties";
 import { prefillContact } from "@/lib/prefill";
+import { setScrollLock } from "@/lib/scroll-lock";
 import { getSpecialtyWhatsAppUrl } from "@/utils/whatsapp";
 import Mono from "@/components/ui/Mono";
 import StatusLed from "@/components/ui/StatusLed";
@@ -41,11 +42,13 @@ export default function SpecialtyDrawer({
 
     const { overflow } = document.documentElement.style;
     document.documentElement.style.overflow = "hidden";
+    setScrollLock(true);
     closeRef.current?.focus({ preventScroll: true });
 
     return () => {
       document.removeEventListener("keydown", onKey);
       document.documentElement.style.overflow = overflow;
+      setScrollLock(false);
     };
   }, [open, onClose]);
 
@@ -110,7 +113,11 @@ export default function SpecialtyDrawer({
               </button>
             </header>
 
-            <div className="flex-1 overflow-y-auto overscroll-contain px-6 py-8 md:px-10">
+            <div
+              // sem isto o Lenis captura a roda e rola a página atrás do painel
+              data-lenis-prevent
+              className="flex-1 overflow-y-auto overscroll-contain px-6 py-8 md:px-10"
+            >
               <p className="text-lead font-light text-paper/85">{specialty.body}</p>
 
               {detail ? (
@@ -143,7 +150,7 @@ export default function SpecialtyDrawer({
                         </motion.li>
                       ))}
                     </ul>
-                    <p className="mt-4 text-xs leading-relaxed text-paper/45">
+                    <p className="mt-4 text-[11px] leading-normal text-paper/45">
                       Lista de referência — a equipe técnica indica o que falta
                       depois da primeira leitura do caso.
                     </p>
@@ -158,7 +165,10 @@ export default function SpecialtyDrawer({
                 <a
                   href="#contato"
                   onClick={() => {
-                    prefillContact(message);
+                    prefillContact(message, {
+                      area: specialty.practice,
+                      caso: specialty.title,
+                    });
                     onClose();
                   }}
                   aria-label={`Solicitar análise sobre ${specialty.title} pelo formulário de contato`}

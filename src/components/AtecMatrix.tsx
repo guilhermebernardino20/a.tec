@@ -7,6 +7,8 @@ import { prefillContact } from "@/lib/prefill";
 import { getMatrixWhatsAppUrl } from "@/utils/whatsapp";
 import Container from "@/components/ui/Container";
 import Mono from "@/components/ui/Mono";
+import Scramble from "@/components/ui/Scramble";
+import MatrixRadarBg from "@/components/MatrixRadarBg";
 import ScanEdge from "@/components/ui/ScanEdge";
 import StatusLed from "@/components/ui/StatusLed";
 import { cn } from "@/lib/utils";
@@ -71,6 +73,38 @@ function Radar({ active }: { active: boolean }) {
   );
 }
 
+/** Moldura holográfica: cantoneiras em L e cabeçalho técnico. */
+function HudCard({
+  header,
+  children,
+}: {
+  header: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="relative rounded-md border border-white/10 bg-white/[0.015] p-5 md:p-6">
+      {[
+        "left-0 top-0 border-l border-t",
+        "right-0 top-0 border-r border-t",
+        "bottom-0 left-0 border-b border-l",
+        "bottom-0 right-0 border-b border-r",
+      ].map((corner) => (
+        <span
+          key={corner}
+          aria-hidden
+          className={`pointer-events-none absolute h-3 w-3 border-[#7F9970]/40 ${corner}`}
+        />
+      ))}
+
+      <p className="font-mono text-[9px] uppercase tracking-widest text-[#7F9970]/70">
+        {header}
+      </p>
+
+      <div className="mt-4">{children}</div>
+    </div>
+  );
+}
+
 /** Selo qualitativo do peso da prova técnica na tese. */
 const IMPACT_STYLE: Record<Impact, string> = {
   CRÍTICO: "border-lime/70 text-lime",
@@ -127,6 +161,11 @@ export default function AtecMatrix() {
   const [caseId, setCaseId] = useState(MATRIX[0].cases[0].id);
   const [phase, setPhase] = useState<Phase>("idle");
   const [logIndex, setLogIndex] = useState(0);
+  // pulso de sonar: nasce no ponto exato do clique
+  const [pulse, setPulse] = useState<{ x: number; y: number; id: number } | null>(null);
+  const panel = useRef<HTMLDivElement>(null);
+  // contador próprio: identifica cada pulso sem depender do relógio
+  const pulseId = useRef(0);
   const timers = useRef<number[]>([]);
 
   const area = useMemo(
@@ -136,6 +175,18 @@ export default function AtecMatrix() {
   const current: MatrixCase =
     area.cases.find((c) => c.id === caseId) ?? area.cases[0];
 
+  /** posiciona o pulso onde o usuário clicou, em coordenadas do painel */
+  const emitPulse = (event: React.MouseEvent<HTMLElement>) => {
+    const box = panel.current?.getBoundingClientRect();
+    if (!box) return;
+    const target = event.currentTarget.getBoundingClientRect();
+    setPulse({
+      x: target.left + target.width / 2 - box.left,
+      y: target.top + target.height / 2 - box.top,
+      id: (pulseId.current += 1),
+    });
+  };
+
   const clearTimers = () => {
     timers.current.forEach((t) => window.clearTimeout(t));
     timers.current = [];
@@ -143,16 +194,18 @@ export default function AtecMatrix() {
 
   useEffect(() => clearTimers, []);
 
-  const selectArea = (id: string) => {
+  const selectArea = (id: string, event: React.MouseEvent<HTMLElement>) => {
     const next = MATRIX.find((a) => a.id === id);
     if (!next) return;
+    emitPulse(event);
     clearTimers();
     setAreaId(id);
     setCaseId(next.cases[0].id);
     setPhase("idle");
   };
 
-  const selectCase = (id: string) => {
+  const selectCase = (id: string, event: React.MouseEvent<HTMLElement>) => {
+    emitPulse(event);
     clearTimers();
     setCaseId(id);
     setPhase("idle");
@@ -175,9 +228,29 @@ export default function AtecMatrix() {
     <section id="matrix" className="bg-paper py-20 md:py-28">
       <Container>
         <div
+          ref={panel}
           data-surface="dark"
           className="relative overflow-hidden rounded-[32px] bg-olive-deep text-paper md:rounded-[40px]"
         >
+          <MatrixRadarBg active={phase !== "idle"} />
+
+          {/* pulso de sonar a partir do controle acionado */}
+          <AnimatePresence>
+            {pulse ? (
+              <motion.span
+                key={pulse.id}
+                aria-hidden
+                initial={{ opacity: 0.5, scale: 0 }}
+                animate={{ opacity: 0, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.1, ease: "easeOut" }}
+                onAnimationComplete={() => setPulse(null)}
+                className="pointer-events-none absolute z-20 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-lime/40"
+                style={{ left: pulse.x, top: pulse.y }}
+              />
+            ) : null}
+          </AnimatePresence>
+
           <ScanEdge orientation="x" duration={7} />
           <ScanEdge orientation="y" duration={9} delay={1.4} />
           <ScanEdge orientation="x" duration={8} delay={3} className="bottom-0 top-auto" />
@@ -185,8 +258,10 @@ export default function AtecMatrix() {
           {/* cabeçalho do painel */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-paper/12 px-6 py-5 md:px-10">
             <div className="flex items-baseline gap-4">
-              <Mono className="text-paper">a.tec matrix</Mono>
-              <Mono className="text-paper/40">Central de inteligência pericial</Mono>
+              <Mono className="title-sheen [--sheen-base:#f7f7f5] [--sheen-light:#b7d492]">
+                a.tec matrix
+              </Mono>
+              <span className="text-sm text-paper/45">Central de inteligência pericial</span>
             </div>
             <StatusLed
               label={
@@ -199,7 +274,38 @@ export default function AtecMatrix() {
             />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12">
+          {/* transmissão: da seleção para o diagnóstico */}
+          {phase === "result" ? (
+            <svg
+              aria-hidden
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              className="pointer-events-none absolute inset-0 z-10 hidden h-full w-full lg:block"
+            >
+              <defs>
+                <linearGradient id="matrix-stream" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#7F9970" stopOpacity="0" />
+                  <stop offset="55%" stopColor="#A3B899" stopOpacity="0.55" />
+                  <stop offset="100%" stopColor="#B7D492" stopOpacity="0.15" />
+                </linearGradient>
+              </defs>
+              {[22, 50, 78].map((y, i) => (
+                <path
+                  key={y}
+                  d={`M40 50 C 43 50, 43 ${y}, 47 ${y}`}
+                  fill="none"
+                  stroke="url(#matrix-stream)"
+                  strokeWidth="0.35"
+                  strokeDasharray="6 4"
+                  style={{
+                    animation: `data-stream ${2.4 + i * 0.4}s linear infinite`,
+                  }}
+                />
+              ))}
+            </svg>
+          ) : null}
+
+          <div className="relative grid grid-cols-1 lg:grid-cols-12">
             {/* --------- coluna de comando --------- */}
             <div className="border-b border-paper/12 px-6 py-8 md:px-10 lg:col-span-5 lg:border-b-0 lg:border-r">
               <Mono className="text-paper/45">01 — Área de atuação</Mono>
@@ -208,7 +314,7 @@ export default function AtecMatrix() {
                   <button
                     key={a.id}
                     type="button"
-                    onClick={() => selectArea(a.id)}
+                    onClick={(event) => selectArea(a.id, event)}
                     aria-pressed={a.id === area.id}
                     aria-label={`Selecionar área de atuação: ${a.label}`}
                     className={cn(
@@ -232,7 +338,7 @@ export default function AtecMatrix() {
                     <li key={c.id}>
                       <button
                         type="button"
-                        onClick={() => selectCase(c.id)}
+                        onClick={(event) => selectCase(c.id, event)}
                         aria-pressed={active}
                         aria-label={`Selecionar tipo de litígio: ${c.label}`}
                         className={cn(
@@ -258,7 +364,10 @@ export default function AtecMatrix() {
 
               <button
                 type="button"
-                onClick={process}
+                onClick={(event) => {
+                  emitPulse(event);
+                  process();
+                }}
                 disabled={phase === "scanning"}
                 aria-label={`Processar análise de viabilidade para ${current.label}, na área de ${area.label}`}
                 className="mt-8 flex w-full items-center justify-between gap-4 rounded-lg bg-paper px-5 py-4 font-mono text-mono uppercase text-ink transition-colors duration-300 hover:bg-mint disabled:cursor-progress disabled:opacity-70"
@@ -298,7 +407,7 @@ export default function AtecMatrix() {
                               initial={{ opacity: 0, x: -8 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ duration: 0.3, ease: EASE }}
-                              className="flex items-center gap-3 font-mono text-mono uppercase text-paper/60"
+                              className="flex items-center gap-3 text-sm text-paper/70"
                             >
                               <span className="text-lime">▸</span>
                               {line}
@@ -327,11 +436,15 @@ export default function AtecMatrix() {
                         show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
                       }}
                     >
-                      <div className="flex items-baseline gap-3">
-                        <Mono className="text-lime">[01]</Mono>
-                        <Mono className="text-paper/45">Ponto cego pericial</Mono>
-                      </div>
-                      <p className="mt-4 text-body text-paper/85">{current.blindSpot}</p>
+                      <HudCard header="[analysis_node // ponto_cego]">
+                        <div className="flex items-baseline gap-3">
+                          <Mono className="text-lime">[01]</Mono>
+                          <Mono className="text-paper/45">Ponto cego pericial</Mono>
+                        </div>
+                        <p className="mt-4 text-body text-paper/85">
+                          <Scramble text={current.blindSpot} trigger={current.id} />
+                        </p>
+                      </HudCard>
                     </motion.div>
 
                     <motion.div
@@ -339,22 +452,25 @@ export default function AtecMatrix() {
                         hidden: { opacity: 0, y: 20 },
                         show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
                       }}
-                      className="border-t border-paper/12 pt-8"
                     >
-                      <div className="flex items-baseline gap-3">
-                        <Mono className="text-lime">[02]</Mono>
-                        <Mono className="text-paper/45">Direcionamento de quesitos</Mono>
-                      </div>
-                      <ol className="mt-4 space-y-3">
-                        {current.questioning.map((q, i) => (
-                          <li key={q} className="flex gap-4 text-body text-paper/80">
-                            <Mono className="mt-1 shrink-0 text-paper/35">
-                              {String(i + 1).padStart(2, "0")}
-                            </Mono>
-                            <span>{q}</span>
-                          </li>
-                        ))}
-                      </ol>
+                      <HudCard header="[strategy_nodes // quesitos_estratégicos]">
+                        <div className="flex items-baseline gap-3">
+                          <Mono className="text-lime">[02]</Mono>
+                          <Mono className="text-paper/45">Direcionamento de quesitos</Mono>
+                        </div>
+                        <ol className="mt-4 space-y-3">
+                          {current.questioning.map((q, i) => (
+                            <li key={q} className="flex gap-4 text-body text-paper/80">
+                              <Mono className="mt-1 shrink-0 text-paper/35">
+                                {String(i + 1).padStart(2, "0")}
+                              </Mono>
+                              <span>
+                                <Scramble text={q} trigger={current.id} />
+                              </span>
+                            </li>
+                          ))}
+                        </ol>
+                      </HudCard>
                     </motion.div>
 
                     <motion.div
@@ -362,38 +478,42 @@ export default function AtecMatrix() {
                         hidden: { opacity: 0, y: 20 },
                         show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
                       }}
-                      className="border-t border-paper/12 pt-8"
                     >
-                      <div className="flex items-baseline gap-3">
-                        <Mono className="text-lime">[03]</Mono>
-                        <Mono className="text-paper/45">Prova e viabilidade</Mono>
-                      </div>
-
-                      <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
-                        <div className="border-l border-paper/20 pl-4">
-                          <Mono className="text-paper/40">Risco</Mono>
-                          <p className="mt-2 text-sm leading-relaxed text-paper/75">
-                            {current.evidence.risk}
-                          </p>
+                      <HudCard header="[viability_score // rigor_metodológico]">
+                        <div className="flex items-baseline gap-3">
+                          <Mono className="text-lime">[03]</Mono>
+                          <Mono className="text-paper/45">Prova e viabilidade</Mono>
                         </div>
-                        <div className="border-l border-lime/50 pl-4">
-                          <Mono className="text-paper/40">Oportunidade</Mono>
-                          <p className="mt-2 text-sm leading-relaxed text-paper/75">
-                            {current.evidence.opportunity}
-                          </p>
+
+                        <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
+                          <div className="border-l border-paper/20 pl-4">
+                            <Mono className="text-paper/40">Risco</Mono>
+                            <p className="mt-2 text-sm leading-relaxed text-paper/75">
+                              <Scramble text={current.evidence.risk} trigger={current.id} />
+                            </p>
+                          </div>
+                          <div className="border-l border-lime/50 pl-4">
+                            <Mono className="text-paper/40">Oportunidade</Mono>
+                            <p className="mt-2 text-sm leading-relaxed text-paper/75">
+                              <Scramble
+                                text={current.evidence.opportunity}
+                                trigger={current.id}
+                              />
+                            </p>
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="mt-6 flex flex-wrap items-center gap-3">
-                        <Mono className="text-paper/50">Impacto técnico na tese</Mono>
-                        <ImpactBadge impact={current.evidence.impact} />
-                      </div>
+                        <div className="mt-6 flex flex-wrap items-center gap-3">
+                          <Mono className="text-paper/50">Impacto técnico na tese</Mono>
+                          <ImpactBadge impact={current.evidence.impact} />
+                        </div>
 
-                      <RigorMeter level={current.evidence.rigor} />
+                        <RigorMeter level={current.evidence.rigor} />
 
-                      <Mono className="mt-5 block text-paper/40">
-                        {current.evidence.horizon}
-                      </Mono>
+                        <p className="mt-5 text-sm text-paper/55">
+                          {current.evidence.horizon}
+                        </p>
+                      </HudCard>
                     </motion.div>
 
                     <motion.div
@@ -409,6 +529,7 @@ export default function AtecMatrix() {
                           onClick={() =>
                             prefillContact(
                               `Gostaria de agendar uma análise de viabilidade para o caso de ${current.label} na área de ${area.label}.`,
+                              { area: area.label, caso: current.label },
                             )
                           }
                           aria-label={`Solicitar minuta de quesitos para ${current.label}, na área de ${area.label}, pelo formulário de contato`}
@@ -430,7 +551,7 @@ export default function AtecMatrix() {
                         </a>
                       </div>
 
-                      <p className="mt-6 max-w-[62ch] font-mono text-[10px] leading-relaxed text-paper/40">
+                      <p className="mt-6 max-w-[62ch] text-[11px] leading-normal text-paper/45">
                         Análise preditiva baseada em padrões de impugnação e
                         metodologia pericial a.tec. Não substitui a análise
                         documental prévia do caso concreto.

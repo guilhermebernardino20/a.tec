@@ -1,18 +1,24 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useFormStatus } from "react-dom";
-import { submitContact, type ContactState } from "@/app/actions";
+import {
+  CONTACT_SUCCESS,
+  type ContactField,
+  type ContactResponse,
+} from "@/lib/contact";
 import { CONTACT } from "@/lib/content";
-import { PREFILL_EVENT } from "@/lib/prefill";
+import { PREFILL_EVENT, type PrefillDetail } from "@/lib/prefill";
 import { getGeneralWhatsAppUrl } from "@/utils/whatsapp";
 import Container from "@/components/ui/Container";
 import Mono from "@/components/ui/Mono";
 
 import { cn } from "@/lib/utils";
 
-const initialState: ContactState = { status: "idle" };
+type Status = "idle" | "sending" | "error" | "success";
+
+const HELP =
+  "Nome, e-mail e mensagem são obrigatórios. Retornamos em até 1 dia útil.";
 
 function Field({
   name,
@@ -20,6 +26,7 @@ function Field({
   type = "text",
   error,
   textarea = false,
+  optional = false,
   className,
 }: {
   name: string;
@@ -27,6 +34,7 @@ function Field({
   type?: string;
   error?: string;
   textarea?: boolean;
+  optional?: boolean;
   className?: string;
 }) {
   const base =
@@ -41,7 +49,7 @@ function Field({
           id={name}
           name={name}
           rows={3}
-          required
+          required={!optional}
           placeholder="Descreva brevemente o caso"
           aria-invalid={Boolean(error)}
           className={cn(base, "resize-none")}
@@ -51,21 +59,26 @@ function Field({
           id={name}
           name={name}
           type={type}
-          required
-          placeholder={type === "email" ? "nome@escritorio.com.br" : "—"}
+          required={!optional}
+          placeholder={
+            type === "email"
+              ? "nome@escritorio.com.br"
+              : type === "tel"
+                ? "(41) 90000-0000"
+                : "—"
+          }
           aria-invalid={Boolean(error)}
           className={base}
         />
       )}
       {error ? (
-        <Mono className="mt-3 block text-olive">{error}</Mono>
+        <p className="mt-3 text-[13px] leading-normal text-olive">{error}</p>
       ) : null}
     </div>
   );
 }
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
+function SubmitButton({ pending }: { pending: boolean }) {
   return (
     <button
       type="submit"
@@ -147,28 +160,81 @@ function SuccessToast({
 }
 
 export default function Contact() {
-  const [state, formAction] = useActionState(submitContact, initialState);
   const formRef = useRef<HTMLFormElement>(null);
+  const [status, setStatus] = useState<Status>("idle");
+  const [message, setMessage] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<
+    Partial<Record<ContactField, string>>
+  >({});
   const [dismissed, setDismissed] = useState(false);
+  // origem do contato (Matrix, especialidade): segue junto no envio
+  const origem = useRef<{ area?: string; caso?: string }>({});
 
   // o aviso deriva do estado do envio; o local guarda só a dispensa
-  const toastOpen = state.status === "success" && !dismissed;
+  const toastOpen = status === "success" && !dismissed;
 
-  // envio aceito: limpa os campos e agenda o desaparecimento do aviso
+  const handleSubmit = useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const data = new FormData(form);
+
+    setDismissed(false);
+    setStatus("sending");
+    setMessage(null);
+    setFieldErrors({});
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          nome: data.get("nome"),
+          sobrenome: data.get("sobrenome"),
+          email: data.get("email"),
+          telefone: data.get("telefone"),
+          mensagem: data.get("mensagem"),
+          empresa: data.get("empresa"),
+          ...origem.current,
+        }),
+      });
+
+      const result = (await response.json()) as ContactResponse;
+
+      if (!response.ok || !result.ok) {
+        setStatus("error");
+        setMessage(result.message ?? "Não foi possível enviar agora.");
+        setFieldErrors(result.fieldErrors ?? {});
+        return;
+      }
+
+      setStatus("success");
+      setMessage(result.message ?? CONTACT_SUCCESS);
+      form.reset();
+      origem.current = {};
+    } catch {
+      setStatus("error");
+      setMessage(
+        "Falha de conexão. Tente novamente ou fale conosco pelo WhatsApp.",
+      );
+    }
+  }, []);
+
+  // o aviso de sucesso se retira sozinho
   useEffect(() => {
-    if (state.status !== "success") return;
-    formRef.current?.reset();
+    if (status !== "success") return;
     const timer = window.setTimeout(() => setDismissed(true), 12000);
     return () => window.clearTimeout(timer);
-  }, [state]);
+  }, [status]);
 
   // CTAs do site podem chegar com um assunto já escrito
   useEffect(() => {
     const onPrefill = (event: Event) => {
-      const text = (event as CustomEvent<{ text: string }>).detail?.text;
+      const detail = (event as CustomEvent<PrefillDetail>).detail;
+      if (!detail?.text) return;
+      origem.current = { area: detail.area, caso: detail.caso };
       const field = formRef.current?.elements.namedItem("mensagem");
-      if (!text || !(field instanceof HTMLTextAreaElement)) return;
-      field.value = text;
+      if (!(field instanceof HTMLTextAreaElement)) return;
+      field.value = detail.text;
       window.setTimeout(() => field.focus({ preventScroll: true }), 900);
     };
     window.addEventListener(PREFILL_EVENT, onPrefill);
@@ -245,28 +311,29 @@ export default function Contact() {
           <div className="lg:col-span-6 lg:col-start-7">
             <form
               ref={formRef}
-              action={formAction}
-              onSubmit={() => setDismissed(false)}
+              onSubmit={handleSubmit}
+              noValidate
               className="grid grid-cols-1 gap-10 sm:grid-cols-2"
             >
-              <Field name="nome" label="Nome" error={state.fieldErrors?.nome} />
+              <Field name="nome" label="Nome" error={fieldErrors.nome} />
               <Field
                 name="sobrenome"
                 label="Sobrenome"
-                error={state.fieldErrors?.sobrenome}
+                error={fieldErrors.sobrenome}
               />
+              <Field name="email" label="E-mail" type="email" error={fieldErrors.email} />
               <Field
-                name="email"
-                label="E-mail"
-                type="email"
-                error={state.fieldErrors?.email}
-                className="sm:col-span-2"
+                name="telefone"
+                label="Telefone / WhatsApp (opcional)"
+                type="tel"
+                optional
+                error={fieldErrors.telefone}
               />
               <Field
                 name="mensagem"
                 label="Mensagem"
                 textarea
-                error={state.fieldErrors?.mensagem}
+                error={fieldErrors.mensagem}
                 className="sm:col-span-2"
               />
 
@@ -278,20 +345,23 @@ export default function Contact() {
 
               <div className="flex flex-col gap-6 sm:col-span-2">
                 <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-                  <SubmitButton />
+                  <SubmitButton pending={status === "sending"} />
                   <p
                     aria-live="polite"
                     className={cn(
                       "max-w-[40ch] text-sm leading-relaxed",
-                      state.status === "success" ? "text-olive" : "text-ink-mute",
+                      status === "success"
+                        ? "text-olive"
+                        : status === "error"
+                          ? "text-olive"
+                          : "text-ink-mute",
                     )}
                   >
-                    {state.message ??
-                      "Todos os campos são obrigatórios. Retornamos em até 1 dia útil."}
+                    {message ?? HELP}
                   </p>
                 </div>
 
-                {state.status === "success" ? (
+                {status === "success" ? (
                   <a
                     href={getGeneralWhatsAppUrl()}
                     target="_blank"
@@ -309,7 +379,7 @@ export default function Contact() {
             <AnimatePresence>
               {toastOpen ? (
                 <SuccessToast
-                  message="Solicitação enviada com sucesso! Nossa equipe retornará em breve."
+                  message={message ?? CONTACT_SUCCESS}
                   onDismiss={() => setDismissed(true)}
                 />
               ) : null}
