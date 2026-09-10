@@ -9,20 +9,9 @@ import Pill from "@/components/ui/Pill";
 import { setScrollLock } from "@/lib/scroll-lock";
 import { cn } from "@/lib/utils";
 
-/** Etapas do percurso, na ordem em que aparecem na página. */
-const STAGES = [
-  { id: "topo", label: "Visão geral" },
-  { id: "dados", label: "Peso da prova" },
-  { id: "processo", label: "Metodologia" },
-  { id: "matrix", label: "Matriz pericial" },
-  { id: "servicos", label: "Áreas" },
-  { id: "contato", label: "Contato" },
-] as const;
-
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [onDark, setOnDark] = useState(true);
-  const [stage, setStage] = useState(0);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -41,15 +30,6 @@ export default function Header() {
         return r.top <= bar && r.bottom >= bar;
       });
       setOnDark(dark);
-
-      // etapa ativa: a última cujo topo já passou pelo terço superior da tela
-      const line = window.innerHeight * 0.35;
-      let active = 0;
-      STAGES.forEach((s, i) => {
-        const el = document.getElementById(s.id);
-        if (el && el.getBoundingClientRect().top <= line) active = i;
-      });
-      setStage(active);
     };
 
     const onScroll = () => {
@@ -107,43 +87,13 @@ export default function Header() {
             />
             <span
               className={cn(
-                "hidden font-mono text-[10px] uppercase leading-none transition-colors duration-500 sm:block md:hidden",
+                "hidden font-mono text-[10px] uppercase leading-none transition-colors duration-500 sm:block",
                 light ? "text-paper/70" : "text-ink/50",
               )}
             >
               Assistência Técnica Judicial
             </span>
           </a>
-
-          {/* indicador técnico da etapa em que a leitura está */}
-          <div
-            aria-hidden
-            className={cn(
-              "hidden items-center gap-1 font-mono text-[10px] uppercase leading-none transition-colors duration-500 md:flex",
-              light ? "text-paper/60" : "text-ink/45",
-            )}
-          >
-            <span>[</span>
-            <span className={light ? "text-paper/85" : "text-ink/70"}>
-              {String(stage + 1).padStart(2, "0")}/{String(STAGES.length).padStart(2, "0")}
-            </span>
-            <span className="px-1">•</span>
-            <span className="relative block h-3 overflow-hidden">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.span
-                  key={STAGES[stage].id}
-                  initial={{ y: 12, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -12, opacity: 0 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                  className={cn("block whitespace-nowrap", light ? "text-paper" : "text-ink")}
-                >
-                  {STAGES[stage].label}
-                </motion.span>
-              </AnimatePresence>
-            </span>
-            <span>]</span>
-          </div>
 
           <div className="flex items-center gap-1">
             <nav className="hidden items-center lg:flex">
@@ -152,7 +102,7 @@ export default function Header() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "inline-flex min-h-11 items-center rounded-lg px-[17px] py-[11px] font-mono text-mono uppercase leading-none transition-colors duration-500",
+                    "inline-flex min-h-11 items-center rounded-full px-5 text-xs font-medium uppercase tracking-[0.18em] leading-none transition-colors duration-500",
                     light
                       ? "text-paper/85 hover:bg-paper/15 hover:text-paper"
                       : "text-ink/75 hover:bg-ink/[0.06] hover:text-ink",
@@ -178,7 +128,7 @@ export default function Header() {
               aria-label={open ? "Fechar menu" : "Abrir menu"}
               aria-expanded={open}
               className={cn(
-                "inline-flex min-h-11 items-center rounded-lg px-[17px] py-[11px] font-mono text-mono uppercase leading-none transition-colors duration-500 lg:hidden",
+                "inline-flex min-h-11 items-center rounded-full px-5 text-xs font-medium uppercase tracking-[0.18em] leading-none transition-colors duration-500 lg:hidden",
                 light ? "bg-paper/15 text-paper" : "bg-ink text-paper",
               )}
             >
@@ -205,7 +155,7 @@ export default function Header() {
                       <a
                         href={item.href}
                         onClick={() => setOpen(false)}
-                        className="flex items-center justify-between px-6 py-5 font-mono text-mono uppercase"
+                        className="flex min-h-11 items-center justify-between px-6 py-5 text-xs font-medium uppercase tracking-[0.18em]"
                       >
                         {item.label}
                         <span className="text-paper/40">{item.index}</span>
@@ -216,7 +166,7 @@ export default function Header() {
                     <a
                       href="#contato"
                       onClick={() => setOpen(false)}
-                      className="block bg-mint px-6 py-5 font-mono text-mono uppercase text-olive-deep"
+                      className="block bg-mint px-6 py-5 text-xs font-medium uppercase tracking-[0.18em] text-olive-deep"
                     >
                       Agendar análise técnica
                     </a>
