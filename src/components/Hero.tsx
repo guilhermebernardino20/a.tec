@@ -7,6 +7,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Container from "@/components/ui/Container";
 import EditorialBadgePanel from "@/components/EditorialBadgePanel";
+import HeroBackdrop from "@/components/HeroBackdrop";
+import HeroCanvas from "@/components/HeroCanvas";
 
 /** curva de entrada do site de referência */
 const EASE_INTEGRATED = [0.16, 1, 0.3, 1] as const;
@@ -146,8 +148,15 @@ export default function Hero() {
         className="pointer-events-none absolute inset-0 z-0 overflow-hidden will-change-transform"
       >
         <motion.div variants={backdrop} className="relative h-full w-full will-change-transform">
-          {/* única fonte de luz: difusa, no centro-topo */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(127,153,112,0.12),rgba(255,255,255,0))]" />
+          {/* superfície orgânica em movimento */}
+          <HeroBackdrop className="absolute inset-0 h-full w-full" />
+
+          {/* rede de partículas que reage ao cursor */}
+          <HeroCanvas className="absolute inset-0 h-full w-full" />
+
+          {/* véu só onde o texto pede contraste; à direita o render aparece */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#070807] via-[#070807]/55 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#070807]/85 to-transparent" />
 
           {/* granulação de papel */}
           <div
