@@ -147,15 +147,23 @@ export default function Header() {
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="pointer-events-auto lg:hidden"
           >
+            {/* véu: isola o menu do conteúdo que fica atrás */}
+            <button
+              type="button"
+              aria-label="Fechar menu"
+              onClick={() => setOpen(false)}
+              className="fixed inset-0 -z-10 h-full w-full cursor-default bg-dark/85 backdrop-blur-sm"
+            />
+
             <Container>
-              <div className="mt-2 overflow-hidden rounded-2xl bg-ink text-paper">
+              <div className="mt-2 overflow-hidden rounded-2xl border border-dark-border bg-dark/95 text-paper backdrop-blur-xl">
                 <ul>
                   {NAV.map((item) => (
                     <li key={item.href} className="border-b border-paper/10">
                       <a
                         href={item.href}
                         onClick={() => setOpen(false)}
-                        className="flex min-h-11 items-center justify-between px-6 py-5 text-xs font-medium uppercase tracking-[0.18em]"
+                        className="flex min-h-14 items-center justify-between px-6 py-5 text-lg font-medium transition-colors active:bg-white/5"
                       >
                         {item.label}
                         <span className="text-paper/40">{item.index}</span>
@@ -166,7 +174,7 @@ export default function Header() {
                     <a
                       href="#contato"
                       onClick={() => setOpen(false)}
-                      className="block bg-mint px-6 py-5 text-xs font-medium uppercase tracking-[0.18em] text-olive-deep"
+                      className="flex min-h-14 items-center bg-olive px-6 py-5 text-lg font-medium text-dark transition-transform active:scale-[0.99]"
                     >
                       Agendar análise técnica
                     </a>

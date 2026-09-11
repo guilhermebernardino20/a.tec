@@ -82,7 +82,7 @@ function HudCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative rounded-md border border-white/10 bg-white/[0.015] p-5 md:p-6">
+    <div className="relative rounded-md border border-dark-border bg-white/[0.015] p-5 md:p-6">
       {[
         "left-0 top-0 border-l border-t",
         "right-0 top-0 border-r border-t",
@@ -92,11 +92,11 @@ function HudCard({
         <span
           key={corner}
           aria-hidden
-          className={`pointer-events-none absolute h-3 w-3 border-[#7F9970]/40 ${corner}`}
+          className={`pointer-events-none absolute h-3 w-3 border-olive/40 ${corner}`}
         />
       ))}
 
-      <p className="font-mono text-[9px] uppercase tracking-widest text-[#7F9970]/70">
+      <p className="font-mono text-[9px] uppercase tracking-widest text-olive/70">
         {header}
       </p>
 
@@ -225,12 +225,12 @@ export default function AtecMatrix() {
   };
 
   return (
-    <section id="matrix" className="bg-paper py-20 md:py-28">
+    <section id="matrix" className="bg-paper py-20 md:py-32">
       <Container>
         <div
           ref={panel}
           data-surface="dark"
-          className="relative overflow-hidden rounded-[32px] bg-olive-deep text-paper md:rounded-[40px]"
+          className="relative overflow-hidden rounded-2xl border border-dark-border bg-dark-card/95 text-paper backdrop-blur-md md:rounded-[32px]"
         >
           <MatrixRadarBg active={phase !== "idle"} />
 
@@ -320,7 +320,7 @@ export default function AtecMatrix() {
                     className={cn(
                       "flex flex-col items-start gap-1 bg-olive-deep px-4 py-4 text-left transition-colors duration-300",
                       a.id === area.id
-                        ? "bg-olive text-paper"
+                        ? "bg-olive text-dark"
                         : "text-paper/65 hover:bg-paper/[0.06] hover:text-paper",
                     )}
                   >
@@ -370,7 +370,7 @@ export default function AtecMatrix() {
                 }}
                 disabled={phase === "scanning"}
                 aria-label={`Processar análise de viabilidade para ${current.label}, na área de ${area.label}`}
-                className="mt-8 flex w-full items-center justify-between gap-4 rounded-lg bg-paper px-5 py-4 font-mono text-mono uppercase text-ink transition-colors duration-300 hover:bg-mint disabled:cursor-progress disabled:opacity-70"
+                className="mt-8 flex min-h-11 w-full items-center justify-between gap-4 rounded-full bg-paper px-5 py-4 transition-transform active:scale-[0.98] font-mono text-mono uppercase text-ink transition-colors duration-300 hover:bg-mint disabled:cursor-progress disabled:opacity-70"
               >
                 {phase === "scanning" ? "Processando…" : "Processar análise de viabilidade"}
                 <span aria-hidden className="text-lg leading-none">

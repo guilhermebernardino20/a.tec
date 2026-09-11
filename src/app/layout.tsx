@@ -6,7 +6,7 @@ import AmbientGlow from "@/components/AmbientGlow";
 import "./globals.css";
 
 const prompt = Prompt({
-  variable: "--font-prompt",
+  variable: "--font-prompt-face",
   subsets: ["latin"],
   weight: ["200", "300", "400", "500"],
   display: "swap",
@@ -15,7 +15,7 @@ const prompt = Prompt({
 // corpo de texto: humanista, com contraforma aberta — segura parágrafo
 // longo sem o ar de interface genérica
 const body = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
+  variable: "--font-plus-jakarta-sans",
   subsets: ["latin"],
   display: "swap",
 });
@@ -61,6 +61,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="pt-BR"
+      suppressHydrationWarning
       className={`${prompt.variable} ${body.variable} ${mono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-paper text-ink">

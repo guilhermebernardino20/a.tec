@@ -8,7 +8,8 @@ export type ContactField =
   | "sobrenome"
   | "email"
   | "telefone"
-  | "mensagem";
+  | "mensagem"
+  | "anexo";
 
 export type ContactPayload = {
   nome: string;
@@ -60,3 +61,83 @@ export function validateContact(input: Partial<ContactPayload>) {
 
 export const CONTACT_SUCCESS =
   "Solicitação enviada com sucesso! Nossa equipe retornará em breve.";
+
+// ---------------------------------------------------------------------
+// Anexo (petições, laudos, documentos)
+// ---------------------------------------------------------------------
+
+export const ATTACHMENT_MAX_BYTES = 10 * 1024 * 1024;
+export const ATTACHMENT_MAX_FILES = 5;
+/** teto do conjunto: com a codificação base64, ~33 MB — abaixo dos 40 MB do Resend */
+export const ATTACHMENT_MAX_TOTAL_BYTES = 25 * 1024 * 1024;
+export const ATTACHMENT_ACCEPT = ".pdf,.doc,.docx";
+const ATTACHMENT_EXTENSIONS = ["pdf", "doc", "docx"] as const;
+type AttachmentExtension = (typeof ATTACHMENT_EXTENSIONS)[number];
+
+export function attachmentExtension(name: string): AttachmentExtension | null {
+  const ext = name.split(".").pop()?.toLowerCase() ?? "";
+  return (ATTACHMENT_EXTENSIONS as readonly string[]).includes(ext)
+    ? (ext as AttachmentExtension)
+    : null;
+}
+
+/**
+ * Checagem que roda dos dois lados (nome e tamanho). No servidor ela é
+ * complementada pela assinatura binária do arquivo — extensão se troca
+ * renomeando, os primeiros bytes não.
+ */
+export function checkAttachment(file: { name: string; size: number }): string | null {
+  if (!attachmentExtension(file.name)) {
+    return "Envie um arquivo PDF ou Word (.pdf, .doc, .docx).";
+  }
+  if (file.size > ATTACHMENT_MAX_BYTES) {
+    return "O anexo precisa ter até 10 MB.";
+  }
+  if (file.size === 0) {
+    return "O arquivo selecionado está vazio.";
+  }
+  return null;
+}
+
+/** Regras do conjunto: quantidade, cada arquivo e o total somado. */
+export function checkAttachments(files: { name: string; size: number }[]): string | null {
+  if (files.length > ATTACHMENT_MAX_FILES) {
+    return `Envie no máximo ${ATTACHMENT_MAX_FILES} arquivos.`;
+  }
+  for (const file of files) {
+    const problem = checkAttachment(file);
+    if (problem) return `${file.name}: ${problem}`;
+  }
+  const total = files.reduce((sum, f) => sum + f.size, 0);
+  if (total > ATTACHMENT_MAX_TOTAL_BYTES) {
+    return "Os anexos somados precisam ter até 25 MB.";
+  }
+  return null;
+}
+
+/** Assinaturas (magic bytes) de cada formato aceito. */
+const SIGNATURES: Record<AttachmentExtension, number[]> = {
+  pdf: [0x25, 0x50, 0x44, 0x46], // %PDF
+  docx: [0x50, 0x4b, 0x03, 0x04], // contêiner ZIP do Office Open XML
+  doc: [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1], // OLE2 do Word 97-2003
+};
+
+export function matchesSignature(ext: AttachmentExtension, bytes: Uint8Array) {
+  const signature = SIGNATURES[ext];
+  return signature.every((byte, i) => bytes[i] === byte);
+}
+
+/** Nome seguro para o anexo: sem caminho, sem caractere de controle. */
+export function safeFileName(name: string) {
+  const base = name.split(/[\\/]/).pop() ?? "anexo";
+  return base.replace(/[\u0000-\u001f\u007f]/g, "").slice(0, 120) || "anexo";
+}
+
+export function formatBytes(bytes: number) {
+  if (bytes < 1024 * 1024) {
+    return `${Math.max(1, Math.round(bytes / 1024)).toLocaleString("pt-BR")} KB`;
+  }
+  return `${(bytes / (1024 * 1024)).toLocaleString("pt-BR", {
+    maximumFractionDigits: 1,
+  })} MB`;
+}

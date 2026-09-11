@@ -8,6 +8,8 @@ import { getGeneralWhatsAppUrl } from "@/utils/whatsapp";
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  // quebra permitida logo após o @, nunca no meio do domínio
+  const [emailLocal, emailDomain] = CONTACT.email.split("@");
 
   return (
     <footer
@@ -17,8 +19,8 @@ export default function Footer() {
       <OrganicCanvas className="pointer-events-none absolute inset-0 h-full w-full opacity-45" />
 
       <Container className="relative">
-        <div className="grid grid-cols-1 gap-14 pb-16 pt-14 lg:grid-cols-12 lg:gap-10">
-          <div className="lg:col-span-5">
+        <div className="grid grid-cols-1 gap-14 pb-16 pt-14 xl:grid-cols-12 xl:gap-10">
+          <div className="xl:col-span-5">
             <p data-text-reveal className="text-heading max-w-[20ch] font-light">
               Assistência técnica para decisões que dependem de prova.
             </p>
@@ -27,7 +29,7 @@ export default function Footer() {
             </Pill>
           </div>
 
-          <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 lg:col-span-6 lg:col-start-7 lg:gap-10">
+          <div className="grid grid-cols-2 gap-10 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1.6fr)_minmax(0,1fr)] xl:col-span-7 xl:col-start-6">
             <div>
               <Mono className="text-paper/45">Navegar</Mono>
               <ul className="mt-4 flex flex-col">
@@ -44,16 +46,17 @@ export default function Footer() {
               </ul>
             </div>
 
-            <div>
+            <div className="order-last col-span-2 sm:order-none sm:col-span-1">
               <Mono className="text-paper/45">Contato</Mono>
               <ul className="mt-4 flex flex-col">
                 <li>
                   <a
                     href={CONTACT.emailHref}
                     aria-label={`Enviar e-mail para ${CONTACT.email} com o assunto Solicitação de Análise Técnica`}
-                    className="inline-flex min-h-11 items-center text-body break-words text-paper/85 underline-offset-4 transition-colors hover:text-paper hover:underline"
+                    className="block min-h-11 py-2.5 text-body [overflow-wrap:anywhere] text-paper/85 underline-offset-4 transition-colors hover:text-paper hover:underline"
                   >
-                    {CONTACT.email}
+                    {emailLocal}@<wbr />
+                    {emailDomain}
                   </a>
                 </li>
                 <li>
@@ -79,7 +82,7 @@ export default function Footer() {
               </ul>
             </div>
 
-            <div className="col-span-2 sm:col-span-1">
+            <div>
               <Mono className="text-paper/45">Localização</Mono>
               <address className="mt-6 max-w-[26ch] text-body not-italic text-paper/85">
                 <a

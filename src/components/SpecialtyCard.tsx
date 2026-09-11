@@ -83,7 +83,7 @@ export default function SpecialtyCard({
       onBlur={reset}
       aria-haspopup="dialog"
       aria-label={`Abrir o método de trabalho da a.tec em ${title}`}
-      className="group/card relative min-h-11 w-full overflow-hidden rounded-sm px-4 pb-12 pt-6 text-left transition-colors duration-200 active:bg-olive/[0.06]"
+      className="group/card relative min-h-11 w-full overflow-hidden rounded-2xl px-4 pb-12 pt-6 text-left transition-all duration-200 active:scale-[0.98] active:bg-olive-brand/[0.06]"
     >
       {/* malha de captura */}
       <motion.span
@@ -107,7 +107,7 @@ export default function SpecialtyCard({
         <motion.span
           key={bracket.key}
           aria-hidden
-          className={`pointer-events-none absolute h-3 w-3 border-[#7F9970]/50 ${bracket.className}`}
+          className={`pointer-events-none absolute h-3 w-3 border-olive/50 ${bracket.className}`}
           initial={false}
           animate={active ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.1 }}
           transition={{ duration: 0.3, ease: EASE, delay: active ? i * 0.03 : 0 }}

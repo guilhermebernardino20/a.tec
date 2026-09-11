@@ -19,16 +19,27 @@
   --color-ink-soft: #4a5a45;
   --color-ink-mute: #78826f;
 
-  /* verde institucional e derivados */
-  --color-olive: #3a4728;
+  /* verde de marca em tela — o acento que aparece no site */
+  --color-olive: #7f9970;
+  --color-olive-light: #8ea87e;
+  /* verde institucional do Manual de Marca: escuro o bastante para texto
+     sobre superfície clara, onde o #7f9970 não teria contraste */
+  --color-olive-brand: #3a4728;
   --color-olive-deep: #1d2416;
   --color-mint: #cfe3b4;
   --color-lime: #b7d492;
 
+  /* superfícies escuras */
+  --color-dark: #070807;
+  --color-dark-card: #121412;
+  --color-dark-border: rgba(255, 255, 255, 0.1);
+
+  /* Prompt, disponível também como `font-prompt` */
+  --font-prompt: var(--font-prompt-face), ui-sans-serif, system-ui, sans-serif;
   /* títulos e chamadas */
-  --font-sans: var(--font-prompt), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-prompt-face), ui-sans-serif, system-ui, sans-serif;
   /* corpo, descrições e notas */
-  --font-body: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* escala tipográfica fluida */

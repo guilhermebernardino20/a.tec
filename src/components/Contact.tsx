@@ -2,8 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { FileText, Paperclip, X } from "lucide-react";
 import {
+  ATTACHMENT_ACCEPT,
+  ATTACHMENT_MAX_FILES,
   CONTACT_SUCCESS,
+  checkAttachments,
+  formatBytes,
   type ContactField,
   type ContactResponse,
 } from "@/lib/contact";
@@ -72,7 +77,7 @@ function Field({
         />
       )}
       {error ? (
-        <p className="mt-3 text-[13px] leading-normal text-olive">{error}</p>
+        <p className="mt-3 text-[13px] leading-normal text-olive-brand">{error}</p>
       ) : null}
     </div>
   );
@@ -85,7 +90,7 @@ function SubmitButton({ pending }: { pending: boolean }) {
       disabled={pending}
       aria-label="Enviar solicitação de análise técnica"
       aria-busy={pending}
-      className="group inline-flex min-h-11 items-center gap-3 rounded-lg bg-ink px-[17px] py-[13px] font-mono text-mono uppercase text-paper transition-colors duration-500 hover:bg-olive disabled:cursor-wait disabled:opacity-70"
+      className="group inline-flex min-h-11 items-center gap-3 rounded-lg bg-ink px-[17px] py-[13px] font-mono text-mono uppercase text-paper transition-colors duration-500 hover:bg-olive hover:text-dark disabled:cursor-wait disabled:opacity-70"
     >
       {pending ? "Enviando…" : "Enviar"}
       {pending ? (
@@ -159,6 +164,115 @@ function SuccessToast({
   );
 }
 
+/**
+ * Anexos opcionais: petições, laudos, documentos — até 5 arquivos. O
+ * `<input>` fica visualmente escondido mas focável (Tab chega nele), e a
+ * área inteira aceita arrastar e soltar.
+ */
+function AttachmentField({
+  files,
+  error,
+  onPick,
+  onRemove,
+}: {
+  files: File[];
+  error?: string;
+  onPick: (files: File[]) => void;
+  onRemove: (index: number) => void;
+}) {
+  const [dragging, setDragging] = useState(false);
+  const total = files.reduce((sum, f) => sum + f.size, 0);
+  const cheio = files.length >= ATTACHMENT_MAX_FILES;
+
+  return (
+    <div className="sm:col-span-2">
+      <span className="mb-3 flex items-baseline justify-between gap-4">
+        <Mono className="text-ink-mute">Anexos (opcional)</Mono>
+        {files.length ? (
+          <span className="text-[11px] text-ink-mute">
+            {files.length} de {ATTACHMENT_MAX_FILES} · {formatBytes(total)}
+          </span>
+        ) : null}
+      </span>
+
+      {files.length ? (
+        <ul className="mb-3 space-y-2">
+          {files.map((file, index) => (
+            <li
+              key={`${file.name}-${file.size}-${file.lastModified}`}
+              className="flex items-center justify-between gap-4 rounded-xl border border-ink/15 bg-ink/[0.03] px-4 py-2"
+            >
+              <span className="flex min-w-0 items-center gap-3">
+                <FileText aria-hidden size={18} strokeWidth={1.5} className="shrink-0 text-olive-brand" />
+                <span className="min-w-0 truncate text-sm text-ink">
+                  {file.name}{" "}
+                  <span className="text-ink-mute">({formatBytes(file.size)})</span>
+                </span>
+              </span>
+              <button
+                type="button"
+                onClick={() => onRemove(index)}
+                aria-label={`Remover o anexo ${file.name}`}
+                className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-ink/15 text-ink transition-all hover:border-olive-brand hover:bg-olive-brand/10 active:scale-[0.96]"
+              >
+                <X aria-hidden size={16} strokeWidth={1.75} />
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
+      {cheio ? null : (
+        <label
+          onDragOver={(e) => {
+            e.preventDefault();
+            setDragging(true);
+          }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setDragging(false);
+            const dropped = Array.from(e.dataTransfer.files ?? []);
+            if (dropped.length) onPick(dropped);
+          }}
+          className={cn(
+            "flex min-h-11 cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed p-4 text-center transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[#7f9970]",
+            dragging
+              ? "border-olive-brand bg-olive-brand/[0.06]"
+              : "border-ink/20 bg-ink/[0.02] hover:border-olive-brand/50 hover:bg-ink/[0.04]",
+          )}
+        >
+          <input
+            type="file"
+            name="anexo-seletor"
+            accept={ATTACHMENT_ACCEPT}
+            multiple
+            className="sr-only"
+            onChange={(e) => {
+              const picked = Array.from(e.target.files ?? []);
+              if (picked.length) onPick(picked);
+              e.target.value = "";
+            }}
+          />
+          <Paperclip aria-hidden size={18} strokeWidth={1.5} className="text-ink-mute" />
+          <span className="text-sm text-ink-soft">
+            {files.length
+              ? "Adicionar mais documentos"
+              : "Clique ou arraste petições, laudos ou documentos"}
+          </span>
+          <span className="text-[11px] text-ink-mute">
+            PDF ou Word • até {ATTACHMENT_MAX_FILES} arquivos, 10 MB cada
+          </span>
+        </label>
+      )}
+
+      {error ? (
+        <p className="mt-3 text-[13px] leading-normal text-olive-brand">{error}</p>
+      ) : null}
+    </div>
+  );
+}
+
 export default function Contact() {
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<Status>("idle");
@@ -167,8 +281,22 @@ export default function Contact() {
     Partial<Record<ContactField, string>>
   >({});
   const [dismissed, setDismissed] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
   // origem do contato (Matrix, especialidade): segue junto no envio
   const origem = useRef<{ area?: string; caso?: string }>({});
+
+  // novos arquivos somam aos já escolhidos; o conjunto é validado inteiro
+  const pickFiles = useCallback(
+    (picked: File[]) => {
+      const chave = (f: File) => `${f.name}-${f.size}-${f.lastModified}`;
+      const vistos = new Set(files.map(chave));
+      const proximo = [...files, ...picked.filter((f) => !vistos.has(chave(f)))];
+      const problem = checkAttachments(proximo);
+      setFieldErrors((erros) => ({ ...erros, anexo: problem ?? undefined }));
+      if (!problem) setFiles(proximo);
+    },
+    [files],
+  );
 
   // o aviso deriva do estado do envio; o local guarda só a dispensa
   const toastOpen = status === "success" && !dismissed;
@@ -183,20 +311,17 @@ export default function Contact() {
     setMessage(null);
     setFieldErrors({});
 
+    const body = new FormData();
+    for (const key of ["nome", "sobrenome", "email", "telefone", "mensagem", "empresa"]) {
+      body.append(key, String(data.get(key) ?? ""));
+    }
+    if (origem.current.area) body.append("area", origem.current.area);
+    if (origem.current.caso) body.append("caso", origem.current.caso);
+    for (const f of files) body.append("anexo", f);
+
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          nome: data.get("nome"),
-          sobrenome: data.get("sobrenome"),
-          email: data.get("email"),
-          telefone: data.get("telefone"),
-          mensagem: data.get("mensagem"),
-          empresa: data.get("empresa"),
-          ...origem.current,
-        }),
-      });
+      // sem content-type: o navegador monta o boundary do multipart
+      const response = await fetch("/api/contact", { method: "POST", body });
 
       const result = (await response.json()) as ContactResponse;
 
@@ -210,6 +335,7 @@ export default function Contact() {
       setStatus("success");
       setMessage(result.message ?? CONTACT_SUCCESS);
       form.reset();
+      setFiles([]);
       origem.current = {};
     } catch {
       setStatus("error");
@@ -217,7 +343,7 @@ export default function Contact() {
         "Falha de conexão. Tente novamente ou fale conosco pelo WhatsApp.",
       );
     }
-  }, []);
+  }, [files]);
 
   // o aviso de sucesso se retira sozinho
   useEffect(() => {
@@ -242,7 +368,7 @@ export default function Contact() {
   }, []);
 
   return (
-    <section id="contato" className="bg-paper py-24 md:py-32">
+    <section id="contato" className="bg-paper py-20 md:py-32">
       <Container>
         <div className="grid grid-cols-1 gap-x-5 gap-y-14 lg:grid-cols-12">
           <div className="lg:col-span-5">
@@ -337,6 +463,16 @@ export default function Contact() {
                 className="sm:col-span-2"
               />
 
+              <AttachmentField
+                files={files}
+                error={fieldErrors.anexo}
+                onPick={pickFiles}
+                onRemove={(index) => {
+                  setFiles((prev) => prev.filter((_, i) => i !== index));
+                  setFieldErrors((prev) => ({ ...prev, anexo: undefined }));
+                }}
+              />
+
               {/* honeypot */}
               <div aria-hidden className="hidden">
                 <label htmlFor="empresa">Empresa</label>
@@ -350,11 +486,9 @@ export default function Contact() {
                     aria-live="polite"
                     className={cn(
                       "max-w-[40ch] text-sm leading-relaxed",
-                      status === "success"
-                        ? "text-olive"
-                        : status === "error"
-                          ? "text-olive"
-                          : "text-ink-mute",
+                      status === "success" || status === "error"
+                        ? "text-olive-brand"
+                        : "text-ink-mute",
                     )}
                   >
                     {message ?? HELP}
@@ -367,7 +501,7 @@ export default function Contact() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Acelerar atendimento pelo WhatsApp"
-                    className="inline-flex min-h-11 w-fit items-center gap-3 rounded-lg border border-ink/20 px-[17px] py-[13px] font-mono text-mono uppercase text-ink transition-colors duration-300 hover:border-olive hover:bg-olive/10"
+                    className="inline-flex min-h-11 w-fit items-center gap-3 rounded-lg border border-ink/20 px-[17px] py-[13px] font-mono text-mono uppercase text-ink transition-colors duration-300 hover:border-olive-brand hover:bg-olive-brand/10"
                   >
                     Acelerar atendimento via WhatsApp
                     <span aria-hidden>↗</span>

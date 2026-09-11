@@ -6,7 +6,6 @@ import { motion, type Variants } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Container from "@/components/ui/Container";
-import EditorialBadgePanel from "@/components/EditorialBadgePanel";
 import HeroBackdrop from "@/components/HeroBackdrop";
 import HeroCanvas from "@/components/HeroCanvas";
 
@@ -77,16 +76,6 @@ const lead: Variants = {
   },
 };
 
-/** cartão de credibilidade: fecha a composição */
-const panel: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 1.2, delay: 1.1, ease: EASE_INTEGRATED },
-  },
-};
-
 const tail: Variants = {
   hidden: { opacity: 0, y: 16 },
   show: {
@@ -139,7 +128,7 @@ export default function Hero() {
       variants={frame}
       initial="hidden"
       animate="show"
-      className="relative flex min-h-screen w-full origin-center flex-col justify-between overflow-hidden rounded-none bg-[#070807] pb-14 pt-24 will-change-transform supports-[height:100svh]:min-h-[100svh] md:pb-16 md:pt-28"
+      className="relative flex min-h-screen w-full origin-center flex-col justify-between overflow-hidden rounded-none bg-dark pb-14 pt-24 will-change-transform supports-[height:100svh]:min-h-[100svh] md:pb-16 md:pt-28"
     >
       {/* fundo: camada externa é do scrub (GSAP), interna é da entrada */}
       <div
@@ -155,8 +144,8 @@ export default function Hero() {
           <HeroCanvas className="absolute inset-0 h-full w-full" />
 
           {/* véu só onde o texto pede contraste; à direita o render aparece */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#070807] via-[#070807]/55 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#070807]/85 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-dark via-dark/55 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-dark/85 to-transparent" />
 
           {/* granulação de papel */}
           <div
@@ -168,18 +157,18 @@ export default function Hero() {
 
       <div className="relative z-10 my-auto">
         <Container>
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
-            <div className="lg:col-span-8">
+          <div className="max-w-4xl">
+            <div>
               <motion.p
                 variants={eyebrow}
-                className="text-xs font-medium uppercase tracking-[0.25em] text-[#7F9970]"
+                className="text-xs font-medium uppercase tracking-[0.25em] text-olive"
               >
                 Assistência Técnica Judicial • Prova Pericial Blindada
               </motion.p>
 
               <motion.h1
                 variants={title}
-                className="mt-8 max-w-3xl font-sans text-4xl font-bold leading-[1.08] tracking-tight text-[#F3F4F3] will-change-transform sm:text-5xl lg:text-6xl xl:text-7xl"
+                className="mt-8 max-w-3xl text-balance font-sans text-3xl font-bold leading-[1.08] tracking-tight text-[#F3F4F3] will-change-transform sm:text-5xl lg:text-6xl xl:text-7xl"
               >
                 {TITLE_LINES.map((line) => (
                   <span key={line} className="-my-2 block px-1 pb-2 pt-2">
@@ -200,23 +189,19 @@ export default function Hero() {
               <motion.div variants={tail} className="mt-8 flex flex-wrap items-center gap-4">
                 <Link
                   href="#servicos"
-                  className="rounded-full bg-[#7F9970] px-8 py-4 font-semibold text-[#070807] shadow-lg transition-all duration-300 hover:bg-[#8EA87E]"
+                  className="min-h-11 rounded-full bg-olive px-8 py-4 font-semibold text-dark shadow-lg transition-all duration-300 hover:bg-olive-light active:scale-[0.98]"
                 >
                   Nossas frentes de atuação
                 </Link>
                 <Link
                   href="#contato"
-                  className="rounded-full border border-white/15 px-8 py-4 text-neutral-200 transition-all duration-300 hover:bg-white/5"
+                  className="min-h-11 rounded-full border border-white/15 px-8 py-4 text-neutral-200 transition-all duration-300 hover:border-olive/40 hover:bg-white/5 active:scale-[0.98]"
                 >
                   Agendar análise técnica
                 </Link>
               </motion.div>
             </div>
 
-            {/* o painel só entra onde existem duas colunas de verdade */}
-            <motion.div variants={panel} className="hidden lg:col-span-4 lg:block">
-              <EditorialBadgePanel />
-            </motion.div>
           </div>
         </Container>
       </div>

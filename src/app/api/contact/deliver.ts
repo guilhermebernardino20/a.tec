@@ -80,15 +80,45 @@ export function template(data: ContactPayload) {
   `;
 }
 
-export async function deliver(data: ContactPayload): Promise<boolean> {
+export type Attachment = { filename: string; content: Buffer };
+
+/**
+ * `sent` — e-mail entregue ao Resend
+ * `simulated` — desenvolvimento local sem chave: registrado no terminal
+ * `unconfigured` — produção sem chave: nada foi enviado
+ * `failed` — o Resend recusou ou a rede caiu
+ */
+export type DeliveryResult = "sent" | "simulated" | "unconfigured" | "failed";
+
+export async function deliver(
+  data: ContactPayload,
+  attachments: Attachment[] = [],
+): Promise<DeliveryResult> {
   const apiKey = process.env.RESEND_API_KEY;
 
   if (!apiKey) {
-    console.info("[contato a.tec · sem RESEND_API_KEY]", {
-      ...data,
-      recebidoEm: new Date().toISOString(),
-    });
-    return true;
+    if (process.env.NODE_ENV !== "production") {
+      console.log("[LOCAL DEV - SIMULAÇÃO DE ENVIO DE E-MAIL]", {
+        name: `${data.nome} ${data.sobrenome}`.trim(),
+        email: data.email,
+        phone: data.telefone || null,
+        message: data.mensagem,
+        area: data.area || null,
+        caso: data.caso || null,
+        files: attachments.map((a) => ({
+          fileName: a.filename,
+          fileSize: a.content.byteLength,
+        })),
+      });
+      return "simulated";
+    }
+
+    // em produção, fingir sucesso sem chave faria o lead sumir em silêncio
+    console.error(
+      "[contato a.tec] RESEND_API_KEY ausente em produção — solicitação NÃO enviada",
+      { email: data.email, files: attachments.map((a) => a.filename) },
+    );
+    return "unconfigured";
   }
 
   try {
@@ -102,16 +132,19 @@ export async function deliver(data: ContactPayload): Promise<boolean> {
       replyTo: data.email,
       subject: assunto,
       html: template(data),
+      attachments: attachments.length
+        ? attachments.map((a) => ({ filename: a.filename, content: a.content }))
+        : undefined,
     });
 
     if (error) {
       console.error("[contato a.tec · Resend]", error);
-      return false;
+      return "failed";
     }
 
-    return true;
+    return "sent";
   } catch (error) {
     console.error("[contato a.tec · Resend]", error);
-    return false;
+    return "failed";
   }
 }

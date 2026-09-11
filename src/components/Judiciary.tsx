@@ -42,7 +42,7 @@ export default function Judiciary() {
           <InViewGroup className="mt-14 grid grid-cols-1 gap-x-5 gap-y-12 lg:grid-cols-12">
             <InViewItem className="lg:col-span-5">
               <Parallax distance={-46} className="lg:h-full">
-              <div className="flex flex-col justify-between gap-10 rounded-[24px] bg-ink p-8 text-paper md:p-10 lg:h-full">
+              <div className="flex flex-col justify-between gap-10 rounded-2xl border border-dark-border bg-dark-card p-8 text-paper backdrop-blur-md transition-colors duration-300 hover:border-olive/40 md:p-10 lg:h-full">
                 <div className="flex flex-col gap-2">
                   <Mono className="text-paper/60">Judiciário brasileiro</Mono>
                   <Mono className="text-paper/40">{featured.source}</Mono>

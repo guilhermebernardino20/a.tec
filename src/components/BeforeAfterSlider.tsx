@@ -102,7 +102,7 @@ export default function BeforeAfterSlider() {
   };
 
   return (
-    <section id="comparativo" className="bg-paper py-20 md:py-28">
+    <section id="comparativo" className="bg-paper py-20 md:py-32">
       <Container>
         <div className="grid grid-cols-1 gap-x-5 gap-y-8 pb-12 lg:grid-cols-12">
           <div className="lg:col-span-3">
