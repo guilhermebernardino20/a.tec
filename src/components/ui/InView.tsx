@@ -119,11 +119,21 @@ export function MaskLines({
       initial="hidden"
       {...(trigger === "mount"
         ? { animate: "show" as const }
-        : { whileInView: "show" as const, viewport: { once: true, amount: 0.35 } })}
+        : {
+            whileInView: "show" as const,
+            viewport: { once: true, amount: 0.35 },
+          })}
     >
       {lines.map((text, i) => (
-        <span key={`${text}-${i}`} className="block overflow-hidden pb-[0.04em]">
-          <motion.span className={cn("block", lineClassName)} variants={line} custom={i}>
+        <span
+          key={`${text}-${i}`}
+          className="block overflow-hidden pb-[0.04em]"
+        >
+          <motion.span
+            className={cn("block", lineClassName)}
+            variants={line}
+            custom={i}
+          >
             {text}
           </motion.span>
         </span>

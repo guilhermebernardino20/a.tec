@@ -13,17 +13,22 @@ const [featured, ...rest] = JUDICIARY_DATA;
 export default function Judiciary() {
   return (
     <section id="dados" className="bg-paper">
-      <div className="overflow-clip rounded-[40px] bg-mist">
-        <Container className="py-20 md:py-28">
+      <div className="overflow-clip rounded-2xl bg-mist">
+        <Container className="py-20 md:py-32">
           {/* números da própria a.tec, antes do retrato do Judiciário */}
-          <InViewGroup as="ul" className="grid grid-cols-2 pb-14 lg:grid-cols-4">
+          <InViewGroup
+            as="ul"
+            className="grid grid-cols-2 pb-14 lg:grid-cols-4"
+          >
             {METRICS.map((m) => (
               <InViewItem as="li" key={m.label}>
                 <SpotlightCard className="h-full rounded-sm px-4 py-8 md:px-6 md:py-10">
                   <div className="text-[clamp(2.5rem,4.6vw,4rem)] font-extralight leading-none tracking-[-0.03em] text-ink">
                     <AnimatedNumber value={m.value} prefix={m.prefix} />
                   </div>
-                  <p className="mt-4 max-w-[20ch] text-body text-ink">{m.label}</p>
+                  <p className="mt-2 max-w-[20ch] text-body text-ink">
+                    {m.label}
+                  </p>
                   <p className="mt-2 text-[13px] text-ink-mute">{m.note}</p>
                 </SpotlightCard>
               </InViewItem>
@@ -39,26 +44,26 @@ export default function Judiciary() {
             </Pill>
           </div>
 
-          <InViewGroup className="mt-14 grid grid-cols-1 gap-x-5 gap-y-12 lg:grid-cols-12">
+          <InViewGroup className="mt-14 grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-12">
             <InViewItem className="lg:col-span-5">
               <Parallax distance={-46} className="lg:h-full">
-              <div className="flex flex-col justify-between gap-10 rounded-2xl border border-dark-border bg-dark-card p-8 text-paper backdrop-blur-md transition-colors duration-300 hover:border-olive/40 md:p-10 lg:h-full">
-                <div className="flex flex-col gap-2">
-                  <Mono className="text-paper/60">Judiciário brasileiro</Mono>
-                  <Mono className="text-paper/40">{featured.source}</Mono>
+                <div className="flex flex-col justify-between gap-10 rounded-2xl border border-white/10 bg-dark-card p-8 text-paper backdrop-blur-md transition-colors duration-300 hover:border-olive/40 md:p-10 lg:h-full">
+                  <div className="flex flex-col gap-2">
+                    <Mono className="text-paper/60">Judiciário brasileiro</Mono>
+                    <Mono className="text-paper/40">{featured.source}</Mono>
+                  </div>
+                  <div>
+                    <p className="font-sans text-[clamp(2.5rem,5vw,4.25rem)] font-light leading-none tracking-tight">
+                      {featured.figure}
+                    </p>
+                    <p className="mt-4 text-lead font-light text-paper/85">
+                      {featured.caption}
+                    </p>
+                    <p className="mt-6 max-w-[38ch] text-body text-paper/60">
+                      {featured.body}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-mono text-[clamp(2.5rem,5vw,4.25rem)] font-light leading-none tracking-[-0.04em]">
-                    {featured.figure}
-                  </p>
-                  <p className="mt-4 text-lead font-light text-paper/85">
-                    {featured.caption}
-                  </p>
-                  <p className="mt-6 max-w-[38ch] text-body text-paper/60">
-                    {featured.body}
-                  </p>
-                </div>
-              </div>
               </Parallax>
             </InViewItem>
 
@@ -69,16 +74,21 @@ export default function Judiciary() {
                   key={d.index}
                   className="border-b border-ink/10 first:border-t"
                 >
-                  <div className="grid grid-cols-1 gap-4 py-8 md:grid-cols-12 md:items-baseline md:gap-5 md:py-10">
-                    <div className="flex items-baseline gap-4 md:col-span-4">
-                      <Mono className="text-ink-mute">{d.source}</Mono>
-                      <span className="font-mono text-[clamp(1.5rem,2.6vw,2.1rem)] font-light leading-none tracking-[-0.04em] text-ink">
+                  <div className="py-8 md:py-10">
+                    {/* período em linha própria, com respiro antes do número */}
+                    <Mono className="block text-ink-mute">{d.source}</Mono>
+                    <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-[8.5rem_minmax(0,1fr)] md:items-baseline md:gap-6">
+                      <span className="font-sans text-[clamp(1.5rem,2.6vw,2.1rem)] font-light leading-none tracking-tight text-ink">
                         {d.figure}
                       </span>
-                    </div>
-                    <div className="md:col-span-8">
-                      <p className="text-lead font-light text-ink">{d.caption}</p>
-                      <p className="mt-2 max-w-[52ch] text-body text-ink-soft">{d.body}</p>
+                      <div>
+                        <p className="text-lead font-light text-ink">
+                          {d.caption}
+                        </p>
+                        <p className="mt-2 max-w-[52ch] text-body text-ink-soft">
+                          {d.body}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </InViewItem>

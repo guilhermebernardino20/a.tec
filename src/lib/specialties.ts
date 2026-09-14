@@ -18,7 +18,7 @@ export const SPECIALTY_DETAILS: Record<string, SpecialtyDetail> = {
   // ---------- Medicina ----------
   "Suposto Erro Médico": {
     method:
-      "Reconstituímos a linha do tempo do atendimento a partir do prontuário e confrontamos cada conduta com os protocolos e diretrizes vigentes à época do fato. O objetivo é separar intercorrência previsível de desvio de conduta, identificando onde houve negligência, imprudência ou imperícia — e demonstrando o nexo entre a conduta e o dano alegado.",
+      "Reconstituímos a linha do tempo do atendimento a partir do prontuário e confrontamos cada conduta com os protocolos e diretrizes vigentes à época do fato. O objetivo é separar intercorrência previsível de desvio de conduta, identificando onde houve negligência, imprudência ou imperícia, e demonstrando o nexo entre a conduta e o dano alegado.",
     documents: [
       "Prontuário médico completo, incluindo evolução de enfermagem",
       "Descrição cirúrgica e ficha anestésica, quando houver procedimento",
@@ -54,7 +54,7 @@ export const SPECIALTY_DETAILS: Record<string, SpecialtyDetail> = {
   // ---------- Psicologia ----------
   "TEA e Acompanhamento Escolar": {
     method:
-      "Avaliamos o perfil de desenvolvimento, a autonomia e as demandas de suporte da criança no ambiente escolar, correlacionando-os ao nível de apoio indicado. A análise fundamenta tecnicamente a necessidade — ou a insuficiência — do acompanhamento por profissional especializado, com linguagem que o Judiciário consegue aplicar.",
+      "Avaliamos o perfil de desenvolvimento, a autonomia e as demandas de suporte da criança no ambiente escolar, correlacionando-os ao nível de apoio indicado. A análise fundamenta tecnicamente a necessidade (ou a insuficiência) do acompanhamento por profissional especializado, com linguagem que o Judiciário consegue aplicar.",
     documents: [
       "Laudo diagnóstico com CID e nível de suporte",
       "Relatórios da escola e do professor de referência",
@@ -76,7 +76,7 @@ export const SPECIALTY_DETAILS: Record<string, SpecialtyDetail> = {
   },
   "Guarda e Convivência": {
     method:
-      "Analisamos vínculos, rotina e necessidades da criança a partir dos elementos já produzidos nos autos, indicando o que o estudo psicológico oficial precisa investigar. Trabalhamos sobre dinâmicas observáveis — não sobre juízos morais a respeito dos genitores.",
+      "Analisamos vínculos, rotina e necessidades da criança a partir dos elementos já produzidos nos autos, indicando o que o estudo psicológico oficial precisa investigar. Trabalhamos sobre dinâmicas observáveis, não sobre juízos morais a respeito dos genitores.",
     documents: [
       "Estudo psicossocial já produzido nos autos",
       "Relatórios escolares e de acompanhamento terapêutico",
@@ -87,7 +87,7 @@ export const SPECIALTY_DETAILS: Record<string, SpecialtyDetail> = {
   },
   "Alienação Parental": {
     method:
-      "Avaliamos a dinâmica familiar buscando indicadores objetivos de interferência na convivência, distinguindo-os de resistência espontânea da criança ou de reação legítima a um contexto de risco. O parecer indica quais elementos sustentam — ou afastam — a alegação.",
+      "Avaliamos a dinâmica familiar buscando indicadores objetivos de interferência na convivência, distinguindo-os de resistência espontânea da criança ou de reação legítima a um contexto de risco. O parecer indica quais elementos sustentam, ou afastam, a alegação.",
     documents: [
       "Histórico documentado das tentativas de convivência",
       "Estudo psicossocial e relatórios terapêuticos",
@@ -111,7 +111,7 @@ export const SPECIALTY_DETAILS: Record<string, SpecialtyDetail> = {
   },
   "Impactos entre Obras": {
     method:
-      "Investigamos o nexo entre a obra vizinha e os danos alegados, considerando o tipo de fundação, o método executivo, a distância e as características do solo. A vistoria cautelar prévia, quando existe, é a peça decisiva — e a sua ausência também é um dado técnico relevante.",
+      "Investigamos o nexo entre a obra vizinha e os danos alegados, considerando o tipo de fundação, o método executivo, a distância e as características do solo. A vistoria cautelar prévia, quando existe, é a peça decisiva, e a sua ausência também é um dado técnico relevante.",
     documents: [
       "Vistoria cautelar de vizinhança, anterior ao início da obra",
       "Registro fotográfico das trincas com evolução no tempo",
@@ -144,7 +144,7 @@ export const SPECIALTY_DETAILS: Record<string, SpecialtyDetail> = {
   },
   "Insalubridade e Periculosidade": {
     method:
-      "Reconstituímos as condições reais do ambiente de trabalho e a exposição efetiva do trabalhador aos agentes alegados, com o enquadramento nas normas regulamentadoras aplicáveis. Avaliamos a eficácia dos EPIs fornecidos — ponto em que a maioria dos laudos oficiais é atacável.",
+      "Reconstituímos as condições reais do ambiente de trabalho e a exposição efetiva do trabalhador aos agentes alegados, com o enquadramento nas normas regulamentadoras aplicáveis. Avaliamos a eficácia dos EPIs fornecidos, ponto em que a maioria dos laudos oficiais é atacável.",
     documents: [
       "PPRA/PGR, PCMSO, LTCAT e PPP da empresa",
       "Fichas de entrega e certificados de aprovação dos EPIs",
@@ -157,7 +157,7 @@ export const SPECIALTY_DETAILS: Record<string, SpecialtyDetail> = {
   // ---------- Avaliações Imobiliárias ----------
   "Avaliação de Imóvel": {
     method:
-      "Aplicamos os métodos previstos na NBR 14.653, com pesquisa de mercado documentada e tratamento estatístico da amostra. O laudo explicita grau de fundamentação e precisão, o que torna o valor sustentável em contraditório — e permite atacar avaliações sem amostra rastreável.",
+      "Aplicamos os métodos previstos na NBR 14.653, com pesquisa de mercado documentada e tratamento estatístico da amostra. O laudo explicita grau de fundamentação e precisão, o que torna o valor sustentável em contraditório, e permite atacar avaliações sem amostra rastreável.",
     documents: [
       "Matrícula atualizada e IPTU do imóvel",
       "Projeto ou planta com áreas construídas e privativas",

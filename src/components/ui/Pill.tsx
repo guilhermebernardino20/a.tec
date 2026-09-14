@@ -8,7 +8,8 @@ const VARIANTS: Record<Variant, string> = {
   dark: "bg-ink text-paper hover:bg-olive",
   light: "bg-paper text-ink hover:bg-mint",
   ghost: "text-ink hover:bg-ink/[0.06]",
-  outline: "border border-ink/20 text-ink hover:border-ink/60 hover:bg-ink/[0.04]",
+  outline:
+    "border border-ink/20 text-ink hover:border-ink/60 hover:bg-ink/[0.04]",
 };
 
 /**
@@ -25,7 +26,10 @@ export default function Pill({
   href: string;
   variant?: Variant;
   className?: string;
-} & Omit<React.ComponentPropsWithoutRef<typeof Link>, "href" | "className" | "children">) {
+} & Omit<
+  React.ComponentPropsWithoutRef<typeof Link>,
+  "href" | "className" | "children"
+>) {
   return (
     <Link
       href={href}

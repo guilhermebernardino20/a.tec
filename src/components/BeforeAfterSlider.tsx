@@ -104,7 +104,7 @@ export default function BeforeAfterSlider() {
   return (
     <section id="comparativo" className="bg-paper py-20 md:py-32">
       <Container>
-        <div className="grid grid-cols-1 gap-x-5 gap-y-8 pb-12 lg:grid-cols-12">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-8 pb-12 lg:grid-cols-12">
           <div className="lg:col-span-3">
             <Mono className="text-ink-mute">Antes e depois pericial</Mono>
           </div>
@@ -112,16 +112,12 @@ export default function BeforeAfterSlider() {
             <TextReveal
               as="h2"
               lines={[
-                "A diferença entre",
-                "um laudo comum e uma",
+                "A diferença entre um",
+                "laudo comum e uma",
                 "estratégia vitoriosa.",
               ]}
-              className="text-title max-w-[24ch] font-light text-ink"
+              className="text-title font-light leading-[1.06] tracking-[-0.03em] [word-spacing:-0.05em] text-ink"
             />
-            <p className="mt-6 max-w-[52ch] text-body text-ink-soft">
-              Arraste o divisor — ou use as setas do teclado — para comparar as
-              duas formas de chegar à perícia.
-            </p>
           </div>
         </div>
 
@@ -134,7 +130,7 @@ export default function BeforeAfterSlider() {
           className={cn(
             // abaixo de md não há largura para duas colunas legíveis:
             // o comparativo vira uma pilha e o divisor sai de cena
-            "relative isolate hidden select-none overflow-hidden rounded-[28px] md:block md:rounded-[36px]",
+            "relative isolate hidden select-none overflow-hidden rounded-2xl md:block",
             dragging ? "cursor-grabbing" : "cursor-grab",
           )}
         >
@@ -162,12 +158,8 @@ export default function BeforeAfterSlider() {
           {/* divisor */}
           <motion.div
             style={{ left: handleLeft }}
-            className="absolute inset-y-0 z-20 w-px -translate-x-1/2 bg-paper/70"
+            className="absolute inset-y-0 z-20 w-px -translate-x-1/2 bg-paper/35"
           >
-            <span
-              aria-hidden
-              className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-lime to-transparent"
-            />
             <button
               type="button"
               role="slider"
@@ -182,17 +174,16 @@ export default function BeforeAfterSlider() {
                 e.stopPropagation();
                 setDragging(true);
               }}
-              className="absolute left-1/2 top-1/2 grid h-12 w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-paper/40 bg-olive-deep/80 text-paper backdrop-blur-md transition-colors duration-300 hover:border-lime"
+              className="absolute left-1/2 top-1/2 flex h-11 w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center gap-[3px] rounded-full border border-paper/25 bg-paper/10 backdrop-blur-md transition-colors duration-300 hover:border-paper/60"
             >
-              <span aria-hidden className="font-mono text-[11px] leading-none">
-                ⇄
-              </span>
+              <span aria-hidden className="h-3.5 w-px bg-paper/70" />
+              <span aria-hidden className="h-3.5 w-px bg-paper/70" />
             </button>
           </motion.div>
         </div>
 
         {/* pilha equivalente, para telas estreitas */}
-        <div className="grid grid-cols-1 overflow-hidden rounded-[28px] md:hidden">
+        <div className="grid grid-cols-1 overflow-hidden rounded-2xl md:hidden">
           <Panel
             tone="weak"
             stacked
@@ -269,13 +260,17 @@ function Panel({
           {title}
         </h3>
 
-        <ul className={cn("mt-7 max-w-[44ch] space-y-4", alignRight && "ml-auto")}>
+        <ul
+          className={cn("mt-7 max-w-[44ch] space-y-4", alignRight && "ml-auto")}
+        >
           {items.map((item) => (
             <li
               key={item}
               className={cn(
                 "flex gap-4 border-t pt-4 text-body",
-                weak ? "border-ink/12 text-ink-soft" : "border-paper/15 text-paper/85",
+                weak
+                  ? "border-ink/12 text-ink-soft"
+                  : "border-paper/15 text-paper/85",
                 alignRight && "flex-row-reverse",
               )}
             >

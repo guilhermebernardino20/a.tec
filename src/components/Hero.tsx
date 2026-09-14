@@ -8,6 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Container from "@/components/ui/Container";
 import HeroBackdrop from "@/components/HeroBackdrop";
 import HeroCanvas from "@/components/HeroCanvas";
+import { SEGMENTS } from "@/lib/segments";
 
 /** curva de entrada do site de referência */
 const EASE_INTEGRATED = [0.16, 1, 0.3, 1] as const;
@@ -136,7 +137,10 @@ export default function Hero() {
         ref={bg}
         className="pointer-events-none absolute inset-0 z-0 overflow-hidden will-change-transform"
       >
-        <motion.div variants={backdrop} className="relative h-full w-full will-change-transform">
+        <motion.div
+          variants={backdrop}
+          className="relative h-full w-full will-change-transform"
+        >
           {/* superfície orgânica em movimento */}
           <HeroBackdrop className="absolute inset-0 h-full w-full" />
 
@@ -150,7 +154,10 @@ export default function Hero() {
           {/* granulação de papel */}
           <div
             className="absolute inset-0 opacity-[0.02]"
-            style={{ backgroundImage: `url("${NOISE}")`, backgroundSize: "220px 220px" }}
+            style={{
+              backgroundImage: `url("${NOISE}")`,
+              backgroundSize: "220px 220px",
+            }}
           />
         </motion.div>
       </div>
@@ -168,7 +175,7 @@ export default function Hero() {
 
               <motion.h1
                 variants={title}
-                className="mt-8 max-w-3xl text-balance font-sans text-3xl font-bold leading-[1.08] tracking-tight text-[#F3F4F3] will-change-transform sm:text-5xl lg:text-6xl xl:text-7xl"
+                className="mt-8 max-w-3xl text-balance font-sans text-3xl font-bold leading-[1.08] tracking-tight text-paper will-change-transform sm:text-5xl lg:text-6xl xl:text-7xl"
               >
                 {TITLE_LINES.map((line) => (
                   <span key={line} className="-my-2 block px-1 pb-2 pt-2">
@@ -186,22 +193,39 @@ export default function Hero() {
                 estratégia.
               </motion.p>
 
-              <motion.div variants={tail} className="mt-8 flex flex-wrap items-center gap-4">
-                <Link
-                  href="#servicos"
-                  className="min-h-11 rounded-full bg-olive px-8 py-4 font-semibold text-dark shadow-lg transition-all duration-300 hover:bg-olive-light active:scale-[0.98]"
-                >
-                  Nossas frentes de atuação
-                </Link>
-                <Link
-                  href="#contato"
-                  className="min-h-11 rounded-full border border-white/15 px-8 py-4 text-neutral-200 transition-all duration-300 hover:border-olive/40 hover:bg-white/5 active:scale-[0.98]"
-                >
-                  Agendar análise técnica
-                </Link>
+              {/* portal de entrada: dois caminhos, um por público */}
+              <motion.div
+                variants={tail}
+                className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6"
+              >
+                {[SEGMENTS.pf, SEGMENTS.pj].map((seg) => (
+                  <Link
+                    key={seg.href}
+                    href={seg.href}
+                    className="group flex flex-col rounded-2xl border border-white/10 bg-neutral-900/50 p-6 text-left backdrop-blur-md hover:border-olive/40 hover:bg-white/[0.03] transition-all duration-300 active:scale-[0.99] md:p-8"
+                  >
+                    <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-olive">
+                      [ {seg.tag} ]
+                    </span>
+                    <span className="mt-5 font-sans text-2xl font-semibold leading-tight text-paper md:text-3xl">
+                      {seg.cardTitle}
+                    </span>
+                    <span className="mt-3 text-sm leading-relaxed text-neutral-300 md:text-[15px]">
+                      {seg.cardBody}
+                    </span>
+                    <span className="mt-auto flex items-center gap-2 pt-6 text-sm font-medium text-olive-light">
+                      {seg.cardCta}
+                      <span
+                        aria-hidden
+                        className="transition-transform duration-300 group-hover:translate-x-1"
+                      >
+                        →
+                      </span>
+                    </span>
+                  </Link>
+                ))}
               </motion.div>
             </div>
-
           </div>
         </Container>
       </div>

@@ -9,7 +9,7 @@ export default function Platform() {
   return (
     <section id="servicos" className="bg-paper">
       <Container>
-        <InViewGroup className="grid grid-cols-1 gap-x-5 gap-y-8 pb-24 pt-28 md:pb-28 md:pt-32 lg:grid-cols-12 lg:pb-32 lg:pt-40">
+        <InViewGroup className="grid grid-cols-1 gap-x-8 gap-y-8 py-20 md:py-32 lg:grid-cols-12">
           <InViewItem className="lg:col-span-3">
             <Mono className="text-ink-mute">{PLATFORM.label}</Mono>
           </InViewItem>
@@ -21,7 +21,7 @@ export default function Platform() {
               split="words"
               stagger={0.035}
               duration={0.95}
-              className="text-title max-w-[18ch] font-light text-ink"
+              className="text-title max-w-[20ch] text-balance font-light leading-[1.06] tracking-[-0.03em] [word-spacing:-0.05em] text-ink"
             />
 
             <InViewItem className="mt-10 max-w-[62ch] md:mt-12">

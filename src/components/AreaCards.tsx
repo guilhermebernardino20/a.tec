@@ -9,7 +9,7 @@ import ScanEdge from "@/components/ui/ScanEdge";
 import Parallax from "@/components/ui/Parallax";
 
 const TONES: Record<string, string> = {
-  mint: "bg-mint text-olive-deep",
+  olive: "bg-olive-brand text-paper",
   ink: "bg-ink text-paper",
   stone: "bg-stone text-ink",
   sage: "bg-sage text-olive-deep",
@@ -51,11 +51,15 @@ export default function AreaCards() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     if (reduced || window.innerWidth < 1025) return;
 
     const ctx = gsap.context(() => {
-      gsap.set(".area-card", { clipPath: "polygon(0 0, 100% 0, 100% 0%, 0% 0%)" });
+      gsap.set(".area-card", {
+        clipPath: "polygon(0 0, 100% 0, 100% 0%, 0% 0%)",
+      });
       gsap.set(".area-card-content > *", { opacity: 0, y: 24 });
 
       gsap.to(".area-card", {
@@ -86,38 +90,40 @@ export default function AreaCards() {
         {PRACTICES.map((p, i) => (
           <li key={p.id} className="[perspective:1200px]">
             <Parallax distance={i % 2 === 0 ? -34 : -62}>
-            <TiltCard
-              intensity={5}
-              glare={p.tone === "ink"}
-              className={`area-card flex min-h-[340px] flex-col justify-between gap-10 p-8 md:min-h-[420px] md:p-10 ${TONES[p.tone]}`}
-            >
-              <ScanEdge orientation="x" duration={6.5} delay={i * 1.2} />
-              <ScanEdge orientation="y" duration={8} delay={i * 1.2 + 0.6} />
+              <TiltCard
+                intensity={5}
+                glare={p.tone === "ink" || p.tone === "olive"}
+                className={`area-card flex min-h-[340px] flex-col justify-between gap-10 p-8 md:min-h-[420px] md:p-10 ${TONES[p.tone]}`}
+              >
+                <ScanEdge orientation="x" duration={6.5} delay={i * 1.2} />
+                <ScanEdge orientation="y" duration={8} delay={i * 1.2 + 0.6} />
 
-              <div className="area-card-content flex h-full flex-col justify-between gap-10">
-              <div className="flex items-start justify-between">
-                <span className="font-mono text-mono uppercase opacity-70">
-                  {p.index}.
-                </span>
-                <svg
-                  viewBox="0 0 114 114"
-                  className="h-16 w-16 opacity-80 md:h-[72px] md:w-[72px]"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinejoin="round"
-                  aria-hidden
-                >
-                  {GLYPHS[p.id]}
-                </svg>
-              </div>
+                <div className="area-card-content flex h-full flex-col justify-between gap-10">
+                  <div className="flex items-start justify-between">
+                    <span className="font-mono text-mono uppercase opacity-70">
+                      {p.index}.
+                    </span>
+                    <svg
+                      viewBox="0 0 114 114"
+                      className="h-16 w-16 opacity-80 md:h-[72px] md:w-[72px]"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinejoin="round"
+                      aria-hidden
+                    >
+                      {GLYPHS[p.id]}
+                    </svg>
+                  </div>
 
-                <div>
-                  <h3 className="text-heading font-light">{p.name}</h3>
-                  <p className="mt-4 max-w-[34ch] text-body opacity-80">{p.cardBody}</p>
+                  <div>
+                    <h3 className="text-heading font-light">{p.name}</h3>
+                    <p className="mt-4 max-w-[34ch] text-body opacity-80">
+                      {p.cardBody}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </TiltCard>
+              </TiltCard>
             </Parallax>
           </li>
         ))}

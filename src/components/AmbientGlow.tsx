@@ -23,7 +23,9 @@ export default function AmbientGlow() {
     if (!el) return;
 
     const fine = window.matchMedia("(pointer: fine)").matches;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     if (!fine || reduced) return;
 
     const target = { x: window.innerWidth / 2, y: window.innerHeight / 2 };

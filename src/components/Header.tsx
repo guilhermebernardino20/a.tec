@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { NAV } from "@/lib/content";
@@ -76,7 +77,11 @@ export default function Header() {
                 : "bg-paper/80 backdrop-blur-xl",
           )}
         >
-          <a href="#topo" aria-label="a.tec — início" className="flex min-h-11 items-center gap-3">
+          <Link
+            href="/"
+            aria-label="a.tec, página principal"
+            className="flex min-h-11 items-center gap-3"
+          >
             <Image
               src={light ? "/brand/atec-offwhite.png" : "/brand/atec-olive.png"}
               alt="a.tec"
@@ -93,7 +98,7 @@ export default function Header() {
             >
               Assistência Técnica Judicial
             </span>
-          </a>
+          </Link>
 
           <div className="flex items-center gap-1">
             <nav className="hidden items-center lg:flex">

@@ -12,6 +12,8 @@ export default function Mono({
   as?: "span" | "p" | "div" | "h2";
 }) {
   return (
-    <Tag className={cn("font-mono text-mono uppercase", className)}>{children}</Tag>
+    <Tag className={cn("font-mono text-mono uppercase", className)}>
+      {children}
+    </Tag>
   );
 }

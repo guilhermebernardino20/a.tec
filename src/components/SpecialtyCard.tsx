@@ -109,15 +109,21 @@ export default function SpecialtyCard({
           aria-hidden
           className={`pointer-events-none absolute h-3 w-3 border-olive/50 ${bracket.className}`}
           initial={false}
-          animate={active ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.1 }}
-          transition={{ duration: 0.3, ease: EASE, delay: active ? i * 0.03 : 0 }}
+          animate={
+            active ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.1 }
+          }
+          transition={{
+            duration: 0.3,
+            ease: EASE,
+            delay: active ? i * 0.03 : 0,
+          }}
         />
       ))}
 
       {/* feixe com rastro: a lâmina de luz fica na borda inferior do rastro */}
       <motion.span
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 h-10 bg-gradient-to-b from-transparent via-[#7F9970]/15 to-[#7F9970]/40"
+        className="pointer-events-none absolute inset-x-0 h-10 bg-gradient-to-b from-transparent via-olive/15 to-olive/40"
         initial={false}
         animate={{ top: active && !reduced ? "100%" : "-56px" }}
         transition={
@@ -126,7 +132,7 @@ export default function SpecialtyCard({
             : { duration: 0 }
         }
       >
-        <span className="absolute inset-x-0 bottom-0 h-px bg-[#A3B899] shadow-[0_0_8px_#7F9970]" />
+        <span className="absolute inset-x-0 bottom-0 h-px bg-olive-light shadow-[0_0_8px_var(--color-olive)]" />
       </motion.span>
 
       <span className="relative block">
@@ -137,8 +143,12 @@ export default function SpecialtyCard({
           </Mono>
         </span>
 
-        <span className="mt-3 block font-sans text-lg font-light text-ink">{title}</span>
-        <span className="mt-2 block max-w-[46ch] text-body text-ink-soft">{body}</span>
+        <span className="mt-3 block font-sans text-lg font-light text-ink">
+          {title}
+        </span>
+        <span className="mt-2 block max-w-[46ch] text-body text-ink-soft">
+          {body}
+        </span>
       </span>
 
       {/* chip de status da leitura */}

@@ -63,7 +63,7 @@ export const MATRIX: MatrixArea[] = [
         id: "erro-cirurgico",
         label: "Erro médico em cirurgia",
         blindSpot:
-          "O laudo costuma concluir pela ausência de erro apoiado apenas na descrição cirúrgica, sem confrontá-la com a evolução de enfermagem e a ficha anestésica — que são justamente onde a intercorrência aparece em tempo real.",
+          "O laudo costuma concluir pela ausência de erro apoiado apenas na descrição cirúrgica, sem confrontá-la com a evolução de enfermagem e a ficha anestésica, que são justamente onde a intercorrência aparece em tempo real.",
         questioning: [
           "Estabelecer a linha do tempo minuto a minuto a partir de todas as fontes do prontuário, não só da descrição cirúrgica.",
           "Confrontar cada conduta com o protocolo institucional e as diretrizes da especialidade vigentes à data do ato.",
@@ -93,7 +93,7 @@ export const MATRIX: MatrixArea[] = [
         evidence: {
           risk: "Ausência de exame contemporâneo ao pedido administrativo dificulta a fixação da DII e limita os efeitos financeiros.",
           opportunity:
-            "Laudos administrativos padronizados costumam ignorar a função exercida — ponto em que a contraprova técnica é mais eficaz.",
+            "Laudos administrativos padronizados costumam ignorar a função exercida, ponto em que a contraprova técnica é mais eficaz.",
           impact: "ESSENCIAL",
           rigor: 3,
           horizon: "Parecer em 7 a 12 dias úteis",
@@ -103,7 +103,7 @@ export const MATRIX: MatrixArea[] = [
         id: "interdicao",
         label: "Interdição e curatela",
         blindSpot:
-          "O laudo se apoia no diagnóstico e no CID, sem demonstrar o impacto funcional concreto sobre os atos da vida civil — que é o que o Estatuto da Pessoa com Deficiência exige para dimensionar a curatela.",
+          "O laudo se apoia no diagnóstico e no CID, sem demonstrar o impacto funcional concreto sobre os atos da vida civil, que é o que o Estatuto da Pessoa com Deficiência exige para dimensionar a curatela.",
         questioning: [
           "Traduzir o diagnóstico em capacidade concreta para atos patrimoniais e negociais.",
           "Dimensionar o grau e a extensão da curatela, evitando restrição maior que a necessária.",
@@ -129,7 +129,7 @@ export const MATRIX: MatrixArea[] = [
         id: "tea-escolar",
         label: "TEA / acompanhante escolar",
         blindSpot:
-          "A negativa se apoia no nível de suporte declarado no laudo, sem avaliar a demanda concreta da criança na rotina escolar — que é o que determina a necessidade do profissional de apoio.",
+          "A negativa se apoia no nível de suporte declarado no laudo, sem avaliar a demanda concreta da criança na rotina escolar, que é o que determina a necessidade do profissional de apoio.",
         questioning: [
           "Descrever o perfil de desenvolvimento e a autonomia observada em ambiente escolar.",
           "Correlacionar as demandas de suporte com as atividades efetivamente exigidas em sala.",
@@ -213,7 +213,7 @@ export const MATRIX: MatrixArea[] = [
         id: "conformidade",
         label: "Vício construtivo e conformidade de obra",
         blindSpot:
-          "A perícia verifica o que está aparente e deixa de confrontar o executado com o memorial descritivo e a planilha contratada — onde estão as supressões de escopo e a troca de especificação de materiais.",
+          "A perícia verifica o que está aparente e deixa de confrontar o executado com o memorial descritivo e a planilha contratada, onde estão as supressões de escopo e a troca de especificação de materiais.",
         questioning: [
           "Confrontar projeto aprovado, memorial e planilha com o efetivamente executado.",
           "Classificar cada anomalia por origem, severidade e responsabilidade.",
@@ -258,7 +258,7 @@ export const MATRIX: MatrixArea[] = [
         id: "avaliacao-urbana",
         label: "Avaliação patrimonial urbana",
         blindSpot:
-          "Avaliações apresentadas nos autos costumam trazer valor sem amostra rastreável — sem pesquisa de mercado documentada, sem tratamento estatístico e sem declarar grau de fundamentação e precisão.",
+          "Avaliações apresentadas nos autos costumam trazer valor sem amostra rastreável, sem pesquisa de mercado documentada, sem tratamento estatístico e sem declarar grau de fundamentação e precisão.",
         questioning: [
           "Verificar método adotado e aderência à NBR 14.653.",
           "Auditar a amostra: origem, data, saneamento e homogeneização dos comparáveis.",

@@ -4,10 +4,21 @@
  */
 
 /** Número institucional, no formato exigido pelo wa.me (só dígitos). */
-export const WHATSAPP_NUMBER = "554198305580";
+export const WHATSAPP_NUMBER = "5541985305580";
 
-const build = (message: string) =>
-  `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+/**
+ * Contato direto do Alan, destino da triagem PF/PJ. Enquanto o número
+ * dele não for informado, a conversa cai no institucional.
+ */
+export const WHATSAPP_ALAN_NUMBER = WHATSAPP_NUMBER;
+
+const build = (message: string, number = WHATSAPP_NUMBER) =>
+  `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+
+/** Síntese montada pela triagem de entrada. */
+export function getTriageWhatsAppUrl(message: string) {
+  return build(message, WHATSAPP_ALAN_NUMBER);
+}
 
 /** Contato genérico — cabeçalho, rodapé e CTAs institucionais. */
 export function getGeneralWhatsAppUrl() {

@@ -14,14 +14,17 @@ export default function Footer() {
   return (
     <footer
       data-surface="dark"
-      className="relative overflow-clip rounded-t-[40px] bg-olive-deep pb-6 pt-10 text-paper"
+      className="relative overflow-clip rounded-t-2xl bg-olive-deep pb-6 pt-10 text-paper"
     >
       <OrganicCanvas className="pointer-events-none absolute inset-0 h-full w-full opacity-45" />
 
       <Container className="relative">
         <div className="grid grid-cols-1 gap-14 pb-16 pt-14 xl:grid-cols-12 xl:gap-10">
           <div className="xl:col-span-5">
-            <p data-text-reveal className="text-heading max-w-[20ch] font-light">
+            <p
+              data-text-reveal
+              className="text-heading max-w-[20ch] font-light"
+            >
               Assistência técnica para decisões que dependem de prova.
             </p>
             <Pill href="#contato" variant="light" className="mt-10">
@@ -90,7 +93,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Abrir o endereço da a.tec no Google Maps"
-                  className="underline-offset-4 transition-colors hover:text-paper hover:underline"
+                  className="inline-flex min-h-11 items-center underline-offset-4 transition-colors hover:text-paper hover:underline"
                 >
                   {CONTACT.address}
                 </a>
@@ -105,13 +108,13 @@ export default function Footer() {
             alt="a.tec"
             width={2070}
             height={622}
-            className="w-full max-w-[1100px] opacity-90" 
+            className="w-full max-w-[1100px] opacity-90"
           />
         </div>
 
         <div className="mt-8 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[11px] leading-normal text-paper/45">
-            © {year} a.tec — Assistência Técnica Judicial
+            © {year} a.tec · Assistência Técnica Judicial
           </p>
           <p className="text-[11px] leading-normal text-paper/45">
             Todos os direitos reservados

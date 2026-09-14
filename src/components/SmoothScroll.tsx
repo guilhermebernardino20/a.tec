@@ -44,7 +44,8 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
     // âncoras internas percorrem o caminho com o mesmo easing do scroll
     const onClick = (event: MouseEvent) => {
       if (event.defaultPrevented || event.button !== 0) return;
-      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+        return;
 
       const anchor = (event.target as HTMLElement | null)?.closest?.(
         'a[href^="#"]',

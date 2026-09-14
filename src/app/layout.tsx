@@ -32,7 +32,7 @@ const siteUrl = "https://atec.com.br";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "a.tec — Assistência Técnica Judicial",
+    default: "a.tec | Assistência Técnica Judicial",
     template: "%s · a.tec",
   },
   description:
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     locale: "pt_BR",
     url: siteUrl,
     siteName: "a.tec",
-    title: "a.tec — Assistência Técnica Judicial",
+    title: "a.tec | Assistência Técnica Judicial",
     description:
       "Transformamos técnica em estratégia. Assistência técnica pericial em Medicina, Psicologia, Engenharias e Avaliações Imobiliárias.",
   },

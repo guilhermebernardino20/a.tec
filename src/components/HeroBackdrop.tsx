@@ -123,7 +123,6 @@ void main() {
 }
 `;
 
-
 function compile(gl: WebGL2RenderingContext, type: number, src: string) {
   const shader = gl.createShader(type)!;
   gl.shaderSource(shader, src);
@@ -185,7 +184,9 @@ export default function HeroBackdrop({ className }: { className?: string }) {
     const uTime = gl.getUniformLocation(program, "uTime");
     const uPointer = gl.getUniformLocation(program, "uPointer");
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
     let raf = 0;
     let running = true;

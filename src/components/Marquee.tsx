@@ -14,7 +14,9 @@ export default function Marquee() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     if (reduced) return;
 
     const ctx = gsap.context(() => {
@@ -22,7 +24,8 @@ export default function Marquee() {
       if (!items.length) return;
 
       const width = items[0].offsetWidth;
-      const scale = window.innerWidth < 479 ? 0.25 : window.innerWidth < 991 ? 0.5 : 1;
+      const scale =
+        window.innerWidth < 479 ? 0.25 : window.innerWidth < 991 ? 0.5 : 1;
       const duration = 15 * (width / window.innerWidth) * scale;
 
       const loop = gsap
@@ -48,7 +51,7 @@ export default function Marquee() {
     return () => ctx.revert();
   }, []);
 
-  const item = `${MARQUEE_TEXT} – `;
+  const item = `${MARQUEE_TEXT} • `;
 
   return (
     <section

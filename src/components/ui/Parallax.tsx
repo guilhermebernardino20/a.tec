@@ -1,7 +1,12 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import { cn } from "@/lib/utils";
 
 /**
@@ -27,7 +32,11 @@ export default function Parallax({
     target: ref,
     offset: ["start end", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], [-distance / 2, distance / 2]);
+  const y = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [-distance / 2, distance / 2],
+  );
 
   const Tag = motion[as];
 

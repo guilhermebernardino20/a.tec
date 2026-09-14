@@ -4,9 +4,9 @@
  */
 
 export const NAV = [
-  { index: "01", label: "Atuação", href: "#servicos" },
-  { index: "02", label: "Sobre", href: "#sobre" },
-  { index: "03", label: "Dados", href: "#dados" },
+  { index: "01", label: "Pessoa Física", href: "/pessoa-fisica" },
+  { index: "02", label: "Empresas", href: "/empresas" },
+  { index: "03", label: "Sobre", href: "/#sobre" },
   { index: "04", label: "Contato", href: "#contato" },
 ] as const;
 
@@ -43,7 +43,7 @@ export const JUDICIARY_DATA = [
     index: "04",
     figure: "1 em 3",
     caption: "processos da Justiça Federal",
-    body: "Quase um terço é previdenciário — e muitos deles dependem de prova técnica.",
+    body: "Quase um terço é previdenciário, e muitos deles dependem de prova técnica.",
     source: "2024",
   },
 ] as const;
@@ -88,7 +88,7 @@ export type Practice = {
   /** frase curta usada no cartão da grade de atuação */
   cardBody: string;
   /** preenchimento do cartão na grade */
-  tone: "mint" | "ink" | "stone" | "sage";
+  tone: "olive" | "ink" | "stone" | "sage";
   headline: string;
   intro: string;
   specialties: { title: string; body: string }[];
@@ -98,8 +98,8 @@ export const PRACTICES: Practice[] = [
   {
     id: "medicina",
     cardBody:
-      "Erro médico, interdição judicial e invalidez — prontuários, exames e laudos lidos com rigor científico.",
-    tone: "mint",
+      "Erro médico, interdição judicial e invalidez, prontuários, exames e laudos lidos com rigor científico.",
+    tone: "olive",
     index: "01",
     name: "Medicina",
     headline: "Apoio técnico especializado para fortalecer estratégias jurídicas diante das demandas de saúde.",
@@ -116,14 +116,14 @@ export const PRACTICES: Practice[] = [
       },
       {
         title: "Invalidez",
-        body: "Suporte em demandas previdenciárias, securitárias e trabalhistas — ações contra o INSS, seguradoras ou empregadores. Pareceres médicos que fortalecem a petição inicial e a instrução probatória.",
+        body: "Suporte em demandas previdenciárias, securitárias e trabalhistas, ações contra o INSS, seguradoras ou empregadores. Pareceres médicos que fortalecem a petição inicial e a instrução probatória.",
       },
     ],
   },
   {
     id: "psicologia",
     cardBody:
-      "TEA, guarda e convivência, alienação parental — avaliações traduzidas em elementos técnicos para o processo.",
+      "TEA, guarda e convivência, alienação parental, avaliações traduzidas em elementos técnicos para o processo.",
     tone: "ink",
     index: "02",
     name: "Psicologia",
@@ -152,7 +152,7 @@ export const PRACTICES: Practice[] = [
   {
     id: "engenharias",
     cardBody:
-      "Obras, terrenos, impacto ambiental e condições de trabalho — falhas, responsabilidades e extensão de danos.",
+      "Obras, terrenos, impacto ambiental e condições de trabalho, falhas, responsabilidades e extensão de danos.",
     tone: "stone",
     index: "03",
     name: "Engenharias",
@@ -195,7 +195,7 @@ export const PRACTICES: Practice[] = [
     specialties: [
       {
         title: "Avaliação de Imóvel",
-        body: "Consideramos características físicas, localização, padrão construtivo e condições de mercado para determinar o valor do bem de forma técnica — recurso importante em compra e venda, partilha, indenizações, financiamentos e disputas patrimoniais.",
+        body: "Consideramos características físicas, localização, padrão construtivo e condições de mercado para determinar o valor do bem de forma técnica, recurso importante em compra e venda, partilha, indenizações, financiamentos e disputas patrimoniais.",
       },
       {
         title: "Imóveis Urbanos",
@@ -203,20 +203,20 @@ export const PRACTICES: Practice[] = [
       },
       {
         title: "Imóveis Rurais",
-        body: "Consideramos as particularidades da propriedade rural — localização, características da área, benfeitorias e potencial de utilização — para uma análise compatível com o imóvel.",
+        body: "Consideramos as particularidades da propriedade rural (localização, características da área, benfeitorias e potencial de utilização) para uma análise compatível com o imóvel.",
       },
     ],
   },
 ];
 
 export const CONTACT = {
-  address: "Av. João Gualberto, 1342, Sala 1912 — Alto da Glória, Curitiba, Paraná",
+  address: "Av. João Gualberto, 1342, Sala 1912, Alto da Glória, Curitiba, Paraná",
   email: "contato@chomabettegaadvocacia.com.br",
   /** e-mail já com assunto, para a mensagem chegar triada */
   emailHref:
     "mailto:contato@chomabettegaadvocacia.com.br?subject=Solicita%C3%A7%C3%A3o%20de%20An%C3%A1lise%20T%C3%A9cnica%20-%20A.TEC",
-  phone: "(41) 9830-5580",
-  phoneHref: "+554198305580",
+  phone: "(41) 98530-5580",
+  phoneHref: "+5541985305580",
   mapsHref:
     "https://www.google.com/maps/search/?api=1&query=Av.+Jo%C3%A3o+Gualberto,+1342,+Curitiba+-+PR",
 } as const;
@@ -238,5 +238,5 @@ export const ABOUT = {
     "Aliamos o conhecimento processual à expertise técnica das áreas em discussão, oferecendo análises criteriosas e pareceres fundamentados, de modo a assegurar que nossos clientes tenham a melhor estratégia possível diante das demandas judiciais.",
   ],
   closing:
-    "Nossa atuação abrange Medicina, Psicologia, Engenharias e Avaliações Imobiliárias — sempre com foco em qualidade, rigor técnico e compromisso ético.",
+    "Nossa atuação abrange Medicina, Psicologia, Engenharias e Avaliações Imobiliárias, sempre com foco em qualidade, rigor técnico e compromisso ético.",
 } as const;

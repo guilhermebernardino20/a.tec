@@ -115,7 +115,7 @@ export async function deliver(
 
     // em produção, fingir sucesso sem chave faria o lead sumir em silêncio
     console.error(
-      "[contato a.tec] RESEND_API_KEY ausente em produção — solicitação NÃO enviada",
+      "[contato a.tec] RESEND_API_KEY ausente em produção: solicitação NÃO enviada",
       { email: data.email, files: attachments.map((a) => a.filename) },
     );
     return "unconfigured";
@@ -123,7 +123,7 @@ export async function deliver(
 
   try {
     const resend = new Resend(apiKey);
-    const assunto = `[Novo Lead A.TEC] ${data.area ? `${data.area} — ` : ""}${data.nome} ${data.sobrenome}`.trim();
+    const assunto = `[Novo Lead A.TEC] ${data.area ? `${data.area} · ` : ""}${data.nome} ${data.sobrenome}`.trim();
 
     const { error } = await resend.emails.send({
       from: FROM,

@@ -39,7 +39,8 @@ export default function TextReveal({
   stagger?: number;
   duration?: number;
 }) {
-  const pieces = lines ?? (split === "words" ? (text ?? "").split(" ") : [text ?? ""]);
+  const pieces =
+    lines ?? (split === "words" ? (text ?? "").split(" ") : [text ?? ""]);
   const inline = split === "words" && !lines;
 
   const piece: Variants = {
@@ -57,7 +58,10 @@ export default function TextReveal({
         initial="hidden"
         {...(trigger === "mount"
           ? { animate: "show" as const }
-          : { whileInView: "show" as const, viewport: { once: true, amount: 0.3 } })}
+          : {
+              whileInView: "show" as const,
+              viewport: { once: true, amount: 0.3 },
+            })}
       >
         {pieces.map((text, i) => (
           <span

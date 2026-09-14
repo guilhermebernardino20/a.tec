@@ -6,7 +6,9 @@ import { PRACTICES } from "@/lib/content";
 import Container from "@/components/ui/Container";
 import Mono from "@/components/ui/Mono";
 import GlowRule from "@/components/ui/GlowRule";
-import SpecialtyDrawer, { type DrawerSpecialty } from "@/components/SpecialtyDrawer";
+import SpecialtyDrawer, {
+  type DrawerSpecialty,
+} from "@/components/SpecialtyDrawer";
 import SpecialtyCard from "@/components/SpecialtyCard";
 import { SPECIALTY_DETAILS } from "@/lib/specialties";
 
@@ -68,7 +70,7 @@ export default function Specialties() {
     <section className="bg-paper">
       <Container>
         <GlowRule />
-        <div className="grid grid-cols-1 gap-x-5 gap-y-10 pt-14 lg:grid-cols-12">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-10 pt-14 lg:grid-cols-12">
           <div className="lg:col-span-3">
             <Mono className="text-ink-mute">Especialidades</Mono>
           </div>
@@ -77,7 +79,10 @@ export default function Specialties() {
             {PRACTICES.map((p) => {
               const isOpen = open === p.id;
               return (
-                <li key={p.id} className="border-b border-ink/10 first:border-t">
+                <li
+                  key={p.id}
+                  className="border-b border-ink/10 first:border-t"
+                >
                   <button
                     type="button"
                     onClick={() => setOpen(isOpen ? null : p.id)}
@@ -101,7 +106,9 @@ export default function Specialties() {
                       </span>
                       <span
                         className={`text-heading font-light transition-colors duration-500 ${
-                          isOpen ? "text-ink" : "text-ink/70 group-hover:text-ink"
+                          isOpen
+                            ? "text-ink"
+                            : "text-ink/70 group-hover:text-ink"
                         }`}
                       >
                         {p.name}
@@ -135,13 +142,17 @@ export default function Specialties() {
                           </p>
                           <ul className="mt-10 grid grid-cols-1 gap-x-10 gap-y-8 md:grid-cols-2">
                             {p.specialties.map((s, i) => (
-                              <li key={s.title} className="border-t border-ink/10">
+                              <li
+                                key={s.title}
+                                className="border-t border-ink/10"
+                              >
                                 <SpecialtyCard
                                   index={String(i + 1).padStart(2, "0")}
                                   title={s.title}
                                   body={s.body}
                                   documents={
-                                    SPECIALTY_DETAILS[s.title]?.documents.length ?? 0
+                                    SPECIALTY_DETAILS[s.title]?.documents
+                                      .length ?? 0
                                   }
                                   onOpen={() =>
                                     setDetail({

@@ -37,7 +37,9 @@ export default function HeroCanvas({ className }: { className?: string }) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     // sem cursor não há o que perseguir: no toque a rede fica mais enxuta
     // e não assina eventos de ponteiro
     const coarse = window.matchMedia("(pointer: coarse)").matches;
@@ -80,7 +82,10 @@ export default function HeroCanvas({ className }: { className?: string }) {
       const rect = canvas.getBoundingClientRect();
       const span = rect.height + window.innerHeight;
       // 0 no topo do herói, 1 quando ele termina de sair da tela
-      scrollTarget = Math.min(1.6, Math.max(0, (window.innerHeight - rect.top) / span));
+      scrollTarget = Math.min(
+        1.6,
+        Math.max(0, (window.innerHeight - rect.top) / span),
+      );
     };
 
     const onPointerMove = (e: PointerEvent) => {
@@ -168,7 +173,8 @@ export default function HeroCanvas({ className }: { className?: string }) {
           const pb = projected[j];
           const t = 1 - Math.sqrt(d2) / LINK_DIST;
           const bridge = a.side !== b.side; // liga os dois campos
-          const alpha = t * 0.25 * (bridge ? 1.35 : 0.8) * Math.min(1, pa.scale);
+          const alpha =
+            t * 0.25 * (bridge ? 1.35 : 0.8) * Math.min(1, pa.scale);
 
           ctx.strokeStyle = `rgba(${LINK_RGB}, ${alpha.toFixed(3)})`;
           ctx.lineWidth = bridge ? 0.8 : 0.55;
@@ -189,7 +195,10 @@ export default function HeroCanvas({ className }: { className?: string }) {
           ctx.strokeStyle = `rgba(198, 212, 191, ${((1 - d / POINTER_RADIUS) * 0.3).toFixed(3)})`;
           ctx.lineWidth = 0.6;
           ctx.beginPath();
-          ctx.moveTo(width / 2 + pointer.x * Math.min(width, height) * 0.62, height / 2 + pointer.y * Math.min(width, height) * 0.62);
+          ctx.moveTo(
+            width / 2 + pointer.x * Math.min(width, height) * 0.62,
+            height / 2 + pointer.y * Math.min(width, height) * 0.62,
+          );
           ctx.lineTo(p.sx, p.sy);
           ctx.stroke();
         }

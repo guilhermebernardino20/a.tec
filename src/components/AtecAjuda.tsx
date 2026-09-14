@@ -10,13 +10,19 @@ import {
 } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useLenis } from "lenis/react";
 import Container from "@/components/ui/Container";
 import Mono from "@/components/ui/Mono";
 import SpotlightCard from "@/components/ui/SpotlightCard";
 import { STEPS } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
-const STEP_SCROLL = 820; // px de rolagem por etapa
+/**
+ * Rolagem por etapa enquanto o painel está fixo. Curta de propósito: um
+ * pin longo dá a sensação de que a página parou. Somada à altura da tela,
+ * a duração do pin fica igual em qualquer viewport.
+ */
+const STEP_SCROLL = 320;
 
 /**
  * Metodologia da a.tec — as cinco etapas da prova.
@@ -30,6 +36,18 @@ export default function AtecAjuda() {
   const scroller = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const railProgress = useMotionValue(0);
+  const lenis = useLenis();
+
+  /** leva a rolagem ao meio do trecho da etapa escolhida */
+  const goTo = (i: number) => {
+    const el = scroller.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY;
+    const y =
+      top + ((i + 0.5) / STEPS.length) * (el.offsetHeight - window.innerHeight);
+    if (lenis) lenis.scrollTo(y, { duration: 0.9 });
+    else window.scrollTo({ top: y, behavior: "smooth" });
+  };
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -54,7 +72,7 @@ export default function AtecAjuda() {
   const step = STEPS[active];
 
   return (
-    <section id="processo" className="relative bg-paper md:py-24">
+    <section id="processo" className="relative bg-paper md:py-32">
       {/* halo de brilho por trás da moldura */}
       <div
         aria-hidden
@@ -64,14 +82,14 @@ export default function AtecAjuda() {
       <div
         ref={scroller}
         className="relative"
-        style={{ height: `${STEPS.length * STEP_SCROLL}px` }}
+        style={{ height: `calc(100svh + ${STEPS.length * STEP_SCROLL}px)` }}
       >
         <div className="sticky top-0 flex h-[100svh] items-center md:py-24">
           <Container className="w-full max-md:h-full max-md:px-0">
             {/* no celular a moldura vira tela cheia; do tablet para cima, cartão */}
             <div
               data-surface="dark"
-              className="relative flex flex-col overflow-hidden bg-dark-card px-6 pb-[max(2rem,env(safe-area-inset-bottom))] pt-24 text-paper max-md:h-full md:rounded-[32px] md:border md:border-dark-border md:bg-dark-card/95 md:p-12 md:shadow-[0_40px_120px_-40px_rgba(12,17,11,0.9)] md:backdrop-blur-md"
+              className="relative flex flex-col overflow-hidden bg-dark-card px-6 pb-[max(2rem,env(safe-area-inset-bottom))] pt-24 text-paper max-md:h-full md:rounded-2xl md:border md:border-dark-border md:bg-dark-card/95 md:p-12 md:shadow-[0_40px_120px_-40px_rgba(12,17,11,0.9)] md:backdrop-blur-md"
             >
               {/* cabeçalho da moldura */}
               <div className="flex flex-wrap items-center justify-between gap-4">
@@ -105,7 +123,7 @@ export default function AtecAjuda() {
                       key={s.index}
                       aria-hidden={i !== active}
                       className={cn(
-                        "grid grid-cols-1 gap-4 md:gap-6 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] lg:grid-cols-12 lg:gap-5",
+                        "grid grid-cols-1 gap-4 md:gap-6 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] lg:grid-cols-12 lg:gap-6",
                         i === active
                           ? "relative opacity-100 blur-0"
                           : "pointer-events-none absolute inset-0 opacity-0 blur-[2px]",
@@ -133,7 +151,11 @@ export default function AtecAjuda() {
                 </SpotlightCard>
               </div>
 
-              <FiberRail progress={railProgress} active={active} />
+              <FiberRail
+                progress={railProgress}
+                active={active}
+                onSelect={goTo}
+              />
             </div>
           </Container>
         </div>
@@ -149,9 +171,11 @@ export default function AtecAjuda() {
 function FiberRail({
   progress,
   active,
+  onSelect,
 }: {
   progress: MotionValue<number>;
   active: number;
+  onSelect: (index: number) => void;
 }) {
   const percent = useTransform(
     progress,
@@ -199,12 +223,16 @@ function FiberRail({
       <ol className="mt-4 grid grid-cols-5 gap-2 md:gap-3">
         {STEPS.map((s, i) => (
           <li key={s.index}>
-            <div
+            <button
+              type="button"
+              onClick={() => onSelect(i)}
+              aria-label={`Ir para a etapa ${s.index}: ${s.title}`}
+              aria-current={i === active ? "step" : undefined}
               className={cn(
-                "group/step h-full rounded-md border bg-dark-card/85 p-2.5 backdrop-blur-md transition-all duration-300 md:p-4",
+                "group/step block h-full min-h-11 w-full cursor-pointer rounded-xl border bg-dark-card/85 p-2.5 text-left backdrop-blur-md transition-all duration-300 md:p-4",
                 i === active
                   ? "border-olive/50 shadow-[0_0_24px_-8px_rgba(127,153,112,0.65)]"
-                  : "border-white/10 hover:border-olive/40",
+                  : "border-white/10 hover:border-olive/40 hover:bg-white/[0.03] active:scale-[0.99]",
               )}
             >
               <span
@@ -227,7 +255,7 @@ function FiberRail({
               >
                 {s.short}
               </span>
-            </div>
+            </button>
           </li>
         ))}
       </ol>

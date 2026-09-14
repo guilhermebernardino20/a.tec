@@ -48,12 +48,12 @@
   --text-display--letter-spacing: -0.03em;
 
   --text-title: clamp(2.1rem, 4.6vw, 4.25rem);
-  --text-title--line-height: 1.1;
-  --text-title--letter-spacing: -0.02em;
+  --text-title--line-height: 1.08;
+  --text-title--letter-spacing: -0.025em;
 
   --text-heading: clamp(1.6rem, 2.6vw, 2.35rem);
-  --text-heading--line-height: 1.14;
-  --text-heading--letter-spacing: -0.02em;
+  --text-heading--line-height: 1.12;
+  --text-heading--letter-spacing: -0.025em;
 
   --text-lead: clamp(1.125rem, 1.5vw, 1.46rem);
   --text-lead--line-height: 1.32;
@@ -104,12 +104,17 @@ body {
  * classe por componente, para que nada fique de fora ao crescer o site.
  */
 :focus-visible {
-  outline: 2px solid #7f9970;
+  outline: 2px solid var(--color-olive);
   outline-offset: 3px;
   border-radius: 3px;
 }
 
 :focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* alvo de foco programático (título de janela): não é controle, sem anel */
+[tabindex="-1"]:focus-visible {
   outline: none;
 }
 

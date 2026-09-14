@@ -19,7 +19,9 @@ export default function TextRevealRoot() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     if (reduced) return;
 
     const triggers: ScrollTrigger[] = [];
@@ -56,7 +58,9 @@ export default function TextRevealRoot() {
         text.replaceWith(frag);
       }
 
-      return Array.from(root.querySelectorAll<HTMLElement>(`.${OVERLAY_CLASS}`));
+      return Array.from(
+        root.querySelectorAll<HTMLElement>(`.${OVERLAY_CLASS}`),
+      );
     };
 
     const setup = () => {

@@ -28,10 +28,7 @@ export default function ScanEdge({
       )}
     >
       <span
-        className={cn(
-          "block",
-          horizontal ? "h-px w-[42%]" : "h-[42%] w-px",
-        )}
+        className={cn("block", horizontal ? "h-px w-[42%]" : "h-[42%] w-px")}
         style={{
           animation: `${horizontal ? "scan-x" : "scan-y"} ${duration}s cubic-bezier(0.4, 0, 0.2, 1) ${delay}s infinite`,
           background: horizontal

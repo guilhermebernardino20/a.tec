@@ -70,29 +70,31 @@ function Field({
               ? "nome@escritorio.com.br"
               : type === "tel"
                 ? "(41) 90000-0000"
-                : "—"
+                : ""
           }
           aria-invalid={Boolean(error)}
           className={base}
         />
       )}
       {error ? (
-        <p className="mt-3 text-[13px] leading-normal text-olive-brand">{error}</p>
+        <p className="mt-3 text-[13px] leading-normal text-olive-brand">
+          {error}
+        </p>
       ) : null}
     </div>
   );
 }
 
-function SubmitButton({ pending }: { pending: boolean }) {
+function SubmitButton({ pending, label }: { pending: boolean; label: string }) {
   return (
     <button
       type="submit"
       disabled={pending}
       aria-label="Enviar solicitação de análise técnica"
       aria-busy={pending}
-      className="group inline-flex min-h-11 items-center gap-3 rounded-lg bg-ink px-[17px] py-[13px] font-mono text-mono uppercase text-paper transition-colors duration-500 hover:bg-olive hover:text-dark disabled:cursor-wait disabled:opacity-70"
+      className="group inline-flex min-h-11 items-center gap-3 rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-colors duration-500 hover:bg-olive hover:text-dark disabled:cursor-wait disabled:opacity-70"
     >
-      {pending ? "Enviando…" : "Enviar"}
+      {pending ? "Enviando…" : label}
       {pending ? (
         <span
           aria-hidden
@@ -141,7 +143,7 @@ function SuccessToast({
           type="button"
           onClick={onDismiss}
           aria-label="Fechar aviso de envio"
-          className="grid h-7 w-7 shrink-0 place-items-center rounded-md border border-paper/20 text-paper/70 transition-colors hover:border-paper/60 hover:text-paper"
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-paper/20 text-paper/70 transition-colors hover:border-paper/60 hover:text-paper"
         >
           <span aria-hidden className="relative block h-2.5 w-2.5">
             <span className="absolute left-0 top-1/2 h-px w-full rotate-45 bg-current" />
@@ -155,7 +157,7 @@ function SuccessToast({
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Acelerar atendimento pelo WhatsApp"
-        className="mt-4 flex min-h-11 items-center justify-between gap-3 rounded-lg bg-paper px-4 py-3 font-mono text-mono uppercase text-ink transition-colors duration-300 hover:bg-mint"
+        className="mt-4 flex min-h-11 items-center justify-between gap-3 rounded-full bg-paper px-5 py-3 text-sm font-medium text-ink transition-colors duration-300 hover:bg-mint"
       >
         Acelerar atendimento via WhatsApp
         <span aria-hidden>↗</span>
@@ -203,10 +205,17 @@ function AttachmentField({
               className="flex items-center justify-between gap-4 rounded-xl border border-ink/15 bg-ink/[0.03] px-4 py-2"
             >
               <span className="flex min-w-0 items-center gap-3">
-                <FileText aria-hidden size={18} strokeWidth={1.5} className="shrink-0 text-olive-brand" />
+                <FileText
+                  aria-hidden
+                  size={18}
+                  strokeWidth={1.5}
+                  className="shrink-0 text-olive-brand"
+                />
                 <span className="min-w-0 truncate text-sm text-ink">
                   {file.name}{" "}
-                  <span className="text-ink-mute">({formatBytes(file.size)})</span>
+                  <span className="text-ink-mute">
+                    ({formatBytes(file.size)})
+                  </span>
                 </span>
               </span>
               <button
@@ -236,7 +245,7 @@ function AttachmentField({
             if (dropped.length) onPick(dropped);
           }}
           className={cn(
-            "flex min-h-11 cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed p-4 text-center transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[#7f9970]",
+            "flex min-h-11 cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed p-4 text-center transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-olive",
             dragging
               ? "border-olive-brand bg-olive-brand/[0.06]"
               : "border-ink/20 bg-ink/[0.02] hover:border-olive-brand/50 hover:bg-ink/[0.04]",
@@ -254,7 +263,12 @@ function AttachmentField({
               e.target.value = "";
             }}
           />
-          <Paperclip aria-hidden size={18} strokeWidth={1.5} className="text-ink-mute" />
+          <Paperclip
+            aria-hidden
+            size={18}
+            strokeWidth={1.5}
+            className="text-ink-mute"
+          />
           <span className="text-sm text-ink-soft">
             {files.length
               ? "Adicionar mais documentos"
@@ -267,13 +281,25 @@ function AttachmentField({
       )}
 
       {error ? (
-        <p className="mt-3 text-[13px] leading-normal text-olive-brand">{error}</p>
+        <p className="mt-3 text-[13px] leading-normal text-olive-brand">
+          {error}
+        </p>
       ) : null}
     </div>
   );
 }
 
-export default function Contact() {
+export default function Contact({
+  label = "Contato",
+  title = "Transforme a técnica em vantagem processual.",
+  lead = "Preencha o formulário e nossa equipe indicará o melhor caminho para auxiliar no seu caso.",
+  submitLabel = "Enviar",
+}: {
+  label?: string;
+  title?: string;
+  lead?: string;
+  submitLabel?: string;
+} = {}) {
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState<string | null>(null);
@@ -290,7 +316,10 @@ export default function Contact() {
     (picked: File[]) => {
       const chave = (f: File) => `${f.name}-${f.size}-${f.lastModified}`;
       const vistos = new Set(files.map(chave));
-      const proximo = [...files, ...picked.filter((f) => !vistos.has(chave(f)))];
+      const proximo = [
+        ...files,
+        ...picked.filter((f) => !vistos.has(chave(f))),
+      ];
       const problem = checkAttachments(proximo);
       setFieldErrors((erros) => ({ ...erros, anexo: problem ?? undefined }));
       if (!problem) setFiles(proximo);
@@ -301,49 +330,59 @@ export default function Contact() {
   // o aviso deriva do estado do envio; o local guarda só a dispensa
   const toastOpen = status === "success" && !dismissed;
 
-  const handleSubmit = useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const data = new FormData(form);
+  const handleSubmit = useCallback(
+    async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
 
-    setDismissed(false);
-    setStatus("sending");
-    setMessage(null);
-    setFieldErrors({});
+      setDismissed(false);
+      setStatus("sending");
+      setMessage(null);
+      setFieldErrors({});
 
-    const body = new FormData();
-    for (const key of ["nome", "sobrenome", "email", "telefone", "mensagem", "empresa"]) {
-      body.append(key, String(data.get(key) ?? ""));
-    }
-    if (origem.current.area) body.append("area", origem.current.area);
-    if (origem.current.caso) body.append("caso", origem.current.caso);
-    for (const f of files) body.append("anexo", f);
-
-    try {
-      // sem content-type: o navegador monta o boundary do multipart
-      const response = await fetch("/api/contact", { method: "POST", body });
-
-      const result = (await response.json()) as ContactResponse;
-
-      if (!response.ok || !result.ok) {
-        setStatus("error");
-        setMessage(result.message ?? "Não foi possível enviar agora.");
-        setFieldErrors(result.fieldErrors ?? {});
-        return;
+      const body = new FormData();
+      for (const key of [
+        "nome",
+        "sobrenome",
+        "email",
+        "telefone",
+        "mensagem",
+        "empresa",
+      ]) {
+        body.append(key, String(data.get(key) ?? ""));
       }
+      if (origem.current.area) body.append("area", origem.current.area);
+      if (origem.current.caso) body.append("caso", origem.current.caso);
+      for (const f of files) body.append("anexo", f);
 
-      setStatus("success");
-      setMessage(result.message ?? CONTACT_SUCCESS);
-      form.reset();
-      setFiles([]);
-      origem.current = {};
-    } catch {
-      setStatus("error");
-      setMessage(
-        "Falha de conexão. Tente novamente ou fale conosco pelo WhatsApp.",
-      );
-    }
-  }, [files]);
+      try {
+        // sem content-type: o navegador monta o boundary do multipart
+        const response = await fetch("/api/contact", { method: "POST", body });
+
+        const result = (await response.json()) as ContactResponse;
+
+        if (!response.ok || !result.ok) {
+          setStatus("error");
+          setMessage(result.message ?? "Não foi possível enviar agora.");
+          setFieldErrors(result.fieldErrors ?? {});
+          return;
+        }
+
+        setStatus("success");
+        setMessage(result.message ?? CONTACT_SUCCESS);
+        form.reset();
+        setFiles([]);
+        origem.current = {};
+      } catch {
+        setStatus("error");
+        setMessage(
+          "Falha de conexão. Tente novamente ou fale conosco pelo WhatsApp.",
+        );
+      }
+    },
+    [files],
+  );
 
   // o aviso de sucesso se retira sozinho
   useEffect(() => {
@@ -370,18 +409,17 @@ export default function Contact() {
   return (
     <section id="contato" className="bg-paper py-20 md:py-32">
       <Container>
-        <div className="grid grid-cols-1 gap-x-5 gap-y-14 lg:grid-cols-12">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-14 lg:grid-cols-12">
           <div className="lg:col-span-5">
-            <Mono className="text-ink-mute">Contato</Mono>
+            <Mono className="text-ink-mute">{label}</Mono>
             <h2
               data-text-reveal
-              className="text-title mt-8 max-w-[14ch] font-light text-ink"
+              className="text-title mt-8 max-w-[16ch] text-balance font-light text-ink"
             >
-              Transforme a técnica em vantagem processual.
+              {title}
             </h2>
             <p className="mt-8 max-w-[40ch] text-body text-ink-soft md:text-lg md:leading-[1.45]">
-              Preencha o formulário e nossa equipe indicará o melhor caminho
-              para auxiliar no seu caso.
+              {lead}
             </p>
 
             <dl className="mt-12 grid grid-cols-1 gap-8 border-t border-ink/10 pt-8 sm:grid-cols-2 lg:grid-cols-1">
@@ -395,7 +433,7 @@ export default function Contact() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Abrir o endereço da a.tec no Google Maps"
-                    className="underline-offset-4 hover:underline"
+                    className="inline-flex min-h-11 items-center underline-offset-4 hover:underline"
                   >
                     {CONTACT.address}
                   </a>
@@ -427,7 +465,7 @@ export default function Contact() {
                     aria-label="Abrir conversa no WhatsApp com a a.tec"
                     className="inline-flex min-h-11 items-center underline-offset-4 hover:underline"
                   >
-                    WhatsApp — atendimento direto
+                    WhatsApp: atendimento direto
                   </a>
                 </dd>
               </div>
@@ -447,7 +485,12 @@ export default function Contact() {
                 label="Sobrenome"
                 error={fieldErrors.sobrenome}
               />
-              <Field name="email" label="E-mail" type="email" error={fieldErrors.email} />
+              <Field
+                name="email"
+                label="E-mail"
+                type="email"
+                error={fieldErrors.email}
+              />
               <Field
                 name="telefone"
                 label="Telefone / WhatsApp (opcional)"
@@ -476,12 +519,20 @@ export default function Contact() {
               {/* honeypot */}
               <div aria-hidden className="hidden">
                 <label htmlFor="empresa">Empresa</label>
-                <input id="empresa" name="empresa" tabIndex={-1} autoComplete="off" />
+                <input
+                  id="empresa"
+                  name="empresa"
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
               </div>
 
               <div className="flex flex-col gap-6 sm:col-span-2">
                 <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-                  <SubmitButton pending={status === "sending"} />
+                  <SubmitButton
+                    pending={status === "sending"}
+                    label={submitLabel}
+                  />
                   <p
                     aria-live="polite"
                     className={cn(
@@ -501,7 +552,7 @@ export default function Contact() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Acelerar atendimento pelo WhatsApp"
-                    className="inline-flex min-h-11 w-fit items-center gap-3 rounded-lg border border-ink/20 px-[17px] py-[13px] font-mono text-mono uppercase text-ink transition-colors duration-300 hover:border-olive-brand hover:bg-olive-brand/10"
+                    className="inline-flex min-h-11 w-fit items-center gap-3 rounded-xl border border-ink/20 px-5 py-3 text-sm font-medium text-ink transition-colors duration-300 hover:border-olive-brand hover:bg-olive-brand/10"
                   >
                     Acelerar atendimento via WhatsApp
                     <span aria-hidden>↗</span>
