@@ -76,7 +76,7 @@ export const SEGMENTS: Record<Profile, Segment> = {
       },
       {
         index: "04",
-        title: "Engenharia Imobiliária",
+        title: "Engenharia",
         body: "Rachaduras, infiltrações ou defeitos no imóvel que você comprou ou reformou: identificamos a causa e quem responde por ela.",
         bullets: [
           "Vícios construtivos e infiltrações",
@@ -84,6 +84,17 @@ export const SEGMENTS: Record<Profile, Segment> = {
           "Danos causados por obra vizinha",
         ],
         triageArea: "engenharias",
+      },
+      {
+        index: "05",
+        title: "Avaliação Imobiliária",
+        body: "Em partilhas, inventários ou indenizações, calculamos o valor justo do imóvel com um laudo técnico que resiste à contestação.",
+        bullets: [
+          "Partilha de bens e divórcio",
+          "Inventário e herança",
+          "Desapropriação e indenização",
+        ],
+        triageArea: "avaliacoes",
       },
     ],
   },

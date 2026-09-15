@@ -132,7 +132,7 @@ export default function BeforeAfterSlider() {
         className={cn(
           // abaixo de md não há largura para duas colunas legíveis:
           // o comparativo vira uma pilha e o divisor sai de cena
-          "relative isolate hidden min-h-[100svh] select-none overflow-hidden md:block",
+          "relative isolate hidden min-h-[70svh] select-none overflow-hidden md:block",
           dragging ? "cursor-grabbing" : "cursor-grab",
         )}
       >
@@ -226,8 +226,8 @@ function Panel({
     <div
       className={cn(
         // padding lateral alinhado à grade do Container (max-w-7xl)
-        "flex h-full flex-col justify-between gap-10 px-6 pb-12 pt-24 md:px-12 md:pb-20 md:pt-28 xl:px-[calc((100vw-80rem)/2+3rem)]",
-        "min-h-[100svh]",
+        "flex h-full flex-col justify-between gap-10 px-6 py-12 md:px-12 md:py-16 xl:px-[calc((100vw-80rem)/2+3rem)]",
+        stacked ? "" : "min-h-[70svh]",
         weak ? "bg-stone text-ink" : "bg-olive-deep text-paper",
         // no comparativo lado a lado, cada painel encosta na metade que ocupa
         alignRight ? "items-end text-right" : "items-start text-left",

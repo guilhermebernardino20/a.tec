@@ -95,14 +95,6 @@ export default function Header() {
               priority
               className="h-[17px] w-auto md:h-[19px]"
             />
-            <span
-              className={cn(
-                "hidden font-mono text-[10px] uppercase leading-none transition-colors duration-500 sm:block",
-                light ? "text-paper/70" : "text-ink/50",
-              )}
-            >
-              Assistência Técnica Judicial
-            </span>
           </Link>
 
           <div className="flex items-center gap-1">

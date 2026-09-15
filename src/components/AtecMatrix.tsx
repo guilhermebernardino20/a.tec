@@ -95,7 +95,7 @@ export default function AtecMatrix() {
   };
 
   return (
-    <section id="matrix" className="bg-paper py-20 md:py-32">
+    <section id="matrix" className="bg-paper pb-20 pt-28 md:pb-32 md:pt-44">
       <Container>
         <div
           data-surface="dark"

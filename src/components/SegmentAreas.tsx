@@ -37,13 +37,24 @@ export default function SegmentAreas({
             as="ul"
             className={cn(
               "grid grid-cols-1 gap-4 md:gap-6",
-              segment.areas.length === 4
-                ? "md:grid-cols-2 lg:grid-cols-4"
-                : "md:grid-cols-3",
+              segment.areas.length === 5
+                ? "md:grid-cols-2 lg:grid-cols-6"
+                : segment.areas.length === 4
+                  ? "md:grid-cols-2 lg:grid-cols-4"
+                  : "md:grid-cols-3",
             )}
           >
-            {segment.areas.map((area) => (
-              <InViewItem as="li" key={area.title}>
+            {segment.areas.map((area, i) => (
+              <InViewItem
+                as="li"
+                key={area.title}
+                // 5 cards: três em cima, dois embaixo
+                className={cn(
+                  segment.areas.length === 5 &&
+                    (i < 3 ? "lg:col-span-2" : "lg:col-span-3"),
+                  segment.areas.length === 5 && i === 4 && "md:col-span-2",
+                )}
+              >
                 <article className="flex h-full flex-col rounded-2xl border border-white/10 bg-dark-card p-7 text-paper md:p-8">
                   <span className="font-mono text-mono text-olive-light">
                     {area.index}
