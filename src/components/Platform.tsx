@@ -21,7 +21,7 @@ export default function Platform() {
               split="words"
               stagger={0.035}
               duration={0.95}
-              className="text-title max-w-[20ch] text-balance font-light leading-[1.06] tracking-[-0.03em] [word-spacing:-0.05em] text-ink"
+              className="text-title max-w-[20ch] text-balance font-light leading-[1.06] text-ink"
             />
 
             <InViewItem className="mt-10 max-w-[62ch] md:mt-12">

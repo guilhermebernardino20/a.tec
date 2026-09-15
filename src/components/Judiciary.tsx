@@ -23,7 +23,7 @@ export default function Judiciary() {
             {METRICS.map((m) => (
               <InViewItem as="li" key={m.label}>
                 <SpotlightCard className="h-full rounded-sm px-4 py-8 md:px-6 md:py-10">
-                  <div className="text-[clamp(2.5rem,4.6vw,4rem)] font-extralight leading-none tracking-[-0.03em] text-ink">
+                  <div className="text-[clamp(2.5rem,4.6vw,4rem)] font-extralight leading-none text-ink">
                     <AnimatedNumber value={m.value} prefix={m.prefix} />
                   </div>
                   <p className="mt-2 max-w-[20ch] text-body text-ink">

@@ -1,21 +1,13 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Plus_Jakarta_Sans, Prompt } from "next/font/google";
+import { Geist_Mono, Urbanist } from "next/font/google";
 import SmoothScroll from "@/components/SmoothScroll";
 import Grain from "@/components/ui/Grain";
 import AmbientGlow from "@/components/AmbientGlow";
 import "./globals.css";
 
-const prompt = Prompt({
-  variable: "--font-prompt-face",
-  subsets: ["latin"],
-  weight: ["200", "300", "400", "500"],
-  display: "swap",
-});
-
-// corpo de texto: humanista, com contraforma aberta — segura parágrafo
-// longo sem o ar de interface genérica
-const body = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta-sans",
+// títulos e corpo: Urbanist (variável, todos os pesos)
+const urbanist = Urbanist({
+  variable: "--font-urbanist",
   subsets: ["latin"],
   display: "swap",
 });
@@ -62,7 +54,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="pt-BR"
       suppressHydrationWarning
-      className={`${prompt.variable} ${body.variable} ${mono.variable} h-full antialiased`}
+      className={`${urbanist.variable} ${mono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-paper text-ink">
         <SmoothScroll>{children}</SmoothScroll>

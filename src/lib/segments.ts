@@ -65,7 +65,7 @@ export const SEGMENTS: Record<Profile, Segment> = {
       },
       {
         index: "03",
-        title: "Invalidez Previdenciária",
+        title: "Fins Previdenciários",
         body: "Se o INSS, a seguradora ou a empresa negou o seu direito, preparamos o parecer que mostra a sua real limitação para o trabalho.",
         bullets: [
           "Benefício do INSS negado",
@@ -73,6 +73,17 @@ export const SEGMENTS: Record<Profile, Segment> = {
           "Perícia trabalhista",
         ],
         triageArea: "medicina",
+      },
+      {
+        index: "04",
+        title: "Engenharia Imobiliária",
+        body: "Rachaduras, infiltrações ou defeitos no imóvel que você comprou ou reformou: identificamos a causa e quem responde por ela.",
+        bullets: [
+          "Vícios construtivos e infiltrações",
+          "Imóvel novo entregue com defeito",
+          "Danos causados por obra vizinha",
+        ],
+        triageArea: "engenharias",
       },
     ],
   },

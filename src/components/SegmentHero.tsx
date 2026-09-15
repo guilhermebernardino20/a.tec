@@ -34,16 +34,18 @@ export default function SegmentHero({ segment }: { segment: Segment }) {
           <p className="text-xs font-medium uppercase tracking-[0.25em] text-olive">
             [ {segment.tag} ]
           </p>
-          <h1 className="mt-8 text-balance text-3xl font-bold leading-[1.08] tracking-tight text-paper sm:text-5xl lg:text-6xl">
-            {segment.heroTitle.map((line) => (
-              <span key={line} className="block">
-                {line}
-              </span>
-            ))}
-          </h1>
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-neutral-300 md:text-lg">
-            {segment.heroLead}
-          </p>
+          <div className="w-fit">
+            <h1 className="mt-8 text-balance text-3xl font-bold leading-[1.08] tracking-tight text-paper sm:text-5xl lg:text-6xl">
+              {segment.heroTitle.map((line) => (
+                <span key={line} className="block">
+                  {line}
+                </span>
+              ))}
+            </h1>
+            <p className="mt-6 w-0 min-w-full text-base leading-relaxed text-neutral-300 md:text-lg">
+              {segment.heroLead}
+            </p>
+          </div>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             {pf ? (

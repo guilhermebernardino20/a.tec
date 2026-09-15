@@ -34,12 +34,12 @@
   --color-dark-card: #121412;
   --color-dark-border: rgba(255, 255, 255, 0.1);
 
-  /* Prompt, disponível também como `font-prompt` */
-  --font-prompt: var(--font-prompt-face), ui-sans-serif, system-ui, sans-serif;
+  /* Urbanist em títulos e corpo; `font-prompt` mantido como alias */
+  --font-prompt: var(--font-urbanist), ui-sans-serif, system-ui, sans-serif;
   /* títulos e chamadas */
-  --font-sans: var(--font-prompt-face), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-urbanist), ui-sans-serif, system-ui, sans-serif;
   /* corpo, descrições e notas */
-  --font-body: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-urbanist), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* escala tipográfica fluida */
@@ -49,11 +49,11 @@
 
   --text-title: clamp(2.1rem, 4.6vw, 4.25rem);
   --text-title--line-height: 1.08;
-  --text-title--letter-spacing: -0.025em;
+  --text-title--letter-spacing: -0.015em;
 
   --text-heading: clamp(1.6rem, 2.6vw, 2.35rem);
   --text-heading--line-height: 1.12;
-  --text-heading--letter-spacing: -0.025em;
+  --text-heading--letter-spacing: -0.01em;
 
   --text-lead: clamp(1.125rem, 1.5vw, 1.46rem);
   --text-lead--line-height: 1.32;

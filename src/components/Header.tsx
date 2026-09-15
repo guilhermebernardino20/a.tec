@@ -39,10 +39,13 @@ export default function Header() {
     };
 
     measure();
+    // o herói abre com escala: mede de novo quando a moldura assenta
+    const settle = window.setTimeout(measure, 1900);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     return () => {
       cancelAnimationFrame(frame);
+      window.clearTimeout(settle);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
@@ -51,9 +54,11 @@ export default function Header() {
   useEffect(() => {
     if (!open) return;
     document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
     setScrollLock(true);
     return () => {
       document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
       setScrollLock(false);
     };
   }, [open]);
@@ -161,14 +166,14 @@ export default function Header() {
             />
 
             <Container>
-              <div className="mt-2 overflow-hidden rounded-2xl border border-dark-border bg-dark/95 text-paper backdrop-blur-xl">
+              <div className="mt-2 overflow-hidden rounded-2xl border border-white/10 bg-dark/95 text-paper backdrop-blur-2xl">
                 <ul>
                   {NAV.map((item) => (
-                    <li key={item.href} className="border-b border-paper/10">
+                    <li key={item.href} className="border-b border-white/5">
                       <a
                         href={item.href}
                         onClick={() => setOpen(false)}
-                        className="flex min-h-14 items-center justify-between px-6 py-5 text-lg font-medium transition-colors active:bg-white/5"
+                        className="flex min-h-14 items-center justify-between px-6 py-3.5 text-lg font-medium transition-colors active:bg-white/5"
                       >
                         {item.label}
                         <span className="text-paper/40">{item.index}</span>
@@ -179,7 +184,7 @@ export default function Header() {
                     <a
                       href="#contato"
                       onClick={() => setOpen(false)}
-                      className="flex min-h-14 items-center bg-olive px-6 py-5 text-lg font-medium text-dark transition-transform active:scale-[0.99]"
+                      className="flex min-h-14 items-center bg-olive px-6 py-3.5 text-lg font-medium text-dark transition-transform active:scale-[0.99]"
                     >
                       Agendar análise técnica
                     </a>

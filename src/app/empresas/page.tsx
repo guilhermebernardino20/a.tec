@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import TextRevealRoot from "@/components/TextRevealRoot";
 import SegmentHero from "@/components/SegmentHero";
 import SegmentAreas from "@/components/SegmentAreas";
+import AreaCards from "@/components/AreaCards";
 import Judiciary from "@/components/Judiciary";
 import AtecMatrix from "@/components/AtecMatrix";
 import AtecAjuda from "@/components/AtecAjuda";
@@ -25,7 +26,8 @@ export default function Empresas() {
       <TextRevealRoot />
       <main className="w-full max-w-full flex-1 overflow-x-clip">
         <SegmentHero segment={segment} />
-        <SegmentAreas segment={segment} />
+        <SegmentAreas segment={segment} showCards={false} />
+        <AreaCards />
         <AtecMatrix />
         <Judiciary />
         <AtecAjuda />

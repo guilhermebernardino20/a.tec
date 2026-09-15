@@ -92,16 +92,16 @@ export default function SpecialtyDrawer({
             }
             transition={{ duration: 0.6, ease: EASE }}
             className={cn(
-              "absolute flex flex-col bg-neutral-900/90 text-paper backdrop-blur-md",
+              "absolute flex flex-col text-paper",
               sheet
-                ? "inset-x-0 bottom-0 max-h-[88vh] rounded-t-2xl border-t border-white/10 shadow-2xl"
-                : "inset-y-0 right-0 w-1/2 min-w-[420px] max-w-[760px] border-l border-white/10",
+                ? "inset-x-0 bottom-0 max-h-[88vh] w-full rounded-t-3xl border-t border-white/15 bg-dark/95 shadow-2xl backdrop-blur-2xl"
+                : "inset-y-0 right-0 w-1/2 min-w-[420px] max-w-xl border-l border-white/10 bg-neutral-900/90 backdrop-blur-md",
             )}
           >
             {sheet ? (
               <span
                 aria-hidden
-                className="mx-auto mt-3 h-1 w-12 shrink-0 rounded-full bg-white/20"
+                className="mx-auto my-3 h-1.5 w-12 shrink-0 rounded-full bg-white/20"
               />
             ) : null}
             <header className="flex items-start justify-between gap-6 border-b border-paper/12 px-6 py-6 md:px-10">

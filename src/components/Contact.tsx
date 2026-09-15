@@ -222,7 +222,7 @@ function AttachmentField({
                 type="button"
                 onClick={() => onRemove(index)}
                 aria-label={`Remover o anexo ${file.name}`}
-                className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-ink/15 text-ink transition-all hover:border-olive-brand hover:bg-olive-brand/10 active:scale-[0.96]"
+                className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-ink/15 text-ink transition-all hover:border-olive-brand hover:bg-olive-brand/10 active:scale-[0.96]"
               >
                 <X aria-hidden size={16} strokeWidth={1.75} />
               </button>
@@ -267,9 +267,16 @@ function AttachmentField({
             aria-hidden
             size={18}
             strokeWidth={1.5}
-            className="text-ink-mute"
+            className="hidden text-ink-mute md:block"
           />
-          <span className="text-sm text-ink-soft">
+          {/* no celular não há arrastar: o botão é o gesto principal */}
+          <span className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-ink px-5 py-3 text-base font-medium text-paper transition-transform duration-200 active:scale-[0.98] md:hidden">
+            <FileText aria-hidden size={18} strokeWidth={1.75} />
+            {files.length
+              ? "Adicionar outro arquivo"
+              : "Selecionar PDF ou Word"}
+          </span>
+          <span className="hidden text-sm text-ink-soft md:block">
             {files.length
               ? "Adicionar mais documentos"
               : "Clique ou arraste petições, laudos ou documentos"}
@@ -412,15 +419,17 @@ export default function Contact({
         <div className="grid grid-cols-1 gap-x-8 gap-y-14 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <Mono className="text-ink-mute">{label}</Mono>
-            <h2
-              data-text-reveal
-              className="text-title mt-8 max-w-[16ch] text-balance font-light text-ink"
-            >
-              {title}
-            </h2>
-            <p className="mt-8 max-w-[40ch] text-body text-ink-soft md:text-lg md:leading-[1.45]">
-              {lead}
-            </p>
+            <div className="w-fit">
+              <h2
+                data-text-reveal
+                className="text-title mt-8 max-w-[16ch] text-balance font-light text-ink"
+              >
+                {title}
+              </h2>
+              <p className="mt-8 w-0 min-w-full text-body text-ink-soft md:text-lg md:leading-[1.45]">
+                {lead}
+              </p>
+            </div>
 
             <dl className="mt-12 grid grid-cols-1 gap-8 border-t border-ink/10 pt-8 sm:grid-cols-2 lg:grid-cols-1">
               <div>

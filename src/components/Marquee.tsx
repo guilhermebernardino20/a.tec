@@ -63,7 +63,7 @@ export default function Marquee() {
         {[0, 1, 2].map((k) => (
           <span
             key={k}
-            className="marquee-collection whitespace-nowrap pr-8 text-[clamp(3rem,9vw,9rem)] font-extralight leading-none tracking-[-0.03em] text-ink"
+            className="marquee-collection whitespace-nowrap pr-8 text-[clamp(3rem,9vw,9rem)] font-extralight leading-none text-ink"
           >
             {item}
           </span>

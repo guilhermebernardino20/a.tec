@@ -102,13 +102,13 @@ export default function BeforeAfterSlider() {
   };
 
   return (
-    <section id="comparativo" className="bg-paper py-20 md:py-32">
+    <section id="comparativo" className="bg-paper pt-20 md:pt-32">
       <Container>
-        <div className="grid grid-cols-1 gap-x-8 gap-y-8 pb-12 lg:grid-cols-12">
-          <div className="lg:col-span-3">
+        <div className="flex flex-col gap-6 pb-12">
+          <div>
             <Mono className="text-ink-mute">Antes e depois pericial</Mono>
           </div>
-          <div className="lg:col-span-9">
+          <div>
             <TextReveal
               as="h2"
               lines={[
@@ -116,90 +116,91 @@ export default function BeforeAfterSlider() {
                 "laudo comum e uma",
                 "estratégia vitoriosa.",
               ]}
-              className="text-title font-light leading-[1.06] tracking-[-0.03em] [word-spacing:-0.05em] text-ink"
+              className="text-title font-light leading-[1.06] text-ink"
             />
           </div>
         </div>
+      </Container>
 
-        <div
-          ref={wrapper}
-          onPointerDown={(e) => {
-            setDragging(true);
-            setFromClientX(e.clientX);
-          }}
-          className={cn(
-            // abaixo de md não há largura para duas colunas legíveis:
-            // o comparativo vira uma pilha e o divisor sai de cena
-            "relative isolate hidden select-none overflow-hidden rounded-2xl md:block",
-            dragging ? "cursor-grabbing" : "cursor-grab",
-          )}
+      {/* comparativo em tela cheia */}
+      <div
+        ref={wrapper}
+        onPointerDown={(e) => {
+          setDragging(true);
+          setFromClientX(e.clientX);
+        }}
+        className={cn(
+          // abaixo de md não há largura para duas colunas legíveis:
+          // o comparativo vira uma pilha e o divisor sai de cena
+          "relative isolate hidden min-h-[100svh] select-none overflow-hidden md:block",
+          dragging ? "cursor-grabbing" : "cursor-grab",
+        )}
+      >
+        {/* base — atuação a.tec */}
+        <Panel
+          tone="strong"
+          tag={STRONG.tag}
+          title={STRONG.title}
+          items={STRONG.items}
+        />
+
+        {/* sobreposição recortada — laudo comum */}
+        <motion.div
+          style={{ clipPath: clip }}
+          className="absolute inset-0 z-10 will-change-[clip-path]"
         >
-          {/* base — atuação a.tec */}
-          <Panel
-            tone="strong"
-            tag={STRONG.tag}
-            title={STRONG.title}
-            items={STRONG.items}
-          />
-
-          {/* sobreposição recortada — laudo comum */}
-          <motion.div
-            style={{ clipPath: clip }}
-            className="absolute inset-0 z-10 will-change-[clip-path]"
-          >
-            <Panel
-              tone="weak"
-              tag={WEAK.tag}
-              title={WEAK.title}
-              items={WEAK.items}
-            />
-          </motion.div>
-
-          {/* divisor */}
-          <motion.div
-            style={{ left: handleLeft }}
-            className="absolute inset-y-0 z-20 w-px -translate-x-1/2 bg-paper/35"
-          >
-            <button
-              type="button"
-              role="slider"
-              tabIndex={0}
-              aria-label="Comparar laudo comum e atuação da a.tec"
-              aria-valuemin={4}
-              aria-valuemax={96}
-              aria-valuenow={announced}
-              aria-valuetext={`${announced}% de laudo comum à mostra`}
-              onKeyDown={onKeyDown}
-              onPointerDown={(e) => {
-                e.stopPropagation();
-                setDragging(true);
-              }}
-              className="absolute left-1/2 top-1/2 flex h-11 w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center gap-[3px] rounded-full border border-paper/25 bg-paper/10 backdrop-blur-md transition-colors duration-300 hover:border-paper/60"
-            >
-              <span aria-hidden className="h-3.5 w-px bg-paper/70" />
-              <span aria-hidden className="h-3.5 w-px bg-paper/70" />
-            </button>
-          </motion.div>
-        </div>
-
-        {/* pilha equivalente, para telas estreitas */}
-        <div className="grid grid-cols-1 overflow-hidden rounded-2xl md:hidden">
           <Panel
             tone="weak"
-            stacked
             tag={WEAK.tag}
             title={WEAK.title}
             items={WEAK.items}
           />
-          <Panel
-            tone="strong"
-            stacked
-            tag={STRONG.tag}
-            title={STRONG.title}
-            items={STRONG.items}
-          />
-        </div>
-      </Container>
+        </motion.div>
+
+        {/* divisor */}
+        <motion.div
+          style={{ left: handleLeft }}
+          className="absolute inset-y-0 z-20 w-px -translate-x-1/2 bg-paper/35"
+        >
+          <button
+            type="button"
+            role="slider"
+            tabIndex={0}
+            aria-label="Comparar laudo comum e atuação da a.tec"
+            aria-valuemin={4}
+            aria-valuemax={96}
+            aria-valuenow={announced}
+            aria-valuetext={`${announced}% de laudo comum à mostra`}
+            onKeyDown={onKeyDown}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              setDragging(true);
+            }}
+            className="absolute left-1/2 top-1/2 flex h-11 w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center gap-[3px] rounded-full border border-paper/25 bg-paper/10 backdrop-blur-md transition-colors duration-300 hover:border-paper/60"
+          >
+            <span aria-hidden className="h-3.5 w-px bg-paper/70" />
+            <span aria-hidden className="h-3.5 w-px bg-paper/70" />
+          </button>
+        </motion.div>
+      </div>
+
+      {/* pilha equivalente, para telas estreitas */}
+      <div className="grid grid-cols-1 overflow-hidden md:hidden">
+        <Panel
+          tone="weak"
+          stacked
+          tag={WEAK.tag}
+          title={WEAK.title}
+          items={WEAK.items}
+        />
+        <Panel
+          tone="strong"
+          stacked
+          tag={STRONG.tag}
+          title={STRONG.title}
+          items={STRONG.items}
+        />
+      </div>
     </section>
   );
 }
@@ -224,8 +225,9 @@ function Panel({
   return (
     <div
       className={cn(
-        "flex h-full flex-col justify-between gap-10 p-7 md:p-12",
-        stacked ? "gap-8" : "min-h-[520px] md:min-h-[560px]",
+        // padding lateral alinhado à grade do Container (max-w-7xl)
+        "flex h-full flex-col justify-between gap-10 px-6 pb-12 pt-24 md:px-12 md:pb-20 md:pt-28 xl:px-[calc((100vw-80rem)/2+3rem)]",
+        "min-h-[100svh]",
         weak ? "bg-stone text-ink" : "bg-olive-deep text-paper",
         // no comparativo lado a lado, cada painel encosta na metade que ocupa
         alignRight ? "items-end text-right" : "items-start text-left",

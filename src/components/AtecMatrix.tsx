@@ -154,7 +154,7 @@ export default function AtecMatrix() {
                         aria-pressed={active}
                         aria-controls="matrix-resultado"
                         className={cn(
-                          "group flex min-h-14 w-full items-center justify-between gap-4 rounded-xl px-3 py-4 text-left transition-all duration-300 hover:bg-white/[0.03] active:scale-[0.99]",
+                          "group flex min-h-14 w-full items-center justify-between gap-4 min-h-[48px] rounded-xl px-4 py-4 text-left transition-all duration-300 hover:bg-white/[0.03] active:scale-[0.99]",
                           active
                             ? "text-paper"
                             : "text-paper/55 hover:text-paper",

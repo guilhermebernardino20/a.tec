@@ -72,7 +72,7 @@ export default function AtecAjuda() {
   const step = STEPS[active];
 
   return (
-    <section id="processo" className="relative bg-paper md:py-32">
+    <section id="processo" className="relative bg-paper">
       {/* halo de brilho por trás da moldura */}
       <div
         aria-hidden
@@ -84,13 +84,13 @@ export default function AtecAjuda() {
         className="relative"
         style={{ height: `calc(100svh + ${STEPS.length * STEP_SCROLL}px)` }}
       >
-        <div className="sticky top-0 flex h-[100svh] items-center md:py-24">
-          <Container className="w-full max-md:h-full max-md:px-0">
-            {/* no celular a moldura vira tela cheia; do tablet para cima, cartão */}
-            <div
-              data-surface="dark"
-              className="relative flex flex-col overflow-hidden bg-dark-card px-6 pb-[max(2rem,env(safe-area-inset-bottom))] pt-24 text-paper max-md:h-full md:rounded-2xl md:border md:border-dark-border md:bg-dark-card/95 md:p-12 md:shadow-[0_40px_120px_-40px_rgba(12,17,11,0.9)] md:backdrop-blur-md"
-            >
+        <div className="sticky top-0 flex h-[100svh]">
+          {/* moldura em tela cheia; o conteúdo segue a grade do site */}
+          <div
+            data-surface="dark"
+            className="relative h-full w-full overflow-hidden bg-dark-card text-paper"
+          >
+            <Container className="flex h-full flex-col pb-[max(2rem,env(safe-area-inset-bottom))] pt-24 md:pb-12 md:pt-28">
               {/* cabeçalho da moldura */}
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <span className="inline-flex items-center gap-2.5 border border-dark-border bg-white/[0.03] px-3 py-2">
@@ -156,8 +156,8 @@ export default function AtecAjuda() {
                 active={active}
                 onSelect={goTo}
               />
-            </div>
-          </Container>
+            </Container>
+          </div>
         </div>
       </div>
     </section>

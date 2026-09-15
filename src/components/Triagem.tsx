@@ -185,14 +185,20 @@ export default function Triagem() {
             }
             transition={{ duration: 0.5, ease: EASE }}
             className={cn(
-              "relative flex max-h-[92svh] w-full flex-col bg-neutral-900/90 text-paper shadow-2xl backdrop-blur-md",
+              "relative flex max-h-[88svh] w-full flex-col text-paper shadow-2xl",
               sheet
-                ? "rounded-t-2xl border-t border-white/10"
-                : "max-w-2xl rounded-2xl border border-white/10",
+                ? "rounded-t-3xl border-t border-white/15 bg-dark/95 backdrop-blur-2xl"
+                : "max-w-2xl rounded-2xl border border-white/10 bg-neutral-900/90 backdrop-blur-md",
             )}
           >
             {/* cabeçalho: perfil, progresso e fechar */}
-            <header className="flex items-start justify-between gap-6 px-6 pb-5 pt-6 md:px-10 md:pt-8">
+            {sheet ? (
+              <span
+                aria-hidden
+                className="mx-auto my-3 h-1.5 w-12 shrink-0 rounded-full bg-white/20"
+              />
+            ) : null}
+            <header className="flex items-start justify-between gap-6 px-6 pb-5 pt-3 md:px-10 md:pt-8">
               <div className="min-w-0">
                 <Mono className="text-paper/50">
                   {PROFILE_LABEL[profile]} · Etapa {step + 1} de 3

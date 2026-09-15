@@ -129,7 +129,7 @@ export default function Hero() {
       variants={frame}
       initial="hidden"
       animate="show"
-      className="relative flex min-h-screen w-full origin-center flex-col justify-between overflow-hidden rounded-none bg-dark pb-14 pt-24 will-change-transform supports-[height:100svh]:min-h-[100svh] md:pb-16 md:pt-28"
+      className="relative flex min-h-screen w-full origin-center flex-col justify-between overflow-hidden rounded-none bg-dark pb-8 pt-24 will-change-transform supports-[height:100svh]:min-h-[100svh] md:pb-16 md:pt-28"
     >
       {/* fundo: camada externa é do scrub (GSAP), interna é da entrada */}
       <div
@@ -170,44 +170,47 @@ export default function Hero() {
                 variants={eyebrow}
                 className="text-xs font-medium uppercase tracking-[0.25em] text-olive"
               >
-                Assistência Técnica Judicial • Prova Pericial Blindada
+                Prova Pericial Blindada
               </motion.p>
 
-              <motion.h1
-                variants={title}
-                className="mt-8 max-w-3xl text-balance font-sans text-3xl font-bold leading-[1.08] tracking-tight text-paper will-change-transform sm:text-5xl lg:text-6xl xl:text-7xl"
-              >
-                {TITLE_LINES.map((line) => (
-                  <span key={line} className="-my-2 block px-1 pb-2 pt-2">
-                    {line}
-                  </span>
-                ))}
-              </motion.h1>
+              {/* o subtítulo acompanha a largura do título */}
+              <div className="w-fit">
+                <motion.h1
+                  variants={title}
+                  className="mt-5 max-w-3xl text-balance sm:mt-8 font-sans text-3xl font-bold leading-[1.08] tracking-tight text-paper will-change-transform sm:text-5xl lg:text-6xl xl:text-7xl"
+                >
+                  {TITLE_LINES.map((line) => (
+                    <span key={line} className="-my-2 block px-1 pb-2 pt-2">
+                      {line}
+                    </span>
+                  ))}
+                </motion.h1>
 
-              <motion.p
-                variants={lead}
-                className="mt-6 max-w-xl text-base leading-relaxed text-neutral-300 md:text-lg"
-              >
-                Assistência técnica e perícias em Medicina, Psicologia,
-                Engenharias e Avaliações Imobiliárias. Transformamos técnica em
-                estratégia.
-              </motion.p>
+                <motion.p
+                  variants={lead}
+                  className="mt-6 hidden w-0 min-w-full text-base leading-relaxed text-neutral-300 sm:block md:text-lg"
+                >
+                  Assistência técnica e perícias em Medicina, Psicologia,
+                  Engenharias e Avaliações Imobiliárias. Transformamos técnica
+                  em estratégia.
+                </motion.p>
+              </div>
 
               {/* portal de entrada: dois caminhos, um por público */}
               <motion.div
                 variants={tail}
-                className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6"
+                className="mt-6 grid grid-cols-1 gap-4 sm:mt-10 sm:gap-6 md:grid-cols-2 lg:w-[min(72rem,calc(100vw-6rem))]"
               >
                 {[SEGMENTS.pf, SEGMENTS.pj].map((seg) => (
                   <Link
                     key={seg.href}
                     href={seg.href}
-                    className="group flex flex-col rounded-2xl border border-white/10 bg-neutral-900/50 p-6 text-left backdrop-blur-md hover:border-olive/40 hover:bg-white/[0.03] transition-all duration-300 active:scale-[0.99] md:p-8"
+                    className="group flex flex-col rounded-2xl border border-white/10 bg-neutral-900/50 p-5 text-left backdrop-blur-md hover:border-olive/40 hover:bg-white/[0.03] transition-all duration-300 active:scale-[0.98] sm:p-6 md:p-10 lg:min-h-[280px]"
                   >
                     <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-olive">
                       [ {seg.tag} ]
                     </span>
-                    <span className="mt-5 font-sans text-2xl font-semibold leading-tight text-paper md:text-3xl">
+                    <span className="mt-5 font-sans text-2xl font-semibold leading-tight text-paper sm:text-3xl lg:text-4xl">
                       {seg.cardTitle}
                     </span>
                     <span className="mt-3 text-sm leading-relaxed text-neutral-300 md:text-[15px]">
