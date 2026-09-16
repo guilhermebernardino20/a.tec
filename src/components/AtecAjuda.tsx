@@ -221,26 +221,10 @@ function VerticalRail({
         <ChevronUp aria-hidden size={18} strokeWidth={1.75} />
       </button>
 
-      {/* trilho: uma guia fina com o preenchimento e o ponto de luz do
-         scroll, e ao lado a coluna de cartões — o mesmo cartão com borda
-         usado em toda a a.tec Matrix — um por etapa */}
+      {/* trilho: a coluna de cartões — o mesmo cartão com borda usado em
+         toda a a.tec Matrix — e, à direita, a guia fina com o
+         preenchimento e o ponto de luz do scroll */}
       <div className="my-3 flex flex-1 items-stretch gap-3 md:gap-4">
-        <div className="relative w-1 shrink-0 self-stretch">
-          <div className="absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 rounded-full bg-white/10" />
-          <motion.span
-            aria-hidden
-            style={{ scaleY: litScale }}
-            className="absolute left-1/2 top-0 h-full w-1 origin-top -translate-x-1/2 rounded-full bg-gradient-to-b from-olive via-sage to-lime"
-          />
-          <motion.span
-            aria-hidden
-            style={{ top }}
-            className="absolute left-1/2 z-10 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-lime"
-          >
-            <span className="absolute inset-0 -m-2 rounded-full bg-lime/25 blur-[6px]" />
-          </motion.span>
-        </div>
-
         <div className="flex flex-1 flex-col gap-2 md:gap-3">
           {STEPS.map((s, i) => (
             <button
@@ -278,6 +262,22 @@ function VerticalRail({
               </span>
             </button>
           ))}
+        </div>
+
+        <div className="relative w-1 shrink-0 self-stretch">
+          <div className="absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 rounded-full bg-white/10" />
+          <motion.span
+            aria-hidden
+            style={{ scaleY: litScale }}
+            className="absolute left-1/2 top-0 h-full w-1 origin-top -translate-x-1/2 rounded-full bg-gradient-to-b from-olive via-sage to-lime"
+          />
+          <motion.span
+            aria-hidden
+            style={{ top }}
+            className="absolute left-1/2 z-10 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-lime"
+          >
+            <span className="absolute inset-0 -m-2 rounded-full bg-lime/25 blur-[6px]" />
+          </motion.span>
         </div>
       </div>
 
