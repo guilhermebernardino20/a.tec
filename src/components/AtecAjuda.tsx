@@ -11,6 +11,7 @@ import {
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLenis } from "lenis/react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import Container from "@/components/ui/Container";
 import Mono from "@/components/ui/Mono";
 import SpotlightCard from "@/components/ui/SpotlightCard";
@@ -28,9 +29,10 @@ const STEP_SCROLL = 320;
  * Metodologia da a.tec — as cinco etapas da prova.
  *
  * O painel gruda na viewport enquanto a seção é percorrida: a etapa
- * ativa troca, o ponto de luz corre pela fibra e os cartões acendem em
- * sequência. O progresso vive em um motion value, então só a troca de
- * etapa toca no estado do React.
+ * ativa troca e o trilho vertical acompanha o progresso. Rolar a página
+ * é só um dos jeitos de navegar — os botões de avançar/voltar e os
+ * marcadores do trilho levam direto a qualquer etapa, sem depender do
+ * gesto de rolagem.
  */
 export default function AtecAjuda() {
   const scroller = useRef<HTMLDivElement>(null);
@@ -40,11 +42,13 @@ export default function AtecAjuda() {
 
   /** leva a rolagem ao meio do trecho da etapa escolhida */
   const goTo = (i: number) => {
+    const target = Math.min(STEPS.length - 1, Math.max(0, i));
     const el = scroller.current;
     if (!el) return;
     const top = el.getBoundingClientRect().top + window.scrollY;
     const y =
-      top + ((i + 0.5) / STEPS.length) * (el.offsetHeight - window.innerHeight);
+      top +
+      ((target + 0.5) / STEPS.length) * (el.offsetHeight - window.innerHeight);
     if (lenis) lenis.scrollTo(y, { duration: 0.9 });
     else window.scrollTo({ top: y, behavior: "smooth" });
   };
@@ -70,6 +74,8 @@ export default function AtecAjuda() {
   }, [railProgress]);
 
   const step = STEPS[active];
+  const isFirst = active === 0;
+  const isLast = active === STEPS.length - 1;
 
   return (
     <section id="processo" className="relative bg-paper">
@@ -111,12 +117,12 @@ export default function AtecAjuda() {
                 </div>
               </div>
 
-              {/* etapa ativa */}
-              <div className="flex flex-1 items-center py-6 md:py-0">
+              {/* corpo: etapa ativa à esquerda, trilho vertical à direita */}
+              <div className="flex flex-1 items-center gap-6 py-6 md:gap-12 md:py-0">
                 <SpotlightCard
                   tone="dark"
                   size={560}
-                  className="relative w-full rounded-sm py-2 md:mt-16 md:py-4"
+                  className="relative min-w-0 flex-1 rounded-sm py-2 md:py-4"
                 >
                   {STEPS.map((s, i) => (
                     <div
@@ -149,13 +155,17 @@ export default function AtecAjuda() {
                     </div>
                   ))}
                 </SpotlightCard>
-              </div>
 
-              <FiberRail
-                progress={railProgress}
-                active={active}
-                onSelect={goTo}
-              />
+                <VerticalRail
+                  progress={railProgress}
+                  active={active}
+                  onSelect={goTo}
+                  onPrev={() => goTo(active - 1)}
+                  onNext={() => goTo(active + 1)}
+                  disablePrev={isFirst}
+                  disableNext={isLast}
+                />
+              </div>
             </Container>
           </div>
         </div>
@@ -165,71 +175,82 @@ export default function AtecAjuda() {
 }
 
 /**
- * Linha do tempo em fibra óptica ligando os cartões das etapas: um ponto
- * de luz corre pelo filete e acende cada nó na passagem.
+ * Trilho vertical da metodologia: uma linha de cima para baixo com um
+ * marcador por etapa, o trecho já percorrido aceso e um ponto de luz na
+ * posição exata do scroll. Setas no topo e na base avançam e voltam uma
+ * etapa por vez, sem depender da rolagem.
  */
-function FiberRail({
+function VerticalRail({
   progress,
   active,
   onSelect,
+  onPrev,
+  onNext,
+  disablePrev,
+  disableNext,
 }: {
   progress: MotionValue<number>;
   active: number;
   onSelect: (index: number) => void;
+  onPrev: () => void;
+  onNext: () => void;
+  disablePrev: boolean;
+  disableNext: boolean;
 }) {
   const percent = useTransform(
     progress,
     (v) => Math.min(1, Math.max(0, v)) * 100,
   );
-  const left = useMotionTemplate`${percent}%`;
+  const top = useMotionTemplate`${percent}%`;
   const litScale = useTransform(progress, (v) => Math.min(1, Math.max(0, v)));
 
+  // mesmo acabamento das outras superfícies escuras do site (cartão com
+  // borda, vidro e o realce oliva/lima no hover e na etapa ativa)
+  const navButton =
+    "grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/10 bg-dark-card/85 text-paper/70 backdrop-blur-md transition-all duration-300 hover:border-olive/40 hover:bg-white/[0.03] hover:text-paper active:scale-[0.94] disabled:pointer-events-none disabled:opacity-30";
+
   return (
-    <div className="md:mt-16">
-      <div className="relative h-px w-full bg-white/10">
-        <motion.span
-          aria-hidden
-          style={{ scaleX: litScale }}
-          className="absolute inset-0 h-px origin-left bg-gradient-to-r from-olive via-sage to-lime"
-        />
+    <div className="flex h-full shrink-0 flex-col items-center">
+      <button
+        type="button"
+        onClick={onPrev}
+        disabled={disablePrev}
+        aria-label="Etapa anterior"
+        className={navButton}
+      >
+        <ChevronUp aria-hidden size={18} strokeWidth={1.75} />
+      </button>
 
-        <motion.span
-          aria-hidden
-          style={{ left }}
-          className="absolute top-1/2 z-10 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-lime"
-        >
-          <span className="absolute inset-0 -m-2 rounded-full bg-lime/25 blur-[6px]" />
-        </motion.span>
-
-        {STEPS.map((s, i) => (
-          <span
-            key={s.index}
+      {/* trilho: uma guia fina com o preenchimento e o ponto de luz do
+         scroll, e ao lado a coluna de cartões — o mesmo cartão com borda
+         usado em toda a a.tec Matrix — um por etapa */}
+      <div className="my-3 flex flex-1 items-stretch gap-3 md:gap-4">
+        <div className="relative w-1 shrink-0 self-stretch">
+          <div className="absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 rounded-full bg-white/10" />
+          <motion.span
             aria-hidden
-            className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
-            style={{ left: `${((i + 0.5) / STEPS.length) * 100}%` }}
+            style={{ scaleY: litScale }}
+            className="absolute left-1/2 top-0 h-full w-1 origin-top -translate-x-1/2 rounded-full bg-gradient-to-b from-olive via-sage to-lime"
+          />
+          <motion.span
+            aria-hidden
+            style={{ top }}
+            className="absolute left-1/2 z-10 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-lime"
           >
-            <span
-              className={cn(
-                "block h-1.5 w-1.5 rounded-full transition-all duration-500",
-                i <= active
-                  ? "bg-lime shadow-[0_0_10px_rgba(183,212,146,0.8)]"
-                  : "bg-white/25",
-              )}
-            />
-          </span>
-        ))}
-      </div>
+            <span className="absolute inset-0 -m-2 rounded-full bg-lime/25 blur-[6px]" />
+          </motion.span>
+        </div>
 
-      <ol className="mt-4 grid grid-cols-5 gap-2 md:gap-3">
-        {STEPS.map((s, i) => (
-          <li key={s.index}>
+        <div className="flex flex-1 flex-col gap-2 md:gap-3">
+          {STEPS.map((s, i) => (
             <button
+              key={s.index}
               type="button"
               onClick={() => onSelect(i)}
               aria-label={`Ir para a etapa ${s.index}: ${s.title}`}
               aria-current={i === active ? "step" : undefined}
               className={cn(
-                "group/step block h-full min-h-11 w-full cursor-pointer rounded-xl border bg-dark-card/85 p-2.5 text-left backdrop-blur-md transition-all duration-300 md:p-4",
+                "flex min-h-11 min-w-11 flex-1 items-center gap-2.5 rounded-xl border bg-dark-card/85 px-3 backdrop-blur-md transition-all duration-300 md:min-w-0 md:gap-3 md:px-4",
                 i === active
                   ? "border-olive/50 shadow-[0_0_24px_-8px_rgba(127,153,112,0.65)]"
                   : "border-white/10 hover:border-olive/40 hover:bg-white/[0.03] active:scale-[0.99]",
@@ -237,7 +258,7 @@ function FiberRail({
             >
               <span
                 className={cn(
-                  "block font-mono text-mono uppercase transition-colors duration-500",
+                  "font-mono text-mono uppercase transition-colors duration-300",
                   i <= active ? "text-lime" : "text-paper/35",
                 )}
               >
@@ -245,7 +266,7 @@ function FiberRail({
               </span>
               <span
                 className={cn(
-                  "mt-2 hidden text-sm font-light leading-tight transition-colors duration-500 sm:block",
+                  "hidden whitespace-nowrap text-sm font-light leading-tight transition-colors duration-300 md:inline",
                   i === active
                     ? "text-paper"
                     : i < active
@@ -256,9 +277,19 @@ function FiberRail({
                 {s.short}
               </span>
             </button>
-          </li>
-        ))}
-      </ol>
+          ))}
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={onNext}
+        disabled={disableNext}
+        aria-label="Próxima etapa"
+        className={navButton}
+      >
+        <ChevronDown aria-hidden size={18} strokeWidth={1.75} />
+      </button>
     </div>
   );
 }

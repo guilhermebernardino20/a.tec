@@ -35,54 +35,94 @@ const NOISE = `data:image/svg+xml,${encodeURIComponent(
  * repintavam a tela inteira a cada quadro.)
  */
 const frame: Variants = {
-  hidden: { scale: 0.82, opacity: 0 },
+  // nasce como um bloco pequeno no centro e abre até a tela inteira
+  hidden: { scale: 0.22, opacity: 0, borderRadius: 28 },
   show: {
     scale: 1,
     opacity: 1,
-    transition: { duration: 1.8, ease: EASE_INTEGRATED },
+    borderRadius: 0,
+    transition: { duration: 2.6, ease: EASE_INTEGRATED },
   },
 };
 
 /** contra-escala: a câmera recua enquanto a janela abre */
 const backdrop: Variants = {
-  hidden: { scale: 1.18 },
-  show: { scale: 1, transition: { duration: 2.4, ease: EASE_INTEGRATED } },
+  hidden: { scale: 1.22 },
+  show: { scale: 1, transition: { duration: 3.6, ease: EASE_INTEGRATED } },
 };
 
+/** feixe que varre a tela uma vez, no início */
+const sweep: Variants = {
+  hidden: { x: "-60%", opacity: 0 },
+  show: {
+    x: "170%",
+    opacity: [0, 0.9, 0.9, 0],
+    transition: {
+      duration: 2.6,
+      delay: 1.0,
+      ease: "linear",
+      times: [0, 0.15, 0.7, 1],
+    },
+  },
+};
+
+/** filete que abre sob o selo, como a régua de um instrumento */
+const rule: Variants = {
+  hidden: { scaleX: 0 },
+  show: {
+    scaleX: 1,
+    transition: { duration: 1.6, delay: 1.1, ease: EASE_INTEGRATED },
+  },
+};
+
+/** selo: o texto é descoberto da esquerda para a direita */
 const eyebrow: Variants = {
-  hidden: { opacity: 0, y: 12 },
+  hidden: { opacity: 0, clipPath: "inset(0 100% 0 0)" },
   show: {
     opacity: 1,
-    y: 0,
-    transition: { duration: 1, delay: 0.6, ease: EASE_INTEGRATED },
+    clipPath: "inset(0 0% 0 0)",
+    transition: { duration: 1.4, delay: 1.25, ease: EASE_INTEGRATED },
   },
 };
 
-/** título: entra quando a expansão já passou de ~40% do percurso */
-const title: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  show: {
+/** cada linha do título sobe do desfoque, uma depois da outra */
+const titleLine: Variants = {
+  hidden: { opacity: 0, y: 44, filter: "blur(14px)" },
+  show: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 1.2, delay: 0.7, ease: EASE_INTEGRATED },
-  },
+    filter: "blur(0px)",
+    transition: {
+      duration: 1.5,
+      delay: 1.55 + i * 0.22,
+      ease: EASE_INTEGRATED,
+    },
+  }),
 };
 
 const lead: Variants = {
-  hidden: { opacity: 0, y: 16 },
+  hidden: { opacity: 0, y: 20, filter: "blur(8px)" },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 1.1, delay: 0.9, ease: EASE_INTEGRATED },
+    filter: "blur(0px)",
+    transition: { duration: 1.3, delay: 2.35, ease: EASE_INTEGRATED },
   },
 };
 
+/** os dois cards entram em sequência, fechando a abertura */
 const tail: Variants = {
-  hidden: { opacity: 0, y: 16 },
+  hidden: {},
+  show: { transition: { delayChildren: 2.6, staggerChildren: 0.22 } },
+};
+
+const card: Variants = {
+  hidden: { opacity: 0, y: 34, filter: "blur(10px)" },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 1, delay: 1.05, ease: EASE_INTEGRATED },
+    filter: "blur(0px)",
+    transition: { duration: 1.2, ease: EASE_INTEGRATED },
   },
 };
 
@@ -151,6 +191,12 @@ export default function Hero() {
           <div className="absolute inset-0 bg-gradient-to-r from-dark via-dark/55 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-dark/85 to-transparent" />
 
+          {/* feixe de varredura da abertura */}
+          <motion.div
+            variants={sweep}
+            className="absolute inset-y-0 left-0 w-[40%] bg-gradient-to-r from-transparent via-olive/20 to-transparent mix-blend-screen"
+          />
+
           {/* granulação de papel */}
           <div
             className="absolute inset-0 opacity-[0.02]"
@@ -172,17 +218,24 @@ export default function Hero() {
               >
                 Prova Pericial Blindada
               </motion.p>
+              <motion.span
+                aria-hidden
+                variants={rule}
+                className="mt-4 block h-px w-full max-w-sm origin-left bg-gradient-to-r from-olive/60 to-transparent"
+              />
 
               {/* o subtítulo acompanha a largura do título */}
               <div className="w-fit">
-                <motion.h1
-                  variants={title}
-                  className="mt-5 max-w-3xl text-balance sm:mt-8 font-sans text-3xl font-bold leading-[1.08] tracking-tight text-paper will-change-transform sm:text-5xl lg:text-6xl xl:text-7xl"
-                >
-                  {TITLE_LINES.map((line) => (
-                    <span key={line} className="-my-2 block px-1 pb-2 pt-2">
+                <motion.h1 className="mt-5 max-w-3xl text-balance sm:mt-8 font-sans text-3xl font-bold leading-[1.08] tracking-tight text-paper will-change-transform sm:text-5xl lg:text-6xl xl:text-7xl">
+                  {TITLE_LINES.map((line, i) => (
+                    <motion.span
+                      key={line}
+                      custom={i}
+                      variants={titleLine}
+                      className="-my-2 block px-1 pb-2 pt-2 will-change-transform"
+                    >
                       {line}
-                    </span>
+                    </motion.span>
                   ))}
                 </motion.h1>
 
@@ -202,30 +255,31 @@ export default function Hero() {
                 className="mt-6 grid grid-cols-1 gap-4 sm:mt-10 sm:gap-6 md:grid-cols-2 lg:w-[min(72rem,calc(100vw-6rem))]"
               >
                 {[SEGMENTS.pf, SEGMENTS.pj].map((seg) => (
-                  <Link
-                    key={seg.href}
-                    href={seg.href}
-                    className="group flex flex-col rounded-2xl border border-white/10 bg-neutral-900/50 p-5 text-left backdrop-blur-md hover:border-olive/40 hover:bg-white/[0.03] transition-all duration-300 active:scale-[0.98] sm:p-6 md:p-10 lg:min-h-[280px]"
-                  >
-                    <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-olive">
-                      [ {seg.tag} ]
-                    </span>
-                    <span className="mt-5 font-sans text-2xl font-semibold leading-tight text-paper sm:text-3xl lg:text-4xl">
-                      {seg.cardTitle}
-                    </span>
-                    <span className="mt-3 text-sm leading-relaxed text-neutral-300 md:text-[15px]">
-                      {seg.cardBody}
-                    </span>
-                    <span className="mt-auto flex items-center gap-2 pt-6 text-sm font-medium text-olive-light">
-                      {seg.cardCta}
-                      <span
-                        aria-hidden
-                        className="transition-transform duration-300 group-hover:translate-x-1"
-                      >
-                        →
+                  <motion.div key={seg.href} variants={card}>
+                    <Link
+                      href={seg.href}
+                      className="group flex flex-col rounded-2xl border border-white/10 bg-neutral-900/50 p-5 text-left backdrop-blur-md hover:border-olive/40 hover:bg-white/[0.03] transition-all duration-300 active:scale-[0.98] sm:p-6 md:p-10 lg:min-h-[280px]"
+                    >
+                      <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-olive">
+                        [ {seg.tag} ]
                       </span>
-                    </span>
-                  </Link>
+                      <span className="mt-5 font-sans text-2xl font-semibold leading-tight text-paper sm:text-3xl lg:text-4xl">
+                        {seg.cardTitle}
+                      </span>
+                      <span className="mt-3 text-sm leading-relaxed text-neutral-300 md:text-[15px]">
+                        {seg.cardBody}
+                      </span>
+                      <span className="mt-auto flex items-center gap-2 pt-6 text-sm font-medium text-olive-light">
+                        {seg.cardCta}
+                        <span
+                          aria-hidden
+                          className="transition-transform duration-300 group-hover:translate-x-1"
+                        >
+                          →
+                        </span>
+                      </span>
+                    </Link>
+                  </motion.div>
                 ))}
               </motion.div>
             </div>
