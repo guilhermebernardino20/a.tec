@@ -280,6 +280,29 @@ html.lenis body {
   animation: title-sheen 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
+/* Corpo do artigo do blog: conteúdo HTML estático vindo de src/data. */
+.prose-atec p {
+  margin-top: 1.5em;
+}
+.prose-atec p:first-child {
+  margin-top: 0;
+}
+.prose-atec h2 {
+  margin-top: 2em;
+  font-family: var(--font-sans);
+  font-size: var(--text-heading);
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--color-ink);
+}
+.prose-atec blockquote {
+  margin: 2em 0;
+  border-left: 3px solid var(--color-olive);
+  padding-left: 1.25em;
+  font-style: italic;
+  color: var(--color-olive-brand);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

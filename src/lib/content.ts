@@ -6,8 +6,9 @@
 export const NAV = [
   { index: "01", label: "Pessoa Física", href: "/pessoa-fisica" },
   { index: "02", label: "Empresas", href: "/empresas" },
-  { index: "03", label: "Sobre", href: "/#sobre" },
-  { index: "04", label: "Contato", href: "#contato" },
+  { index: "03", label: "Blog", href: "/blog" },
+  { index: "04", label: "Sobre", href: "/#sobre" },
+  { index: "05", label: "Contato", href: "#contato" },
 ] as const;
 
 export const METRICS = [

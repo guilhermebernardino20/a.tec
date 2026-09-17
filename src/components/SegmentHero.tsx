@@ -70,6 +70,12 @@ export default function SegmentHero({ segment }: { segment: Segment }) {
             >
               {pf ? "Entender como ajudamos" : "Conhecer a A.TEC Matrix"}
             </Link>
+            <Link
+              href={`${segment.href}/faq`}
+              className="inline-flex min-h-11 items-center justify-center text-center text-sm text-neutral-300 underline-offset-4 hover:text-paper hover:underline"
+            >
+              Perguntas frequentes →
+            </Link>
           </div>
         </motion.div>
       </Container>
