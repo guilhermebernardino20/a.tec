@@ -31,9 +31,8 @@ export const SEGMENTS: Record<Profile, Segment> = {
     profile: "pf",
     href: "/pessoa-fisica",
     tag: "Atendimento individual",
-    cardTitle: "Sou Pessoa Física",
-    cardBody:
-      "Preciso de defesa técnica e acompanhamento pericial para o meu processo (Erro Médico, Invalidez, Perícia Trabalhista ou Previdenciária).",
+    cardTitle: "Preciso de um laudo ou parecer técnico.",
+    cardBody: "Para quem precisa de ajuda com uma perícia judicial.",
     cardCta: "Acessar atendimento para Pessoa Física",
     heroTitle: ["Você não precisa", "enfrentar a perícia sozinho."],
     heroLead:
@@ -102,9 +101,9 @@ export const SEGMENTS: Record<Profile, Segment> = {
     profile: "pj",
     href: "/empresas",
     tag: "Corporativo & jurídico",
-    cardTitle: "Sou Empresa ou Advogado",
+    cardTitle: "Preciso de assistência técnica para um processo.",
     cardBody:
-      "Busco pareceres técnicos blindados, quesitos estratégicos e assistência em perícias de Engenharia, Medicina e Avaliações Imobiliárias.",
+      "Para empresas e advogados que precisam de acompanhamento técnico especializado.",
     cardCta: "Acessar soluções corporativas",
     heroTitle: ["Prova técnica blindada", "para litígios complexos."],
     heroLead:

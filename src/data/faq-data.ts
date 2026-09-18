@@ -13,6 +13,7 @@ export const PF_CATEGORIES = [
   "Perícia Trabalhista",
   "Custos e Prazos",
   "Como Funciona",
+  "Assistente Técnico",
 ] as const;
 
 export const faqPessoaFisica: FaqItem[] = [
@@ -72,6 +73,41 @@ export const faqPessoaFisica: FaqItem[] = [
     answer:
       "Não é obrigatório para iniciar a conversa, mas a assistência técnica atua dentro de um processo judicial ou administrativo, então o ideal é já ter (ou estar buscando) representação jurídica.",
   },
+  {
+    id: "pf-9",
+    category: "Assistente Técnico",
+    question: "O que faz o assistente técnico?",
+    answer:
+      "É o profissional de confiança contratado por uma das partes para acompanhar a atuação do perito. Dentro do processo, auxilia na formulação de quesitos, acompanha o exame pericial e elabora parecer técnico que aponta concordâncias ou inconsistências do laudo, além de propor quesitos complementares.",
+  },
+  {
+    id: "pf-10",
+    category: "Assistente Técnico",
+    question: "Quem paga o assistente técnico?",
+    answer:
+      "A parte que contratou o assistente técnico é responsável pelos honorários. Mesmo em casos de Justiça Gratuita, os honorários do assistente técnico particular não são custeados pelo Estado.",
+  },
+  {
+    id: "pf-11",
+    category: "Assistente Técnico",
+    question: "Quanto ganha o assistente técnico?",
+    answer:
+      "Assistentes técnicos judiciais não recebem salário pelo trabalho no processo. Os honorários são definidos pela parte que os contrata e variam de acordo com a complexidade do caso, o tipo de perícia, o tempo de análise dos documentos e a extensão do trabalho.",
+  },
+  {
+    id: "pf-12",
+    category: "Assistente Técnico",
+    question: "Qual a diferença entre perito judicial e assistente técnico?",
+    answer:
+      "O perito atua como auxiliar do juiz na análise dos aspectos técnicos do processo. O assistente técnico trabalha junto à parte que o contratou, oferecendo suporte especializado para que ela compreenda e se posicione diante da prova pericial.",
+  },
+  {
+    id: "pf-13",
+    category: "Assistente Técnico",
+    question: "A própria parte pode ser assistente técnico?",
+    answer:
+      "Pode, desde que tenha conhecimento técnico ou científico relacionado ao objeto da perícia. A legislação não exige que o assistente técnico seja uma pessoa diferente da parte, mas exige qualificação adequada para acompanhar e se manifestar sobre a prova técnica.",
+  },
 ];
 
 export const PJ_CATEGORIES = [
@@ -79,6 +115,7 @@ export const PJ_CATEGORIES = [
   "Impugnação de Laudos",
   "Prazos e Urgência",
   "Atuação em Lote",
+  "Assistente Técnico",
 ] as const;
 
 export const faqEmpresas: FaqItem[] = [
@@ -130,5 +167,19 @@ export const faqEmpresas: FaqItem[] = [
     question: "Como funciona o relatório de gestão da carteira?",
     answer:
       "Reunimos, por período, o status técnico de cada processo em atendimento, os prazos em aberto e as recomendações pendentes, em um único documento de gestão.",
+  },
+  {
+    id: "pj-8",
+    category: "Assistente Técnico",
+    question: "Qual a diferença entre perito judicial e assistente técnico?",
+    answer:
+      "O perito atua como auxiliar do juiz na análise dos aspectos técnicos do processo. O assistente técnico trabalha junto à parte que o contratou, oferecendo suporte especializado para que ela compreenda e se posicione diante da prova pericial.",
+  },
+  {
+    id: "pj-9",
+    category: "Assistente Técnico",
+    question: "Quem paga os honorários do assistente técnico?",
+    answer:
+      "A parte que contrata o assistente técnico é responsável pelo pagamento. Os honorários são definidos conforme a complexidade do caso, o tipo de perícia e a extensão do trabalho, não seguem tabela de salário.",
   },
 ];
