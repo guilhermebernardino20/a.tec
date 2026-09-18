@@ -25,7 +25,7 @@ const WEAK = {
 
 const STRONG = {
   tag: "Estratégia a.tec",
-  title: "Atuação a.tec",
+  title: "Laudo a.tec",
   items: [
     "Estudo de viabilidade técnica antes de definir a estratégia do caso",
     "Quesitos sob medida, mirando o ponto cego daquele processo",
