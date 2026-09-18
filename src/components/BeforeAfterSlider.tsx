@@ -27,9 +27,9 @@ const STRONG = {
   tag: "Estratégia a.tec",
   title: "Atuação a.tec",
   items: [
-    "Estudo de viabilidade técnica antes de definir a tese",
+    "Estudo de viabilidade técnica antes de definir a estratégia do caso",
     "Quesitos sob medida, mirando o ponto cego daquele processo",
-    "Parecer técnico claro e inteligível para o magistrado",
+    "Parecer técnico claro e inteligível para o juiz responsável",
     "Acompanhamento presencial ou online no ato pericial",
   ],
 };

@@ -70,21 +70,23 @@ function RigorMeter({ level }: { level: RigorLevel }) {
  * intermediária.
  */
 export default function AtecMatrix() {
-  const [areaId, setAreaId] = useState(MATRIX[0].id);
-  const [caseId, setCaseId] = useState(MATRIX[0].cases[0].id);
+  // nada pré-selecionado: o visitante escolhe a área e o caso antes de
+  // ver qualquer diagnóstico
+  const [areaId, setAreaId] = useState<string | null>(null);
+  const [caseId, setCaseId] = useState<string | null>(null);
   const result = useRef<HTMLDivElement>(null);
 
   const area = useMemo(
-    () => MATRIX.find((a) => a.id === areaId) ?? MATRIX[0],
+    () => MATRIX.find((a) => a.id === areaId) ?? null,
     [areaId],
   );
-  const current = area.cases.find((c) => c.id === caseId) ?? area.cases[0];
+  const current = area?.cases.find((c) => c.id === caseId) ?? null;
 
   const selectArea = (id: string) => {
     const next = MATRIX.find((a) => a.id === id);
     if (!next) return;
     setAreaId(id);
-    setCaseId(next.cases[0].id);
+    setCaseId(null);
   };
 
   const selectCase = (id: string) => {
@@ -119,7 +121,7 @@ export default function AtecMatrix() {
                 aria-label="Área de atuação"
               >
                 {MATRIX.map((a) => {
-                  const active = a.id === area.id;
+                  const active = a.id === area?.id;
                   return (
                     <button
                       key={a.id}
@@ -140,43 +142,49 @@ export default function AtecMatrix() {
               </div>
 
               <Mono className="mt-10 block text-paper/45">Tipo de litígio</Mono>
-              <ul className="mt-3">
-                {area.cases.map((c) => {
-                  const active = c.id === current.id;
-                  return (
-                    <li
-                      key={c.id}
-                      className="border-b border-paper/[0.08] last:border-b-0"
-                    >
-                      <button
-                        type="button"
-                        onClick={() => selectCase(c.id)}
-                        aria-pressed={active}
-                        aria-controls="matrix-resultado"
-                        className={cn(
-                          "group flex min-h-14 w-full items-center justify-between gap-4 min-h-[48px] rounded-xl px-4 py-4 text-left transition-all duration-300 hover:bg-white/[0.03] active:scale-[0.99]",
-                          active
-                            ? "text-paper"
-                            : "text-paper/55 hover:text-paper",
-                        )}
+              {area ? (
+                <ul className="mt-3">
+                  {area.cases.map((c) => {
+                    const active = c.id === current?.id;
+                    return (
+                      <li
+                        key={c.id}
+                        className="border-b border-paper/[0.08] last:border-b-0"
                       >
-                        <span className="text-body">{c.label}</span>
-                        <span
-                          aria-hidden
+                        <button
+                          type="button"
+                          onClick={() => selectCase(c.id)}
+                          aria-pressed={active}
+                          aria-controls="matrix-resultado"
                           className={cn(
-                            "text-base transition-all duration-300",
+                            "group flex min-h-14 w-full items-center justify-between gap-4 min-h-[48px] rounded-xl px-4 py-4 text-left transition-all duration-300 hover:bg-white/[0.03] active:scale-[0.99]",
                             active
-                              ? "translate-x-0 text-olive-light opacity-100"
-                              : "-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-60",
+                              ? "text-paper"
+                              : "text-paper/55 hover:text-paper",
                           )}
                         >
-                          →
-                        </span>
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
+                          <span className="text-body">{c.label}</span>
+                          <span
+                            aria-hidden
+                            className={cn(
+                              "text-base transition-all duration-300",
+                              active
+                                ? "translate-x-0 text-olive-light opacity-100"
+                                : "-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-60",
+                            )}
+                          >
+                            →
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <p className="mt-3 text-sm text-paper/45">
+                  Escolha uma área para ver os tipos de litígio.
+                </p>
+              )}
             </div>
 
             {/* --------- diagnóstico --------- */}
@@ -187,115 +195,131 @@ export default function AtecMatrix() {
               className="scroll-mt-24 border-t border-paper/[0.08] pt-8 lg:col-span-7 lg:min-h-[640px] lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0"
             >
               <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={current.id}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.28, ease: EASE }}
-                >
-                  <p className="text-sm text-paper/45">
-                    {area.label} · {current.label}
-                  </p>
-
-                  <section className="mt-6">
-                    <BlockLabel index="01">Ponto cego pericial</BlockLabel>
-                    <p className="mt-4 text-lead font-light text-paper/90">
-                      {current.blindSpot}
+                {current && area ? (
+                  <motion.div
+                    key={current.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.28, ease: EASE }}
+                  >
+                    <p className="text-sm text-paper/45">
+                      {area.label} · {current.label}
                     </p>
-                  </section>
 
-                  <section className="mt-10 border-t border-paper/[0.08] pt-8">
-                    <BlockLabel index="02">
-                      Direcionamento de quesitos
-                    </BlockLabel>
-                    <ol className="mt-5 space-y-4">
-                      {current.questioning.map((q, i) => (
-                        <li
-                          key={q}
-                          className="flex gap-4 text-body text-paper/80"
-                        >
-                          <span className="mt-[3px] w-5 shrink-0 font-mono text-mono text-paper/35">
-                            {String(i + 1).padStart(2, "0")}
+                    <section className="mt-6">
+                      <BlockLabel index="01">Ponto cego pericial</BlockLabel>
+                      <p className="mt-4 text-lead font-light text-paper/90">
+                        {current.blindSpot}
+                      </p>
+                    </section>
+
+                    <section className="mt-10 border-t border-paper/[0.08] pt-8">
+                      <BlockLabel index="02">
+                        Direcionamento de quesitos
+                      </BlockLabel>
+                      <ol className="mt-5 space-y-4">
+                        {current.questioning.map((q, i) => (
+                          <li
+                            key={q}
+                            className="flex gap-4 text-body text-paper/80"
+                          >
+                            <span className="mt-[3px] w-5 shrink-0 font-mono text-mono text-paper/35">
+                              {String(i + 1).padStart(2, "0")}
+                            </span>
+                            <span>{q}</span>
+                          </li>
+                        ))}
+                      </ol>
+                    </section>
+
+                    <section className="mt-10 border-t border-paper/[0.08] pt-8">
+                      <BlockLabel index="03">Prova e viabilidade</BlockLabel>
+
+                      <div className="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-2">
+                        <div>
+                          <p className="text-sm text-paper/50">Risco</p>
+                          <p className="mt-2 text-sm leading-relaxed text-paper/80">
+                            {current.evidence.risk}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-paper/50">Oportunidade</p>
+                          <p className="mt-2 text-sm leading-relaxed text-paper/80">
+                            {current.evidence.opportunity}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 sm:items-end">
+                        <div className="flex flex-wrap items-center gap-3">
+                          <span className="text-sm text-paper/60">
+                            Impacto na tese
                           </span>
-                          <span>{q}</span>
-                        </li>
-                      ))}
-                    </ol>
-                  </section>
-
-                  <section className="mt-10 border-t border-paper/[0.08] pt-8">
-                    <BlockLabel index="03">Prova e viabilidade</BlockLabel>
-
-                    <div className="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-2">
-                      <div>
-                        <p className="text-sm text-paper/50">Risco</p>
-                        <p className="mt-2 text-sm leading-relaxed text-paper/80">
-                          {current.evidence.risk}
-                        </p>
+                          <span
+                            className={cn(
+                              "rounded-full px-3 py-1 text-xs font-medium tracking-wide",
+                              IMPACT_STYLE[current.evidence.impact],
+                            )}
+                          >
+                            {current.evidence.impact}
+                          </span>
+                        </div>
+                        <RigorMeter level={current.evidence.rigor} />
                       </div>
-                      <div>
-                        <p className="text-sm text-paper/50">Oportunidade</p>
-                        <p className="mt-2 text-sm leading-relaxed text-paper/80">
-                          {current.evidence.opportunity}
-                        </p>
-                      </div>
+
+                      <p className="mt-6 text-sm text-paper/55">
+                        {current.evidence.horizon}
+                      </p>
+                    </section>
+
+                    <div className="mt-10 flex flex-col gap-3 border-t border-paper/[0.08] pt-8 sm:flex-row sm:flex-wrap">
+                      <a
+                        href="#contato"
+                        onClick={() =>
+                          prefillContact(
+                            `Gostaria de agendar uma análise de viabilidade para o caso de ${current.label} na área de ${area.label}.`,
+                            { area: area.label, caso: current.label },
+                          )
+                        }
+                        className="inline-flex min-h-11 items-center justify-center gap-3 rounded-full bg-paper px-6 py-3 text-sm font-medium text-ink transition-colors duration-300 hover:bg-mint"
+                      >
+                        Solicitar minuta de quesitos
+                        <span aria-hidden>→</span>
+                      </a>
+                      <a
+                        href={getMatrixWhatsAppUrl(area.label, current.label)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Falar no WhatsApp sobre um caso de ${area.label}: ${current.label}`}
+                        className="inline-flex min-h-11 items-center justify-center gap-3 rounded-full bg-paper/[0.08] px-6 py-3 text-sm text-paper transition-colors duration-300 hover:bg-paper/[0.16]"
+                      >
+                        Falar no WhatsApp
+                        <span aria-hidden>↗</span>
+                      </a>
                     </div>
 
-                    <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 sm:items-end">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <span className="text-sm text-paper/60">
-                          Impacto na tese
-                        </span>
-                        <span
-                          className={cn(
-                            "rounded-full px-3 py-1 text-xs font-medium tracking-wide",
-                            IMPACT_STYLE[current.evidence.impact],
-                          )}
-                        >
-                          {current.evidence.impact}
-                        </span>
-                      </div>
-                      <RigorMeter level={current.evidence.rigor} />
-                    </div>
-
-                    <p className="mt-6 text-sm text-paper/55">
-                      {current.evidence.horizon}
+                    <p className="mt-6 max-w-[62ch] text-[11px] leading-normal text-paper/40">
+                      Análise preditiva baseada em padrões de impugnação e
+                      metodologia pericial a.tec. Não substitui a análise
+                      documental prévia do caso concreto.
                     </p>
-                  </section>
-
-                  <div className="mt-10 flex flex-col gap-3 border-t border-paper/[0.08] pt-8 sm:flex-row sm:flex-wrap">
-                    <a
-                      href="#contato"
-                      onClick={() =>
-                        prefillContact(
-                          `Gostaria de agendar uma análise de viabilidade para o caso de ${current.label} na área de ${area.label}.`,
-                          { area: area.label, caso: current.label },
-                        )
-                      }
-                      className="inline-flex min-h-11 items-center justify-center gap-3 rounded-full bg-paper px-6 py-3 text-sm font-medium text-ink transition-colors duration-300 hover:bg-mint"
-                    >
-                      Solicitar minuta de quesitos
-                      <span aria-hidden>→</span>
-                    </a>
-                    <a
-                      href={getMatrixWhatsAppUrl(area.label, current.label)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`Falar no WhatsApp sobre um caso de ${area.label}: ${current.label}`}
-                      className="inline-flex min-h-11 items-center justify-center gap-3 rounded-full bg-paper/[0.08] px-6 py-3 text-sm text-paper transition-colors duration-300 hover:bg-paper/[0.16]"
-                    >
-                      Falar no WhatsApp
-                      <span aria-hidden>↗</span>
-                    </a>
-                  </div>
-
-                  <p className="mt-6 max-w-[62ch] text-[11px] leading-normal text-paper/40">
-                    Análise preditiva baseada em padrões de impugnação e
-                    metodologia pericial a.tec. Não substitui a análise
-                    documental prévia do caso concreto.
-                  </p>
-                </motion.div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="idle"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.28, ease: EASE }}
+                    className="flex h-full min-h-[320px] items-center lg:min-h-[560px]"
+                  >
+                    <p className="max-w-[46ch] text-lead font-light text-paper/50">
+                      Selecione a área e o tipo de litígio para ver onde a prova
+                      técnica costuma decidir esse caso.
+                    </p>
+                  </motion.div>
+                )}
               </AnimatePresence>
             </div>
           </div>

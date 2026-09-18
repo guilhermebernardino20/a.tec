@@ -258,7 +258,7 @@ export default function Hero() {
                   <motion.div key={seg.href} variants={card}>
                     <Link
                       href={seg.href}
-                      className="group flex flex-col rounded-2xl border border-white/10 bg-neutral-900/50 p-5 text-left backdrop-blur-md hover:border-olive/40 hover:bg-white/[0.03] transition-all duration-300 active:scale-[0.98] sm:p-6 md:p-10 lg:min-h-[280px]"
+                      className="group flex h-full flex-col rounded-2xl border border-white/10 bg-neutral-900/50 p-5 text-left backdrop-blur-md hover:border-olive/40 hover:bg-white/[0.03] transition-all duration-300 active:scale-[0.98] sm:p-6 md:p-10 lg:min-h-[280px]"
                     >
                       <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-olive">
                         [ {seg.tag} ]
