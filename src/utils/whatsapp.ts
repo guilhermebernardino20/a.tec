@@ -40,3 +40,10 @@ export function getSpecialtyWhatsAppUrl(specialtyName: string) {
     `Olá! Gostaria de solicitar suporte da A.TEC para uma demanda de ${specialtyName}.`,
   );
 }
+
+/** Convite do banner "Faça parte do nosso time", para profissionais. */
+export function getJoinTeamWhatsAppUrl() {
+  return build(
+    "Olá! Sou profissional técnico e tenho interesse em fazer parte da rede de assistentes técnicos da A.TEC.",
+  );
+}

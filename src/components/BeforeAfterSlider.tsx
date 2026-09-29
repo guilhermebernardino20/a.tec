@@ -10,6 +10,7 @@ import {
 import Container from "@/components/ui/Container";
 import Mono from "@/components/ui/Mono";
 import TextReveal from "@/components/ui/TextReveal";
+import OrganicCanvas from "@/components/OrganicCanvas";
 import { cn } from "@/lib/utils";
 
 const WEAK = {
@@ -104,20 +105,25 @@ export default function BeforeAfterSlider() {
   return (
     <section id="comparativo" className="bg-paper pt-20 md:pt-32">
       <Container>
-        <div className="flex flex-col gap-6 pb-12">
-          <div>
+        <div className="grid grid-cols-1 gap-8 pb-12 md:grid-cols-12 md:items-center md:gap-10">
+          <div className="md:col-span-7">
             <Mono className="text-ink-mute">Antes e depois pericial</Mono>
+            <div className="mt-4">
+              <TextReveal
+                as="h2"
+                lines={[
+                  "A diferença entre um",
+                  "laudo comum e uma",
+                  "estratégia vitoriosa.",
+                ]}
+                className="text-title font-light leading-[1.06] text-ink"
+              />
+            </div>
           </div>
-          <div>
-            <TextReveal
-              as="h2"
-              lines={[
-                "A diferença entre um",
-                "laudo comum e uma",
-                "estratégia vitoriosa.",
-              ]}
-              className="text-title font-light leading-[1.06] text-ink"
-            />
+
+          {/* imagem ao lado do título, só do tablet para cima */}
+          <div className="hidden overflow-hidden rounded-2xl md:col-span-5 md:block">
+            <OrganicCanvas className="h-[220px] w-full lg:h-[260px]" />
           </div>
         </div>
       </Container>

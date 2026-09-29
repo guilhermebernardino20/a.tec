@@ -258,24 +258,34 @@ export default function Hero() {
                   <motion.div key={seg.href} variants={card}>
                     <Link
                       href={seg.href}
-                      className="group flex h-full flex-col rounded-2xl border border-white/10 bg-neutral-900/50 p-5 text-left backdrop-blur-md hover:border-olive/40 hover:bg-white/[0.03] transition-all duration-300 active:scale-[0.98] sm:p-6 md:p-10 lg:min-h-[280px]"
+                      className="group relative flex h-full cursor-pointer flex-col rounded-2xl border border-white/15 bg-neutral-900/50 p-5 text-left shadow-[0_1px_0_0_rgba(255,255,255,0.05)_inset] backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-olive/60 hover:bg-white/[0.05] hover:shadow-[0_24px_60px_-24px_rgba(127,153,112,0.55)] active:scale-[0.98] active:translate-y-0 sm:p-6 md:p-10 lg:min-h-[280px]"
                     >
+                      {/* selo no canto: deixa claro que o cartão inteiro é clicável */}
+                      <span
+                        aria-hidden
+                        className="absolute right-5 top-5 grid h-10 w-10 place-items-center rounded-full border border-white/15 text-paper/70 transition-all duration-300 group-hover:border-olive group-hover:bg-olive group-hover:text-dark md:right-6 md:top-6"
+                      >
+                        ↗
+                      </span>
+
                       <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-olive">
                         [ {seg.tag} ]
                       </span>
-                      <span className="mt-5 font-sans text-2xl font-semibold leading-tight text-paper sm:text-3xl lg:text-4xl">
+                      <span className="mt-5 max-w-[85%] font-sans text-2xl font-semibold leading-tight text-paper sm:text-3xl lg:text-4xl">
                         {seg.cardTitle}
                       </span>
                       <span className="mt-3 text-sm leading-relaxed text-neutral-300 md:text-[15px]">
                         {seg.cardBody}
                       </span>
-                      <span className="mt-auto flex items-center gap-2 pt-6 text-sm font-medium text-olive-light">
-                        {seg.cardCta}
-                        <span
-                          aria-hidden
-                          className="transition-transform duration-300 group-hover:translate-x-1"
-                        >
-                          →
+                      <span className="mt-auto pt-6">
+                        <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.07] px-5 py-3 text-sm font-medium text-olive-light transition-colors duration-300 group-hover:border-olive group-hover:bg-olive group-hover:text-dark">
+                          {seg.cardCta}
+                          <span
+                            aria-hidden
+                            className="transition-transform duration-300 group-hover:translate-x-1"
+                          >
+                            →
+                          </span>
                         </span>
                       </span>
                     </Link>

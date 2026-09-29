@@ -231,6 +231,27 @@ export const PLATFORM = {
   body: "Atuamos desde a análise inicial do caso até a elaboração de pareceres e o acompanhamento em perícias, unindo fundamentação sólida, clareza e rigor metodológico. Nosso objetivo é transformar informações técnicas em argumentos consistentes, capazes de fortalecer a estratégia jurídica.",
 } as const;
 
+/**
+ * Perfis de exemplo, sem nome, cargo ou foto reais — placeholders até a
+ * a.tec enviar os dados de cada profissional (nome, cargo e foto).
+ */
+export const TEAM_MEMBERS = [
+  { id: "membro-01", role: "Perito(a) em Medicina" },
+  { id: "membro-02", role: "Perito(a) em Psicologia" },
+  { id: "membro-03", role: "Perito(a) em Engenharia" },
+  { id: "membro-04", role: "Perito(a) em Avaliações Imobiliárias" },
+] as const;
+
+export const TEAM = {
+  label: "Nosso time",
+  headline: "Uma rede técnica multidisciplinar, pronta para qualquer tese.",
+  body: "Mais de 100 profissionais especializados atuam com a a.tec: médicos, psicólogos, engenheiros e avaliadores que traduzem a técnica de cada área em argumento jurídico.",
+  joinTitle: "Faça parte do nosso time",
+  joinBody:
+    "Se você é médico, psicólogo, engenheiro ou avaliador e tem interesse em atuar como assistente técnico em processos judiciais, queremos falar com você.",
+  joinCta: "Quero fazer parte",
+} as const;
+
 export const ABOUT = {
   label: "Sobre a a.tec",
   headline: "Assistência técnica especializada em perícias judiciais.",
