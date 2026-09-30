@@ -7,6 +7,7 @@ import { prefillContact } from "@/lib/prefill";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
 import {
+  DIVULGADO_OPTIONS,
   PROFILE_LABEL,
   RELATO_MAX,
   RELATO_MIN,
@@ -17,6 +18,7 @@ import {
   estimate,
   nextSteps,
   triageMessage,
+  type Divulgado,
   type Profile,
   type TriageOpen,
   type Stage,
@@ -65,6 +67,7 @@ export default function Triagem() {
   const [areaId, setAreaId] = useState<string | null>(null);
   const [specialty, setSpecialty] = useState(UNKNOWN_SPECIALTY);
   const [stage, setStage] = useState<Stage | null>(null);
+  const [divulgado, setDivulgado] = useState<Divulgado | null>(null);
   const [nome, setNome] = useState("");
   const [relato, setRelato] = useState("");
   const [tried, setTried] = useState(false);
@@ -149,7 +152,7 @@ export default function Triagem() {
 
   const answers =
     profile && areaId && stage
-      ? { profile, areaId, specialty, stage, nome, relato }
+      ? { profile, areaId, specialty, stage, divulgado, nome, relato }
       : null;
 
   return (
@@ -306,6 +309,27 @@ export default function Triagem() {
                         </div>
                       </fieldset>
 
+                      <fieldset>
+                        <legend className="text-body text-paper/85">
+                          O caso já foi divulgado (imprensa, redes sociais,
+                          conselho de classe etc.)?{" "}
+                          <span className="text-paper/45">(opcional)</span>
+                        </legend>
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          {DIVULGADO_OPTIONS.map((d) => (
+                            <Choice
+                              key={d.id}
+                              selected={d.id === divulgado}
+                              onClick={() =>
+                                setDivulgado(d.id === divulgado ? null : d.id)
+                              }
+                            >
+                              {d.label}
+                            </Choice>
+                          ))}
+                        </div>
+                      </fieldset>
+
                       {tried && (!areaId || !stage) ? (
                         <p role="alert" className="text-sm text-mint">
                           Escolha a área e o momento do caso para continuar.
@@ -446,6 +470,9 @@ function Resultado({
 }) {
   const areaLabel = TRIAGE_AREAS.find((a) => a.id === answers.areaId)?.label;
   const stageLabel = STAGES.find((s) => s.id === answers.stage)?.label;
+  const divulgadoLabel = DIVULGADO_OPTIONS.find(
+    (d) => d.id === answers.divulgado,
+  )?.label;
   const { service, range } = estimate(answers.areaId, answers.stage);
   const { steps, docs } = nextSteps(answers);
 
@@ -457,7 +484,10 @@ function Resultado({
           ["Tipo de perícia", answers.specialty],
           ["Situação", stageLabel],
           ["Perfil", PROFILE_LABEL[answers.profile]],
-        ].map(([k, v]) => (
+          divulgadoLabel ? ["Já foi divulgado", divulgadoLabel] : null,
+        ]
+          .filter((row): row is [string, string] => row !== null)
+          .map(([k, v]) => (
           <div key={k}>
             <dt className="text-paper/45">{k}</dt>
             <dd className="mt-0.5 text-paper">{v}</dd>

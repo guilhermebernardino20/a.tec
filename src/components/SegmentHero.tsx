@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Container from "@/components/ui/Container";
 import HeroBackdrop from "@/components/HeroBackdrop";
+import StatusLed from "@/components/ui/StatusLed";
 import { openTriage } from "@/lib/triagem";
 import type { Segment } from "@/lib/segments";
 
@@ -45,6 +46,7 @@ export default function SegmentHero({ segment }: { segment: Segment }) {
             <p className="mt-6 w-0 min-w-full text-base leading-relaxed text-neutral-300 md:text-lg">
               {segment.heroLead}
             </p>
+            <StatusLed label="Orçamento em 48h" className="mt-6" />
           </div>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">

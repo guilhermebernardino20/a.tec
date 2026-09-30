@@ -40,6 +40,14 @@ export const STAGES: { id: Stage; label: string }[] = [
   { id: "pericia", label: "Perícia marcada ou já realizada" },
 ];
 
+/** O caso já ganhou repercussão pública: muda a leitura estratégica. */
+export type Divulgado = "sim" | "nao";
+
+export const DIVULGADO_OPTIONS: { id: Divulgado; label: string }[] = [
+  { id: "nao", label: "Ainda não" },
+  { id: "sim", label: "Sim, já foi divulgado" },
+];
+
 type Range = readonly [number, number];
 
 /**
@@ -80,6 +88,7 @@ export type TriageAnswers = {
   areaId: string;
   specialty: string;
   stage: Stage;
+  divulgado: Divulgado | null;
   nome: string;
   relato: string;
 };
@@ -131,6 +140,9 @@ export function triageMessage(answers: TriageAnswers) {
     `• Área: ${area?.label ?? answers.areaId}`,
     `• Tipo de perícia: ${answers.specialty}`,
     `• Situação: ${stage?.label ?? answers.stage}`,
+    answers.divulgado
+      ? `• Já foi divulgado: ${answers.divulgado === "sim" ? "Sim" : "Ainda não"}`
+      : null,
     "",
     "Relato:",
     answers.relato.trim(),

@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { NAV } from "@/lib/content";
 import Container from "@/components/ui/Container";
 import Pill from "@/components/ui/Pill";
+import OrcamentoModal from "@/components/OrcamentoModal";
 import { setScrollLock } from "@/lib/scroll-lock";
 import { cn } from "@/lib/utils";
 
@@ -14,6 +15,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [onDark, setOnDark] = useState(true);
   const [open, setOpen] = useState(false);
+  const [orcamentoOpen, setOrcamentoOpen] = useState(false);
 
   useEffect(() => {
     let frame = 0;
@@ -115,6 +117,20 @@ export default function Header() {
               ))}
             </nav>
 
+            <button
+              type="button"
+              onClick={() => setOrcamentoOpen(true)}
+              aria-label="Abrir formulário de orçamento online"
+              className={cn(
+                "hidden min-h-11 items-center justify-center overflow-hidden rounded-full border px-6 py-3 text-xs font-medium uppercase tracking-[0.18em] transition-all duration-500 active:scale-[0.98] md:inline-flex",
+                light
+                  ? "border-paper/40 text-paper hover:bg-paper/10"
+                  : "border-ink/25 text-ink hover:bg-ink/[0.06]",
+              )}
+            >
+              Orçamento online
+            </button>
+
             <Pill
               href="#contato"
               variant={light ? "light" : "dark"}
@@ -181,12 +197,32 @@ export default function Header() {
                       Agendar análise técnica
                     </a>
                   </li>
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOpen(false);
+                        setOrcamentoOpen(true);
+                      }}
+                      className="flex min-h-14 w-full items-center justify-between px-6 py-3.5 text-lg font-medium transition-colors active:bg-white/5"
+                    >
+                      Orçamento online
+                      <span aria-hidden className="text-paper/40">
+                        ↗
+                      </span>
+                    </button>
+                  </li>
                 </ul>
               </div>
             </Container>
           </motion.div>
         ) : null}
       </AnimatePresence>
+
+      <OrcamentoModal
+        open={orcamentoOpen}
+        onClose={() => setOrcamentoOpen(false)}
+      />
     </header>
   );
 }

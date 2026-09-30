@@ -8,6 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Container from "@/components/ui/Container";
 import HeroBackdrop from "@/components/HeroBackdrop";
 import HeroCanvas from "@/components/HeroCanvas";
+import StatusLed from "@/components/ui/StatusLed";
 import { SEGMENTS } from "@/lib/segments";
 
 /** curva de entrada do site de referência */
@@ -247,6 +248,10 @@ export default function Hero() {
                   Engenharias e Avaliações Imobiliárias. Transformamos técnica
                   em estratégia.
                 </motion.p>
+
+                <motion.div variants={lead} className="mt-6">
+                  <StatusLed label="Orçamento em 48h" />
+                </motion.div>
               </div>
 
               {/* portal de entrada: dois caminhos, um por público */}
