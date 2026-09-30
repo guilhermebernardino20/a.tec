@@ -4,12 +4,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { NAV } from "@/lib/content";
+import { CONTACT, NAV } from "@/lib/content";
 import Container from "@/components/ui/Container";
 import Pill from "@/components/ui/Pill";
 import OrcamentoModal from "@/components/OrcamentoModal";
 import { setScrollLock } from "@/lib/scroll-lock";
 import { cn } from "@/lib/utils";
+import { getGeneralWhatsAppUrl } from "@/utils/whatsapp";
+
+const menuList = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.045, delayChildren: 0.05 } },
+};
+
+const menuItem = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] as const } },
+};
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -174,10 +185,19 @@ export default function Header() {
             />
 
             <Container>
-              <div className="mt-2 overflow-hidden rounded-2xl border border-white/10 bg-dark/95 text-paper backdrop-blur-2xl">
-                <ul>
+              <motion.div
+                variants={menuList}
+                initial="hidden"
+                animate="visible"
+                className="mt-2 flex max-h-[calc(100svh-6rem)] flex-col overflow-hidden rounded-2xl border border-white/10 bg-dark/95 text-paper backdrop-blur-2xl"
+              >
+                <ul className="overflow-y-auto overscroll-contain" data-lenis-prevent>
                   {NAV.map((item) => (
-                    <li key={item.href} className="border-b border-white/5">
+                    <motion.li
+                      key={item.href}
+                      variants={menuItem}
+                      className="border-b border-white/5"
+                    >
                       <a
                         href={item.href}
                         onClick={() => setOpen(false)}
@@ -186,34 +206,58 @@ export default function Header() {
                         {item.label}
                         <span className="text-paper/40">{item.index}</span>
                       </a>
-                    </li>
+                    </motion.li>
                   ))}
-                  <li>
-                    <a
-                      href="#contato"
-                      onClick={() => setOpen(false)}
-                      className="flex min-h-14 items-center bg-olive px-6 py-3.5 text-lg font-medium text-dark transition-transform active:scale-[0.99]"
-                    >
-                      Agendar análise técnica
-                    </a>
-                  </li>
-                  <li>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setOpen(false);
-                        setOrcamentoOpen(true);
-                      }}
-                      className="flex min-h-14 w-full items-center justify-between px-6 py-3.5 text-lg font-medium transition-colors active:bg-white/5"
-                    >
-                      Orçamento online
-                      <span aria-hidden className="text-paper/40">
-                        ↗
-                      </span>
-                    </button>
-                  </li>
                 </ul>
-              </div>
+
+                <motion.div
+                  variants={menuItem}
+                  className="flex flex-col gap-2.5 border-t border-white/10 p-4"
+                >
+                  <a
+                    href="#contato"
+                    onClick={() => setOpen(false)}
+                    className="flex min-h-14 items-center justify-center rounded-full bg-olive px-6 text-center text-base font-medium text-dark transition-transform active:scale-[0.98]"
+                  >
+                    Agendar análise técnica
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpen(false);
+                      setOrcamentoOpen(true);
+                    }}
+                    className="flex min-h-14 items-center justify-center gap-2 rounded-full border border-paper/25 px-6 text-base font-medium text-paper transition-colors active:bg-white/5"
+                  >
+                    Orçamento online
+                    <span aria-hidden className="text-paper/50">
+                      ↗
+                    </span>
+                  </button>
+                </motion.div>
+
+                <motion.div
+                  variants={menuItem}
+                  className="flex items-center justify-between gap-4 border-t border-white/5 px-6 py-4 text-sm text-paper/60"
+                >
+                  <a
+                    href={`tel:${CONTACT.phoneHref}`}
+                    aria-label={`Ligar para ${CONTACT.phone}`}
+                    className="underline-offset-4 transition-colors hover:text-paper hover:underline"
+                  >
+                    {CONTACT.phone}
+                  </a>
+                  <a
+                    href={getGeneralWhatsAppUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Abrir conversa no WhatsApp com a a.tec"
+                    className="underline-offset-4 transition-colors hover:text-paper hover:underline"
+                  >
+                    WhatsApp
+                  </a>
+                </motion.div>
+              </motion.div>
             </Container>
           </motion.div>
         ) : null}
