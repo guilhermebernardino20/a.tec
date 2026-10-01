@@ -112,13 +112,26 @@ export default function Footer() {
           />
         </div>
 
-        <div className="mt-8 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 flex flex-col gap-4 border-t border-paper/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[11px] leading-normal text-paper/45">
-            © {year} a.tec · Assistência Técnica Judicial
+            © {year} Collab Brechós Ltda. Todos os direitos reservados.
           </p>
-          <p className="text-[11px] leading-normal text-paper/45">
-            Todos os direitos reservados
-          </p>
+          <a
+            href="https://jozzicreative.com.br"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Site produzido pela Jozzi Creative"
+            className="inline-flex items-center gap-2 text-[11px] leading-normal text-paper/45 transition-opacity hover:opacity-80"
+          >
+            Produzido por
+            <Image
+              src="/brand/jozzi-creative.svg"
+              alt="Jozzi Creative"
+              width={1000}
+              height={64.22}
+              className="h-[11px] w-auto opacity-80 invert"
+            />
+          </a>
         </div>
       </Container>
     </footer>
