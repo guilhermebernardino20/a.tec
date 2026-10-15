@@ -313,6 +313,7 @@ export default function ContactForm({
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState<string | null>(null);
+  const [consentError, setConsentError] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<
     Partial<Record<ContactField, string>>
   >({});
@@ -345,6 +346,12 @@ export default function ContactForm({
       event.preventDefault();
       const form = event.currentTarget;
       const data = new FormData(form);
+
+      if (!data.get("lgpd")) {
+        setConsentError(true);
+        return;
+      }
+      setConsentError(false);
 
       setDismissed(false);
       setStatus("sending");
@@ -464,6 +471,35 @@ export default function ContactForm({
             setFieldErrors((prev) => ({ ...prev, anexo: undefined }));
           }}
         />
+
+        <div className="sm:col-span-2">
+          <label className="flex cursor-pointer items-start gap-3 text-sm leading-relaxed text-ink-soft">
+            <input
+              type="checkbox"
+              name="lgpd"
+              onChange={() => setConsentError(false)}
+              className="mt-1 h-4 w-4 shrink-0 accent-[#5c7a50]"
+            />
+            <span>
+              Li e concordo com o tratamento dos meus dados pessoais, conforme
+              a{" "}
+              <a
+                href="/politica-de-privacidade"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4 hover:text-ink"
+              >
+                Política de Privacidade e Termo de Consentimento (LGPD)
+              </a>
+              .
+            </span>
+          </label>
+          {consentError ? (
+            <p role="alert" className="mt-2 text-sm text-olive-brand">
+              Confirme o consentimento para enviar.
+            </p>
+          ) : null}
+        </div>
 
         {/* honeypot */}
         <div aria-hidden className="hidden">

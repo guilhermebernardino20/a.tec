@@ -117,6 +117,12 @@ export default function Footer() {
             © {year} Collab Brechós Ltda. Todos os direitos reservados.
           </p>
           <a
+            href="/politica-de-privacidade"
+            className="text-[11px] leading-normal text-paper/45 underline-offset-4 transition-colors hover:text-paper hover:underline"
+          >
+            Política de Privacidade (LGPD)
+          </a>
+          <a
             href="https://jozzicreative.com.br"
             target="_blank"
             rel="noopener noreferrer"
