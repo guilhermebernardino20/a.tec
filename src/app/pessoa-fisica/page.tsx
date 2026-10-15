@@ -28,7 +28,7 @@ export default function PessoaFisica() {
         <AtecAjuda />
         <BeforeAfterSlider />
         <Contact
-          title="Conte o seu caso. A gente explica o caminho."
+          title="Conte o seu caso. A gente mostra o caminho."
           lead="Prefere escrever? Envie a mensagem e, se quiser, os documentos. Respondemos em linguagem simples."
         />
       </main>

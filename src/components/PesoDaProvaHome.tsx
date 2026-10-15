@@ -24,7 +24,7 @@ export default function PesoDaProvaHome() {
                 data-text-reveal
                 className="text-title mt-4 font-light leading-[1.08]"
               >
-                O peso da prova
+                O peso da prova pericial
               </h2>
             </div>
             <Pill href="#contato" variant="light">

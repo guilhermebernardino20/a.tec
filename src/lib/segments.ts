@@ -42,6 +42,17 @@ export const SEGMENTS: Record<Profile, Segment> = {
     areas: [
       {
         index: "01",
+        title: "Benefícios do INSS e Indenizações de Seguros",
+        body: "Se o INSS, a seguradora ou a empresa negou o seu direito, preparamos o parecer que mostra a sua real limitação para o trabalho.",
+        bullets: [
+          "Benefício do INSS negado",
+          "Seguro por invalidez",
+          "Perícia trabalhista",
+        ],
+        triageArea: "medicina",
+      },
+      {
+        index: "02",
         title: "Perícia Médica",
         body: "Quando um tratamento ou uma cirurgia deu errado, analisamos o prontuário e mostramos, com base técnica, o que aconteceu.",
         bullets: [
@@ -52,7 +63,7 @@ export const SEGMENTS: Record<Profile, Segment> = {
         triageArea: "medicina",
       },
       {
-        index: "02",
+        index: "03",
         title: "Psicologia Jurídica",
         body: "Em disputas que envolvem crianças e família, cuidamos para que a avaliação psicológica seja justa e bem fundamentada.",
         bullets: [
@@ -61,17 +72,6 @@ export const SEGMENTS: Record<Profile, Segment> = {
           "Alienação parental",
         ],
         triageArea: "psicologia",
-      },
-      {
-        index: "03",
-        title: "Fins Previdenciários",
-        body: "Se o INSS, a seguradora ou a empresa negou o seu direito, preparamos o parecer que mostra a sua real limitação para o trabalho.",
-        bullets: [
-          "Benefício do INSS negado",
-          "Seguro por invalidez",
-          "Perícia trabalhista",
-        ],
-        triageArea: "medicina",
       },
       {
         index: "04",
@@ -107,7 +107,7 @@ export const SEGMENTS: Record<Profile, Segment> = {
     cardCta: "Acessar soluções corporativas",
     heroTitle: ["Prova técnica blindada", "para litígios complexos."],
     heroLead:
-      "Pareceres com método declarado, quesitos direcionados ao ponto cego do laudo e assistência pericial com rigor científico, caso a caso ou em carteira.",
+      "Pareceres com método claro, quesitos estratégicos e assistência pericial com rigor científico, tanto para casos individuais quanto para demandas em carteira.",
     areasLabel: "Soluções corporativas",
     areasTitle: "Autoridade pericial onde o contencioso é decidido.",
     areas: [

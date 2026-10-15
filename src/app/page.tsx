@@ -2,7 +2,6 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import PesoDaProvaHome from "@/components/PesoDaProvaHome";
 import About from "@/components/About";
-import NossoTime from "@/components/NossoTime";
 import ResourcesCta from "@/components/ResourcesCta";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
@@ -18,7 +17,7 @@ export default function Home() {
         <Hero />
         <PesoDaProvaHome />
         <About />
-        <NossoTime />
+        {/* Nosso time: oculto temporariamente — reativar <NossoTime /> */}
         <ResourcesCta />
         <Contact />
       </main>

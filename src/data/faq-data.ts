@@ -62,9 +62,9 @@ export const faqPessoaFisica: FaqItem[] = [
   {
     id: "pf-7",
     category: "Como Funciona",
-    question: "Um especialista acompanha a perícia junto comigo?",
+    question: "Posso ter um especialista me acompanhando durante a perícia?",
     answer:
-      "Sim, presencial ou online. O assistente técnico participa do ato pericial, acompanha os quesitos e garante que o procedimento seja conduzido com clareza e imparcialidade.",
+      "Sim, presencial ou online. Um assistente técnico fica ao seu lado no dia da perícia, acompanha cada quesito e garante que tudo seja conduzido com clareza e imparcialidade.",
   },
   {
     id: "pf-8",
@@ -90,9 +90,9 @@ export const faqPessoaFisica: FaqItem[] = [
   {
     id: "pf-11",
     category: "Assistente Técnico",
-    question: "Quanto ganha o assistente técnico?",
+    question: "Quanto custa contratar um assistente técnico?",
     answer:
-      "Assistentes técnicos judiciais não recebem salário pelo trabalho no processo. Os honorários são definidos pela parte que os contrata e variam de acordo com a complexidade do caso, o tipo de perícia, o tempo de análise dos documentos e a extensão do trabalho.",
+      "O assistente técnico não recebe salário pelo trabalho no processo: os honorários são definidos entre você e o profissional e variam de acordo com a complexidade do caso, o tipo de perícia, o tempo de análise dos documentos e a extensão do trabalho.",
   },
   {
     id: "pf-12",
@@ -100,13 +100,6 @@ export const faqPessoaFisica: FaqItem[] = [
     question: "Qual a diferença entre perito judicial e assistente técnico?",
     answer:
       "O perito atua como auxiliar do juiz na análise dos aspectos técnicos do processo. O assistente técnico trabalha junto à parte que o contratou, oferecendo suporte especializado para que ela compreenda e se posicione diante da prova pericial.",
-  },
-  {
-    id: "pf-13",
-    category: "Assistente Técnico",
-    question: "A própria parte pode ser assistente técnico?",
-    answer:
-      "Pode, desde que tenha conhecimento técnico ou científico relacionado ao objeto da perícia. A legislação não exige que o assistente técnico seja uma pessoa diferente da parte, mas exige qualificação adequada para acompanhar e se manifestar sobre a prova técnica.",
   },
 ];
 
@@ -139,13 +132,6 @@ export const faqEmpresas: FaqItem[] = [
     question: "A A.TEC assina parecer técnico para impugnar laudo pericial?",
     answer:
       "Assina. O parecer técnico corporativo confronta a metodologia, a fundamentação e as conclusões do laudo oficial, em linguagem acessível ao magistrado.",
-  },
-  {
-    id: "pj-4",
-    category: "Impugnação de Laudos",
-    question: "Atuam em audiência de instrução e julgamento?",
-    answer:
-      "Sim, com assistente técnico presencial ou online para acompanhar a oitiva do perito e subsidiar as perguntas do advogado em tempo real.",
   },
   {
     id: "pj-5",

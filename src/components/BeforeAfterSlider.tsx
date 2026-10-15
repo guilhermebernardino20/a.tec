@@ -19,8 +19,8 @@ const WEAK = {
   items: [
     "Quesitos genéricos, baixados da internet e iguais para qualquer caso",
     "Laudo prolixo, sem método declarado nem rigor científico",
-    "Nenhum parecer de impugnação ao que foi produzido pelo juízo",
-    "Alto risco de procedência contrária por prova frágil",
+    "Sem análise técnica que questione o laudo do perito judicial",
+    "Risco de perder a ação por falta de provas consistentes.",
   ],
 };
 
@@ -30,8 +30,8 @@ const STRONG = {
   items: [
     "Estudo de viabilidade técnica antes de definir a estratégia do caso",
     "Quesitos sob medida, mirando o ponto cego daquele processo",
-    "Parecer técnico claro e inteligível para o juiz responsável",
-    "Acompanhamento presencial ou online no ato pericial",
+    "Parecer técnico claro e inteligível para o devido convencimento do juiz",
+    "Acompanhamento presencial ou online durante a perícia.",
   ],
 };
 

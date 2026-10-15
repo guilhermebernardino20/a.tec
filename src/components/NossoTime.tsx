@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { PRACTICES, TEAM, TEAM_MEMBERS } from "@/lib/content";
 import Container from "@/components/ui/Container";
 import Mono from "@/components/ui/Mono";
@@ -89,16 +90,24 @@ export default function NossoTime() {
               {TEAM.joinBody}
             </p>
           </div>
-          <a
-            href={getJoinTeamWhatsAppUrl()}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`${TEAM.joinCta}: falar com a a.tec pelo WhatsApp`}
-            className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-olive px-7 py-4 text-sm font-medium text-dark transition-colors duration-300 hover:bg-olive-light active:scale-[0.98]"
-          >
-            {TEAM.joinCta}
-            <span aria-hidden>↗</span>
-          </a>
+          <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
+            <Link
+              href="/faca-parte-do-time"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-olive px-7 py-4 text-sm font-medium text-dark transition-colors duration-300 hover:bg-olive-light active:scale-[0.98]"
+            >
+              Enviar meus dados
+            </Link>
+            <a
+              href={getJoinTeamWhatsAppUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${TEAM.joinCta}: falar com a a.tec pelo WhatsApp`}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-paper/30 px-7 py-4 text-sm font-medium text-paper transition-colors duration-300 hover:bg-paper/10 active:scale-[0.98]"
+            >
+              Falar no WhatsApp
+              <span aria-hidden>↗</span>
+            </a>
+          </div>
         </div>
       </Container>
     </section>
